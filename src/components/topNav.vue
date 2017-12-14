@@ -64,7 +64,7 @@ export default {
         if(url.indexOf("access_token") > -1) {
             // after getting access token and id saved
             // redirect to home page so vue knows what to display
-            window.location.href = 'http://localhost:8080/';
+            window.location.href = 'https://mdonlan.github.io/twitch_tv_app/#/';
         }
     },
     getFollowedStreams() {
@@ -176,6 +176,10 @@ axios({
     position: absolute;
     top: 20px;
     right: 100px;
+}
+
+a {
+    text-decoration: none;
 }
 
 </style>
