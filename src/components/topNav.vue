@@ -1,6 +1,5 @@
 <template>
   <div class="topNavWrapper">
-    <img class="twitchLogo" src="../assets/Twitch_White_RGB.png">
     <div class="topNavBtnContainer">
             <router-link class="topNavBtn" v-bind:to="{path: '/'}">Popular</router-link>
             <router-link class="topNavBtn" v-bind:to="{path: 'games'}">Games</router-link>
@@ -8,9 +7,8 @@
             <router-link class="topNavBtn" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
             <router-link class="topNavBtn aboutButton" v-bind:to="{path: 'about'}">About</router-link>
     </div>
-    <div v-if="needToLogin" class="twitchConnectBtn">
-        <a href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=yb1fpw6w2ldfn50b0ynr50trdcxn99&redirect_uri=https://mdonlan.github.io/twitch_tv_app&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671">Connect Twitch</a>
-    </div>
+    <a v-if="needToLogin" class="twitchConnectBtn" href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=yb1fpw6w2ldfn50b0ynr50trdcxn99&redirect_uri=https://mdonlan.github.io/twitch_tv_app&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671"> Connect Twitch Account 
+    </a>
   </div>
 </template>
 
@@ -36,15 +34,15 @@ export default {
         var self = this;
         var url = window.location.href;
         if(url.indexOf("access_token") > -1) {
-            console.log('user has access token in url');
+            //console.log('user has access token in url');
             this.needToLogin = false;
             this.saveUserToken();
         }
         if(localStorage.getItem("id_token")) {
-            console.log('user has twitch access token')
+            //console.log('user has twitch access token')
             this.needToLogin = false;
         } else {
-            console.log('user not logged in to twitch');
+            //console.log('user not logged in to twitch');
         }
     },
     saveUserToken() {
@@ -64,7 +62,10 @@ export default {
         if(url.indexOf("access_token") > -1) {
             // after getting access token and id saved
             // redirect to home page so vue knows what to display
+            // prod redirect
             window.location.href = 'https://mdonlan.github.io/twitch_tv_app';
+            // local redirect
+            //window.location.href = 'http://localhost:8080/#/';
         }
     },
     getFollowedStreams() {
@@ -83,16 +84,16 @@ export default {
                 var data = data.streams;
                 var type = "channel";
                 if(isLeftNav == true) {
-                    console.log('is left nav == true')
+                    //console.log('is left nav == true')
                     displayLeftNavData(data);
                 } else {
-                    console.log('is left nav == false')
+                    //console.log('is left nav == false')
                     createDivForEach(data, type);
                 }
                 isLeftNav = false;
             },
             error: function(jq,status,message) {
-                console.log('An error has occured with the http request. Status: ' + status + ' - Message: ' + message);
+                //console.log('An error has occured with the http request. Status: ' + status + ' - Message: ' + message);
             }
         });
         /*
@@ -109,6 +110,8 @@ axios({
     }
   }
 }
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -118,7 +121,7 @@ axios({
     position: fixed;
     z-index: 1;
     margin-top: 0px;
-    background: #061539;
+    background: #051f5c;
     height: 75px;
     width: 100%;
     top:0px;
@@ -155,13 +158,19 @@ axios({
 
 .twitchConnectBtn {
     height: 35px;
-    width: 150px;
+    width: 175px;
     border: solid 1px #dddddd;
     margin-right: 10px;
     margin-left: 10px;
     line-height: 35px;
     color: #dddddd;
-    background: #573367;
+    background: #5a087e;
+    font-size: 14px;
+}
+
+a {
+    text-decoration: none;
+    color: #dddddd;
 }
 
 .twitchLogo {

@@ -25,8 +25,8 @@ export default {
         var h = window.innerHeight;
         var channelName = localStorage.getItem("streamName");
         var embed = new Twitch.Embed("twitch-embed", {
-            width: w,
-            height: h,
+            width: "100%",
+            height: "100%",
             channel: channelName,
             layout: "",
             theme: "dark",
@@ -34,14 +34,16 @@ export default {
 		});
 		
         embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {
-            var player = embed.getPlayer();
+            player = embed.getPlayer();
             player.play();
 		});
-		
+
+        /*
 		// give the embeded video iframe an id
 		$("iframe").each(function() { 
         	$(this).attr('id', 'twitchEmbed');  
-		});
+        });
+        */
     },
     checkForStream() {
       var url = window.location.href;
@@ -89,8 +91,9 @@ export default {
     z-index: 3;
 }
 
-#twitchEmbed {
-	pointer-events: none;
+#twitch-embed {
+    height: 100%;
+    width: 100%;
 }
 
 </style>

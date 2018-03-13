@@ -7,7 +7,7 @@
         </div>
         <div class="gamesItemTextContainer">
             <div class="gameName">{{game.game.name | truncate(15)}}</div>
-            <div class="gameNumViewers">{{game.viewers}}</div>
+            <div class="gameNumViewers">{{game.viewers | addComma}}</div>
         </div>
     </div>
   </div>
@@ -33,6 +33,9 @@ export default {
       } else {
         return string
       }
+    },
+    addComma: function (string) {
+      return string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
   methods: {
@@ -41,7 +44,7 @@ export default {
       // on home page load pull data from twitch
       axios({
         method:'get',
-        url:'https://api.twitch.tv/kraken/games/top/?limit=25',
+        url:'https://api.twitch.tv/kraken/games/top/?limit=100',
         headers: {'Client-ID': 'yb1fpw6w2ldfn50b0ynr50trdcxn99'}
       })
         .then(function(response) {
@@ -80,10 +83,12 @@ export default {
     display: flex;
     flex-direction: column;
     border: 2px #dddddd solid;
+    font-size: 14px;
 }
 
 .gameContainer:hover {
-  opacity: 0.7;
+  opacity: 0.5;
+  font-size: 15px;
 }
 
 .gamesItemTextContainer {
@@ -93,7 +98,7 @@ export default {
 .gameImage {
   height: 200px;
   width: 175px;
-    
+  border-bottom: 1px solid #dddddd;
 }
 
 .gamesItemTextContainer {

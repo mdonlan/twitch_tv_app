@@ -37,7 +37,6 @@ $(document).on("mousemove", function(event) {
         $(".leftNavWrapper").css("margin-top","75")
     }
 
-
     // if hovering over area where left nav would be
     // then display left nav
     if(x < 250 && isOnVideoPage == true) {
@@ -57,24 +56,31 @@ $(document).on("mousemove", function(event) {
     if(y > 75) {
         $(".topNavWrapper").css("z-index","")
     }
-});  
+}); 
 
 </script>
 
 <style>
+
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #111111;
   margin-top: 0px;
+  height: 100%;
+  width: 100%;
+
 }
 
 body {
   margin: 0px;
   overflow: hidden;
-  background: #262626;
+  background: #111111;
 }
 
 .topNavContainer {

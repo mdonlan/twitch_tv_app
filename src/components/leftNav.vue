@@ -79,13 +79,13 @@ export default {
     checkForStream() {
       var url = window.location.href;
       if(url.indexOf("stream") > -1) {
-          console.log('user is trying to load a stream');
+          //console.log('user is trying to load a stream');
           var nameString = url.match(/name=(.*)/)[1]
           localStorage.setItem("streamName", nameString);
       }
     },
     getFollowing() {
-        console.log('updating leftNav data');
+        //console.log('updating leftNav data');
         var self = this;
         var accessToken = localStorage.getItem("access_token");
         var key = "OAuth " + accessToken;
@@ -101,10 +101,10 @@ export default {
         .then(function(response) {
             var leftNavData = response.data.streams;
             self.following = leftNavData;
-            console.log(response);
+            //console.log(response);
         })
         .catch(function (error) {
-            console.log(error);
+            //console.log(error);
         });
     },
     updateLive() {
@@ -125,13 +125,18 @@ export default {
     top: 0px;
     height: 100%;
     width: 250px;
-    background: #061539;
+    background: #051f5c;
     color: #dddddd;
     margin-top: 75px;
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 1;
     border-right: 2px solid #dddddd;
+    
+}
+
+.leftNavContentContainer {
+    max-height: 95%;
 }
 
 .followItemContainer {
@@ -141,10 +146,15 @@ export default {
     margin-top: 1px;
     display: flex;
     align-items: center;
+    -webkit-transition: background 2s ease-out;
+    -moz-transition: background 2s ease-out;
+    -o-transition: background 2s ease-out;
+    transition: background 2s ease-out;
 }
 
 .followItemContainer:hover {
     background: #162955;
+
 }
 
 .leftNavImageContainer {

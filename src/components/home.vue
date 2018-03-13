@@ -1,5 +1,5 @@
 <template>
-  <div class="twitchWrapper">
+  <div class="twitchWrapper" v-on:scroll="handleScroll">
     <div class="streamContainer" v-for="stream in streams">
       <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: stream.channel.name}}"></router-link>
       <div class="streamImageContainer">
@@ -8,7 +8,7 @@
       <div class="streamTextContainer">
         <div class="streamName">{{stream.channel.name | truncate(20)}}</div>
         <div class="streamGame">{{stream.channel.game | truncate(20)}}</div>
-        <div class="streamStatus">{{stream.channel.status | truncate(20)}}</div>
+        <div class="streamStatus">{{stream.channel.status | truncate(25)}}</div>
         <div class="streamStatus">{{stream.viewers | addComma}}</div>
       </div>
     </div>
@@ -16,7 +16,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+import $ from 'jquery';
 
 export default {
   name: 'Home',
@@ -47,7 +48,7 @@ export default {
       // on home page load pull data from twitch
       axios({
         method:'get',
-        url:'https://api.twitch.tv/kraken/streams/?limit=25&offset=0',
+        url:'https://api.twitch.tv/kraken/streams/?limit=100&offset=0',
         headers: {'Client-ID': 'yb1fpw6w2ldfn50b0ynr50trdcxn99'}
       })
         .then(function(response) {
@@ -55,8 +56,26 @@ export default {
           self.streams = streamData;
       });
     },
+    handleScroll(event) {
+      var last = $(".streamContainer").last();
+      var elementTop = last.offset().top;
+      var elementBottom = elementTop + last.outerHeight();
+      var viewportTop = $(window).scrollTop();
+      var viewportBottom = viewportTop + $(window).height();
+
+      if(elementBottom > viewportTop && elementTop < viewportBottom) {
+        //console.log('last element is visible');
+      } else {
+        //console.log('last element is NOT visible');
+      }
+
+      return elementBottom > viewportTop && elementTop < viewportBottom;
+
+    },
   }
 }
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -70,27 +89,29 @@ export default {
   flex-wrap: wrap;
   box-sizing: border-box;
   margin: 0px;
-  margin-top: 75px;
+  margin-top: 100px;
   margin-left: 250px;
   overflow-x: hidden;
   overflow-y: auto;
-
+  background: #111111;
   height: calc(100% - 75px);
 }
 
 .streamContainer {
   height: 250px;
   width: 250px;
-  background: #061539;
+  background: #051f5c;
   color: #dddddd;
   margin: 15px;
   display: flex;
   flex-direction: column;
-  border: 2px #dddddd solid;
+  font-size: 14px;
+  border: 3px solid #dddddd;
 }
 
 .streamContainer:hover {
-  opacity: 0.7;
+  opacity: 0.5;
+  font-size: 15px;
 }
 
 .streamTextContainer {
@@ -104,7 +125,7 @@ export default {
 .streamImage {
   height: 100%;
   width: 100%;
-
+  border-bottom: 1px solid #dddddd;
 }
 
 .clickZone {
