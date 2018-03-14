@@ -8,8 +8,8 @@
             <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo"></img>
         </div>
         <div class="leftNavTextContainer">
-            <div class="followingName leftNavItem">{{follow.channel.name | truncate(15)}}</div>
-            <div class="followingGame leftNavItem">{{follow.channel.game | truncate(15)}}</div>
+            <div class="followingName leftNavItem">{{follow.channel.name | truncate(19)}}</div>
+            <div class="followingGame leftNavItem">{{follow.channel.game | truncate(19)}}</div>
             <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
         </div>
         </div>
@@ -94,8 +94,11 @@ export default {
         method:'get',
         url:'https://api.twitch.tv/kraken/streams/followed?limit=25',
         headers: {
-            'Client-ID': 'yb1fpw6w2ldfn50b0ynr50trdcxn99',
+            'Client-ID': '034f31qw57vu405ondtxpqwp104q5o',
             'Authorization' : key
+            // client ids
+            // dev -- 034f31qw57vu405ondtxpqwp104q5o
+            //prod -- yb1fpw6w2ldfn50b0ynr50trdcxn99
             }
         })
         .then(function(response) {
@@ -132,7 +135,6 @@ export default {
     overflow-x: hidden;
     z-index: 1;
     border-right: 2px solid #dddddd;
-    
 }
 
 .leftNavContentContainer {
@@ -146,15 +148,15 @@ export default {
     margin-top: 1px;
     display: flex;
     align-items: center;
-    -webkit-transition: background 2s ease-out;
-    -moz-transition: background 2s ease-out;
-    -o-transition: background 2s ease-out;
-    transition: background 2s ease-out;
+    -webkit-transition: background 0.5s linear;
+    -moz-transition: background 0.5s linear;
+    -o-transition: background 0.5s linear;
+    transition: background 0.5s linear;
+    font-size: 14px;
 }
 
 .followItemContainer:hover {
-    background: #162955;
-
+    background: #0f327c;
 }
 
 .leftNavImageContainer {
@@ -176,13 +178,13 @@ a {
 }
 
 .leftNavTextContainer {
-    height: 100%;
+    height: 50px;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    margin-left: 10px;
+    margin-left: 5px;
 }
 
 .clickZone {
@@ -196,6 +198,60 @@ a {
     width: 100%;
     line-height: 50px;
     border-bottom: 1px solid #dddddd;
+}
+
+@media only screen and (max-width: 1000px) {
+    .leftNavWrapper {
+        width: 115px;
+        font-size: 10px;
+    }
+
+    img {
+        height: 25px;
+        width: 25px;
+    }
+
+    .followingGame, .followingViewers {
+        display: none;
+    }
+
+    .followItemContainer {
+        font-size: 10px;
+        height: 35px;
+        width: 100%;
+        margin-bottom: 1px;
+        margin-top: 1px;
+        display: flex;
+        align-items: center;
+        -webkit-transition: background 0.5s linear;
+        -moz-transition: background 0.5s linear;
+        -o-transition: background 0.5s linear;
+        transition: background 0.5s linear;
+    }
+
+    .clickZone {
+        position: absolute;
+        height: 35px;
+        width: 100%;
+    }
+
+    .leftNavTextContainer {
+        height: 35px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        margin-left: 3px;
+    }
+
+    .leftNavImageContainer {
+        height: 35px;
+        width: 35px;
+        display: flex;
+        align-items: center;
+        margin-left: 2px;
+    }
 }
 
 </style>

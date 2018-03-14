@@ -51,7 +51,7 @@ export default {
       // on home page load pull data from twitch
       axios({
         method:'get',
-        url:'https://api.twitch.tv/kraken/streams/?game=' + gameName,
+        url:'https://api.twitch.tv/kraken/streams/?limit=100&game=' + gameName,
         headers: {'Client-ID': 'yb1fpw6w2ldfn50b0ynr50trdcxn99'}
       })
         .then(function(response) {

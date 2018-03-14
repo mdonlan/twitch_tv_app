@@ -9,7 +9,7 @@
         <div class="streamName">{{stream.channel.name | truncate(20)}}</div>
         <div class="streamGame">{{stream.channel.game | truncate(20)}}</div>
         <div class="streamStatus">{{stream.channel.status | truncate(25)}}</div>
-        <div class="streamStatus">{{stream.viewers | addComma}}</div>
+        <div class="streamViewers">{{stream.viewers | addComma}}</div>
       </div>
     </div>
   </div>
@@ -23,7 +23,8 @@ export default {
   name: 'Home',
   data: function () {
     return {
-      streams: []
+      streams: [],
+      pageSize: null
     }
   },
   created () {
@@ -49,11 +50,15 @@ export default {
       axios({
         method:'get',
         url:'https://api.twitch.tv/kraken/streams/?limit=100&offset=0',
-        headers: {'Client-ID': 'yb1fpw6w2ldfn50b0ynr50trdcxn99'}
+        headers: {'Client-ID': '034f31qw57vu405ondtxpqwp104q5o'}
+        // client ids
+        // dev -- 034f31qw57vu405ondtxpqwp104q5o
+        //prod -- yb1fpw6w2ldfn50b0ynr50trdcxn99
+        
       })
-        .then(function(response) {
-          var streamData = response.data.streams;
-          self.streams = streamData;
+      .then(function(response) {
+        var streamData = response.data.streams;
+        self.streams = streamData;
       });
     },
     handleScroll(event) {
@@ -68,10 +73,7 @@ export default {
       } else {
         //console.log('last element is NOT visible');
       }
-
-      return elementBottom > viewportTop && elementTop < viewportBottom;
-
-    },
+    }
   }
 }
 
@@ -89,12 +91,13 @@ export default {
   flex-wrap: wrap;
   box-sizing: border-box;
   margin: 0px;
-  margin-top: 100px;
+  margin-top: 75px;
   margin-left: 250px;
   overflow-x: hidden;
   overflow-y: auto;
   background: #111111;
   height: calc(100% - 75px);
+  padding-top: 25px;
 }
 
 .streamContainer {
@@ -132,6 +135,30 @@ export default {
     position: absolute;
     height: 250px;
     width: 250px;
+}
+
+@media only screen and (max-width: 1000px) {
+
+  .twitchWrapper {
+    margin-left: 125px;
+  }
+  .streamContainer {
+    height: 100px;
+    width: 100px;
+    margin: 5px;
+    font-size: 12px;
+    border: 1px solid #dddddd;
+  }
+
+  .streamContainer:hover {
+    opacity: 0.5;
+    font-size: 15px;
+  }
+
+  .streamGame, .streamStatus, .streamViewers {
+    display: none;
+  }
+
 }
 
 </style>

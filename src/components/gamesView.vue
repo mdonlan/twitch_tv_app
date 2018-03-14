@@ -45,7 +45,10 @@ export default {
       axios({
         method:'get',
         url:'https://api.twitch.tv/kraken/games/top/?limit=100',
-        headers: {'Client-ID': 'yb1fpw6w2ldfn50b0ynr50trdcxn99'}
+        headers: {'Client-ID': '034f31qw57vu405ondtxpqwp104q5o'}
+        // client ids
+        // dev -- 034f31qw57vu405ondtxpqwp104q5o
+        //prod -- yb1fpw6w2ldfn50b0ynr50trdcxn99
       })
         .then(function(response) {
           var gamesData = response.data.top;
