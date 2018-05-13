@@ -69,17 +69,19 @@ export default {
 
 .gameViewWrapper {
   position: absolute;
-  height: 100%;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
-  align-content: flex-start;
+  flex-wrap: wrap;
+  box-sizing: border-box;
   margin: 0px;
   margin-top: 75px;
+  padding-top: 40px;
   margin-left: 250px;
   overflow-x: hidden;
   overflow-y: auto;
+  
+  height: calc(100% - 75px);
 }
 
 .streamContainer {
@@ -90,11 +92,11 @@ export default {
   margin: 15px;
   display: flex;
   flex-direction: column;
-  border: 2px #dddddd solid;
+  border-radius: 10px;
 }
 
 .streamContainer:hover {
-  opacity: 0.7;
+
 }
 
 .streamTextContainer {
@@ -108,13 +110,21 @@ export default {
 .streamImage {
   height: 100%;
   width: 100%;
-
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .clickZone {
-    position: absolute;
-    height: 250px;
-    width: 250px;
+  position: absolute;
+  height: 250px;
+  width: 250px;
+  opacity: 0;
+  background: #222222;
+  border-radius: 10px;
+}
+
+.clickZone:hover {
+  opacity: 0.5;
 }
 
 </style>

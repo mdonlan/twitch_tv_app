@@ -8,13 +8,13 @@
             <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo"></img>
         </div>
         <div class="leftNavTextContainer">
-            <div class="followingName leftNavItem">{{follow.channel.name | truncate(19)}}</div>
-            <div class="followingGame leftNavItem">{{follow.channel.game | truncate(19)}}</div>
+            <div class="followingName leftNavItem">{{follow.channel.name}}</div>
+            <div class="followingGame leftNavItem">{{follow.channel.game}}</div>
             <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
         </div>
         </div>
     </div>
-    
+    <div class="bottom"></div>
   </div>
 </template>
 
@@ -123,26 +123,115 @@ export default {
 <style scoped>
 
 .leftNavWrapper {
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    height: 100%;
-    width: 250px;
-    background: #051f5c;
-    color: #dddddd;
-    margin-top: 75px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    z-index: 1;
-    border-right: 2px solid #dddddd;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  height: calc(100% - 75px);
+  width: 250px;
+  background: #051f5c;
+  color: #dddddd;
+  margin-top: 75px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 5;
+  border-right: 2px solid #dddddd;
+  -webkit-transition: width 0.3s linear;
+  -moz-transition: width 0.3s linear;
+  -o-transition: width 0.3s linear;
+  transition: width 0.3s linear;
+  
 }
 
 .leftNavContentContainer {
-    max-height: 95%;
+  
 }
 
 .followItemContainer {
-    height: 75px;
+  width: 250px;
+  height: 60px;
+  margin-bottom: 2px;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  -webkit-transition: background 0.3s linear;
+  -moz-transition: background 0.3s linear;
+  -o-transition: background 0.3s linear;
+  transition: background 0.3s linear;
+  font-size: 14px;
+}
+
+.followItemContainer:hover {
+  background: #0f327c;
+}
+
+.leftNavImageContainer {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+}
+
+img {
+  height: 50px;
+  width: 50px;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+}
+
+.leftNavTextContainer {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: 5px;
+}
+
+.clickZone {
+  position: absolute;
+  height: 60px;
+  width: 100%;
+}
+
+.leftNavTitle {
+  height: 50px;
+  width: 250px;
+  line-height: 50px;
+  border-bottom: 2px solid #dddddd;
+  border-top: 2px solid #dddddd;
+}
+
+.followingGame, .followingName {
+  width: 190px;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media only screen and (max-width: 1000px) {
+  .leftNavWrapper {
+    width: 115px;
+    font-size: 10px;
+  }
+
+  img {
+    height: 25px;
+    width: 25px;
+  }
+
+  .followingGame, .followingViewers {
+    display: none;
+  }
+
+  .followItemContainer {
+    font-size: 10px;
+    height: 35px;
     width: 100%;
     margin-bottom: 1px;
     margin-top: 1px;
@@ -152,106 +241,37 @@ export default {
     -moz-transition: background 0.5s linear;
     -o-transition: background 0.5s linear;
     transition: background 0.5s linear;
-    font-size: 14px;
-}
+  }
 
-.followItemContainer:hover {
-    background: #0f327c;
-}
+  .clickZone {
+    position: absolute;
+    height: 35px;
+    width: 100%;
+  }
 
-.leftNavImageContainer {
-    height: 50px;
-    width: 50px;
-    display: flex;
-    align-items: center;
-    margin-left: 5px;
-}
-
-img {
-    height: 50px;
-    width: 50px;
-}
-
-a {
-    text-decoration: none;
-    outline: none;
-}
-
-.leftNavTextContainer {
-    height: 50px;
+  .leftNavTextContainer {
+    height: 35px;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    margin-left: 5px;
+    margin-left: 3px;
+  }
+
+  .leftNavImageContainer {
+    height: 35px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    margin-left: 2px;
+  }
 }
 
-.clickZone {
-    position: absolute;
-    height: 75px;
-    width: 100%;
-}
-
-.leftNavTitle {
-    height: 50px;
-    width: 100%;
-    line-height: 50px;
-    border-bottom: 1px solid #dddddd;
-}
-
-@media only screen and (max-width: 1000px) {
-    .leftNavWrapper {
-        width: 115px;
-        font-size: 10px;
-    }
-
-    img {
-        height: 25px;
-        width: 25px;
-    }
-
-    .followingGame, .followingViewers {
-        display: none;
-    }
-
-    .followItemContainer {
-        font-size: 10px;
-        height: 35px;
-        width: 100%;
-        margin-bottom: 1px;
-        margin-top: 1px;
-        display: flex;
-        align-items: center;
-        -webkit-transition: background 0.5s linear;
-        -moz-transition: background 0.5s linear;
-        -o-transition: background 0.5s linear;
-        transition: background 0.5s linear;
-    }
-
-    .clickZone {
-        position: absolute;
-        height: 35px;
-        width: 100%;
-    }
-
-    .leftNavTextContainer {
-        height: 35px;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        margin-left: 3px;
-    }
-
-    .leftNavImageContainer {
-        height: 35px;
-        width: 35px;
-        display: flex;
-        align-items: center;
-        margin-left: 2px;
-    }
+.bottom {
+  /* this element helps prevent following items from being too close to bottom of screen */
+  height: 25px;
+  width: 100%;
 }
 
 </style>

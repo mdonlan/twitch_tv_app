@@ -92,12 +92,12 @@ export default {
   box-sizing: border-box;
   margin: 0px;
   margin-top: 75px;
+  padding-top: 40px;
   margin-left: 250px;
   overflow-x: hidden;
   overflow-y: auto;
-  background: #111111;
+  
   height: calc(100% - 75px);
-  padding-top: 25px;
 }
 
 .streamContainer {
@@ -109,12 +109,19 @@ export default {
   display: flex;
   flex-direction: column;
   font-size: 14px;
-  border: 3px solid #dddddd;
+  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  
+  border-radius: 10px;
+  border: 3px solid rgba(232, 244, 255, 0.877);
 }
 
 .streamContainer:hover {
-  opacity: 0.5;
-  font-size: 15px;
+  
+  -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
 }
 
 .streamTextContainer {
@@ -123,18 +130,30 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  
 }
 
 .streamImage {
   height: 100%;
   width: 100%;
-  border-bottom: 1px solid #dddddd;
+  
+  
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  
 }
 
 .clickZone {
-    position: absolute;
-    height: 250px;
-    width: 250px;
+  position: absolute;
+  height: 250px;
+  width: 250px;
+  background: #222222;
+  opacity: 0;
+  border-radius: 10px;
+}
+
+.clickZone:hover {
+  opacity: 0.5;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -152,7 +171,7 @@ export default {
 
   .streamContainer:hover {
     opacity: 0.5;
-    font-size: 15px;
+    
   }
 
   .streamGame, .streamStatus, .streamViewers {

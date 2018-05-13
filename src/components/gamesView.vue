@@ -65,16 +65,19 @@ export default {
 
 .gamesViewWrapper {
     position: absolute;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 0px;
-    margin-top: 75px;
-    margin-left: 250px;
-    overflow-x: hidden;
-    overflow-y: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  margin: 0px;
+  margin-top: 75px;
+  padding-top: 40px;
+  margin-left: 250px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  
+  height: calc(100% - 75px);
 }
 
 .gameContainer {
@@ -83,15 +86,16 @@ export default {
     background: #061539;
     color: #dddddd;
     margin: 15px;
+    margin-left: 25px;
+    margin-right: 25px;
     display: flex;
     flex-direction: column;
-    border: 2px #dddddd solid;
     font-size: 14px;
+    border-radius: 10px;
 }
 
 .gameContainer:hover {
-  opacity: 0.5;
-  font-size: 15px;
+
 }
 
 .gamesItemTextContainer {
@@ -101,7 +105,9 @@ export default {
 .gameImage {
   height: 200px;
   width: 175px;
-  border-bottom: 1px solid #dddddd;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  
 }
 
 .gamesItemTextContainer {
@@ -113,10 +119,17 @@ export default {
 }
 
 .clickZone {
-    position: absolute;
-    height: 250px;
-    width: 175px;
-    padding: 0px;
+  position: absolute;
+  height: 250px;
+  width: 175px;
+  padding: 0px;
+  background: #222222;
+  opacity: 0;
+  border-radius: 10px;
+}
+
+.clickZone:hover {
+  opacity: 0.5;
 }
 
 </style>
