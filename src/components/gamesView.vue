@@ -64,7 +64,7 @@ export default {
 <style scoped>
 
 .gamesViewWrapper {
-    position: absolute;
+  position: absolute;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -81,17 +81,16 @@ export default {
 }
 
 .gameContainer {
-    height: 250px;
-    width: 175px;
-    background: #061539;
-    color: #dddddd;
-    margin: 15px;
-    margin-left: 25px;
-    margin-right: 25px;
-    display: flex;
-    flex-direction: column;
-    font-size: 14px;
-    border-radius: 10px;
+  height: 250px;
+  width: 175px;
+  background: #061539;
+  color: #dddddd;
+  margin: 7px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 2px solid #dddddd;
 }
 
 .gameContainer:hover {

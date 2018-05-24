@@ -7,13 +7,13 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import topNav from '@/components/topNav'
 import leftNav from '@/components/leftNav'
-//import gamesView from '@/components/gamesView'
+import videoPlayer from '@/components/videoPlayer'
 
 Vue.config.productionTip = false
 
 Vue.component('topNav', topNav);
 Vue.component('leftNav', leftNav);
-//Vue.component('gamesView', gamesView);
+Vue.component('videoPlayer', videoPlayer);
 
 
 /* eslint-disable no-new */

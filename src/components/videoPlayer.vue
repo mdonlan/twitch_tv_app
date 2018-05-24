@@ -1,9 +1,10 @@
 <template>
     <div class="videoPlayerWrapper">
-      <div class="mouseEventWatchLayerTop"></div>
+      <!--<div class="mouseEventWatchLayerTop"></div>-->
       <div class="mouseEventWatchLayerLeft"></div>
+      <div class="leftNavButton"></div>
       <div id="twitch-embed"></div>
-      <div class="chromeAutoplayButton" v-if="this.showAutoplayButton">Due to Chrome's autoplay policies this video starts muted, to unmute please click anywhere on the video.</div>
+      <div class="chromeAutoplayButton" v-if="this.showAutoplayButton">Due to Chrome's autoplay policies this video starts muted. To unmute please click anywhere on the video.</div>
 
     </div>
 </template>
@@ -20,6 +21,7 @@ export default {
     return {
       isChrome: false,
       showAutoplayButton: false,
+      showingLeftNav: false,
     }
   },
   created () {
@@ -34,22 +36,14 @@ export default {
         let autoplayButton = document.querySelector(".chromeAutoplayButton");
         let emptyButtonTop = document.querySelector(".emptyButtonTop");
         let emptyButtonBottom = document.querySelector(".emptyButtonBottom");
-        autoplayButton.style.display = 'none';
+        autoplayButton.style.transform = "translateY(200px)";
 
       }, 10000)
     }
   },
   mounted () {
     this.loadPlayer();
-
-    // set leftNav to not show
-    $(".leftNavWrapper").css("margin-top","0px")
-    $(".leftNavWrapper").css("border-right","2px solid #dddddd")
-    $(".leftNavWrapper").css("display","nonw")
-    $(".leftNavContentContainer").css("opacity","0")
-    $(".leftNavTitle").css("opacity","0")
-    $(".leftNavTitle").css("display","none")
-    $(".leftNavWrapper").css("width","0")
+    this.hideLeftNav();    
   },
   methods: {
     loadPlayer() {
@@ -70,7 +64,13 @@ export default {
         // check if it is muted and if so
         // try to unmute, this can only happen though
         // if the user has already intereacted w/ the iframe
-        
+
+        //
+        // UPDATE: twitch has updated their embeded player to have an unmute button 
+        // when the player starts muted, this is a good enough solution for now
+        //
+
+        /*
         let checkForClick = setInterval(function() {
           let player = embed.getPlayer();
           let isMuted = player.getMuted();
@@ -81,6 +81,8 @@ export default {
             isMuted = player.getMuted();
           }
         }, 1000)
+        */
+
 		  });
     },
     checkForStream() {
@@ -90,6 +92,32 @@ export default {
         var nameString = url.match(/name=(.*)/)[1]
         localStorage.setItem("streamName", nameString);
       }
+    },
+    hideLeftNav() {
+      // set leftNav to not show
+      let leftNav = document.querySelector(".leftNavWrapper");
+      let content = document.querySelector(".leftNavContentContainer");
+      let title = document.querySelector(".leftNavTitle");
+
+      leftNav.style.marginTop = '0px';
+      //leftNav.style.display = 'none';
+      leftNav.style.opacity = '0';
+      leftNav.style.width = '0px';
+
+      content.style.opacity = '0';
+
+      //title.style.display = 'none';
+      title.style.opacity = '0';
+
+      /*
+      $(".leftNavWrapper").css("margin-top","0px")
+      $(".leftNavWrapper").css("border-right","2px solid #dddddd")
+      $(".leftNavWrapper").css("display","none")
+      $(".leftNavContentContainer").css("opacity","0")
+      $(".leftNavTitle").css("opacity","0")
+      $(".leftNavTitle").css("display","none")
+      $(".leftNavWrapper").css("width","0")
+      */
     },
   }
 }
@@ -111,22 +139,24 @@ export default {
 
 .mouseEventWatchLayerTop {
     position: absolute;
-    height: 40%;
-    width: 60%;
+    height: 10%;
+    width: 40%;
     left: 20%;
     top: 0px;
     overflow: hidden;
     z-index: 3;
+    opacity: 0.5;
 }
 
 .mouseEventWatchLayerLeft {
     position: absolute;
-    height: 40%;
-    width: 40%;
+    height: 25%;
+    width: 20%;
     left: 0px;
-    top: 20%;
+    top: 33%;
     overflow: hidden;
     z-index: 3;
+    opacity: 0.5;
 }
 
 #twitch-embed {
@@ -135,15 +165,21 @@ export default {
 }
 
 .chromeAutoplayButton {
-  width: 350px;
-  background: #222222;
+  width: 680px;
+  height: 40px;
+  line-height: 40px;
+  background: #111111;
   position: absolute;
   bottom: 75px;
-  left: calc(50% - 175px);
-  border: 2px solid #dddddd;
+  left: calc(40% - 340px);
   color: #dddddd;
   text-align: center;
   font-size: 14px;
+  -webkit-box-shadow: 0px 0px 20px 2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 20px 2px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 20px 2px rgba(0,0,0,0.75);
+  transition: all 3s;
+  border-radius: 3px;
 }
 
 </style>

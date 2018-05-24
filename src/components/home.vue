@@ -6,10 +6,10 @@
         <img class="streamImage" v-bind:src="stream.preview.large">
       </div>
       <div class="streamTextContainer">
-        <div class="streamName">{{stream.channel.name | truncate(20)}}</div>
-        <div class="streamGame">{{stream.channel.game | truncate(20)}}</div>
-        <div class="streamStatus">{{stream.channel.status | truncate(25)}}</div>
-        <div class="streamViewers">{{stream.viewers | addComma}}</div>
+        <div class="streamName streamItem">{{stream.channel.name}}</div>
+        <div class="streamGame streamItem">{{stream.channel.game}}</div>
+        <div class="streamStatus streamItem">{{stream.channel.status}}</div>
+        <div class="streamViewers streamItem">{{stream.viewers | addComma}}</div>
       </div>
     </div>
   </div>
@@ -78,6 +78,8 @@ export default {
 }
 
 
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -105,7 +107,7 @@ export default {
   width: 250px;
   background: #051f5c;
   color: #dddddd;
-  margin: 15px;
+  margin: 8px;
   display: flex;
   flex-direction: column;
   font-size: 14px;
@@ -114,7 +116,7 @@ export default {
   box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
   
   border-radius: 10px;
-  border: 3px solid rgba(232, 244, 255, 0.877);
+  border: 2px solid rgba(232, 244, 255, 0.877);
 }
 
 .streamContainer:hover {
@@ -130,7 +132,14 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  
+  align-items: center;
+}
+
+.streamItem {
+  width: 95%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .streamImage {

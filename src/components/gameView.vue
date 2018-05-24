@@ -89,10 +89,11 @@ export default {
   width: 250px;
   background: #061539;
   color: #dddddd;
-  margin: 15px;
+  margin: 7px;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
+  border: 2px solid #dddddd;
 }
 
 .streamContainer:hover {

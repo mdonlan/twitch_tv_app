@@ -1,39 +1,53 @@
 <template>
   <div class="leftNavWrapper" id="leftNavWrapper">
-      <div class="leftNavTitle">LIVE FOLLOWING</div>
-      <div class="leftNavContentContainer">
-        <div class="followItemContainer" v-for="follow in following">
-            <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: follow.channel.name}}" @click.native="checkForPlayer"></router-link>
-            <div class="leftNavImageContainer">
-            <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo"></img>
-        </div>
-        <div class="leftNavTextContainer">
-            <div class="followingName leftNavItem">{{follow.channel.name}}</div>
-            <div class="followingGame leftNavItem">{{follow.channel.game}}</div>
-            <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
-        </div>
-        </div>
+  <div class="leftNavTitle">LIVE FOLLOWING</div>
+  <div class="leftNavContentContainer">
+    <div class="followItemContainer" v-for="follow in following">
+      <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: follow.channel.name}}" @click.native="checkForPlayer"></router-link>
+      <div class="leftNavImageContainer">
+      <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo"></img>
     </div>
-    <div class="bottom"></div>
+    <div class="leftNavTextContainer">
+      <div class="followingName leftNavItem">{{follow.channel.name}}</div>
+      <div class="followingGame leftNavItem">{{follow.channel.game}}</div>
+      <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
+    </div>
+    </div>
+  </div>
+  <div class="navButtons">
+    <div class="navButtonsContainer" v-if="showNavButtons">
+      <router-link class="navButton" v-bind:to="{path: '/'}">Popular</router-link>
+      <router-link class="navButton" v-bind:to="{path: 'games'}">Games</router-link>
+      <router-link class="navButton" v-bind:to="{path: 'followed'}">Followed</router-link>
+      <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
+      <router-link class="navButton aboutButton" v-bind:to="{path: 'about'}">About</router-link>
+    </div>
+  </div>
+  <div class="bottom"></div>
+    
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import $ from 'jquery'
+import Vue from 'vue'
 
 export default {
   name: 'leftNav',
   data: function () {
     return {
-      following: []
+      following: [],
+      showingLeftNav: false,
+      showNavButtons: false,
     }
   },
   created () {
+    this.checkRoute();
     this.getFollowing();
   },
   mounted () {
-      this.updateLive();
+    this.updateLive();
   },
   filters: {
     truncate: function (string, value) {
@@ -114,13 +128,86 @@ export default {
         // run this function every x seconds
         // will update the left nav bar live followed
         setInterval(this.getFollowing, 60000); // runs every 60 secons to check for changes
-    }
+    },
+    checkRoute() {
+      let self = this;
+      setInterval(function() {
+        if(window.location.href.indexOf("stream") > -1) {
+          // if on video page then show nav buttons on left nav
+          self.showNavButtons = true;
+        } else {
+          self.showNavButtons = false;
+        }
+      }, 1000)
+    },
+    toggleLeftNav() {
+      /*
+      let self = this;
+      let leftNav = document.querySelector(".leftNavWrapper");
+      let button = document.querySelector(".leftNavButton")
+      let isHidden = leftNav.classList.contains('leftNavHidden');
+      if(isHidden == true) {
+        // if alreay hidden then show
+        leftNav.classList.remove("leftNavHidden");
+        leftNav.classList.add("leftNavVideo");
+        // move button
+        button.style.left = '250px';
+        self.showingLeftNav = true;
+      } else {
+        // if showing then hide
+        leftNav.classList.add("leftNavHidden");
+        leftNav.classList.remove("leftNavVideo");
+        // move button
+        button.style.left = '0px';
+        self.showingLeftNav = false;
+      }
+
+      /*
+      $(".leftNavButton").hover(function(){
+        leftNav.style.background = 'red';
+      });
+      */
+     
+    },
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.navButtonsContainer {
+  margin-top: 15px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  border-top: 2px solid #dddddd;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 225px;
+  position: absolute;
+  bottom: 0px;
+}
+
+.navButton {
+  height: 20px;
+  width: 150px;
+  border: 2px solid #dddddd;
+  padding: 5px;
+  margin: 5px;
+  color: #dddddd;
+  border-radius: 7px;
+}
+
+.navButton:hover {
+  background: #dddddd;
+  color: #051f5c;
+  transition: 1s;
+  box-shadow: 0 0 11px rgba(33,33,33,.8); 
+}
 
 .leftNavWrapper {
   position: fixed;
@@ -139,11 +226,27 @@ export default {
   -moz-transition: width 0.3s linear;
   -o-transition: width 0.3s linear;
   transition: width 0.3s linear;
-  
 }
 
+/*
+.leftNavHidden {
+  width: 0px;
+  border: none;
+}
+
+.leftNavVideo {
+  margin-top: 0px;
+  height: 100%;
+}
+
+*/
+
 .leftNavContentContainer {
-  
+  position: absolute;
+  height: calc(100% - 340px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .followItemContainer {
@@ -175,6 +278,7 @@ export default {
 img {
   height: 50px;
   width: 50px;
+  border-radius: 5px;
 }
 
 a {

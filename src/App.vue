@@ -13,6 +13,11 @@ import $ from 'jquery'
 
 export default {
   name: 'app',
+  data: function () {
+    return {
+      lastMouseMove: null,
+    }
+  },
   created() {
 
   },
@@ -27,6 +32,141 @@ export default {
 // used for detecting hovering over left and top nav
 //
 
+let lastMouseMove = null;
+
+$(document).on("mousemove", function(event) {
+
+  // check if user is hovering over the left nav
+  let leftNavWrapper = document.querySelector(".leftNavWrapper");
+  let content = document.querySelector(".leftNavContentContainer");
+  let title = document.querySelector(".leftNavTitle");
+
+  // only check on stream / video pages
+  if(window.location.href.indexOf("stream") > -1) {
+    let time = Date.now();
+    lastMouseMove = time;
+  }
+  /*
+  // check if the url indicates if the user is on a stream / video page
+  // only change the nav settings if on stream / video page
+  if(window.location.href.indexOf("stream") > -1) {
+    // set leftnav display for video view
+    leftNavWrapper.style.width = '250px';
+    leftNavWrapper.style.marginTop = '0px';
+    leftNavWrapper.style.height = '100%';
+    leftNavWrapper.style.opacity = '1';
+    leftNavWrapper.style.borderRight = '2px solid #dddddd';
+    //leftNavWrapper.style.display = 'block';
+    
+    content.style.opacity = '1';
+    content.style.height = 'calc(100% - 340px)';
+
+    title.style.opacity = '1';
+
+    let time = Date.now();
+    lastMouseMove = time;
+  } else {
+    // set leftnav display for normal view
+    leftNavWrapper.style.width = '250px';
+    leftNavWrapper.style.marginTop = '75px';
+    leftNavWrapper.style.height = 'calc(100% - 75px)';
+    leftNavWrapper.style.opacity = '1';
+    leftNavWrapper.style.borderRight = '2px solid #dddddd';
+
+    content.style.height = 'auto';
+  }
+  */
+});
+
+// this interval runs on app load and checks if user is on video page and if so adjust the left nav view
+setInterval(function() {
+
+  let url = window.location.href;
+  if(url.indexOf("stream") > -1) {
+    leftNavStreamStyle();
+  } else {
+    leftNavNormalStyle();
+  }
+  
+
+  // every x seconds check if user is still hovering over left nav
+  // if so, do nothing, if not hide left nav
+  let leftNavIsHovered = $('.leftNavWrapper').is(":hover");
+  let time = Date.now()
+  if(lastMouseMove) {
+    let timePassed = time - lastMouseMove;
+    if(timePassed > 500 && leftNavIsHovered == false) {
+      if(window.location.href.indexOf("stream") > -1) {
+        hideLeftNav();
+      } else {
+        showLeftNav();
+      }
+    }
+  }
+  
+}, 1000);
+
+function leftNavStreamStyle() {
+  //leftnav display for video view
+  let leftNavWrapper = document.querySelector(".leftNavWrapper");
+  let content = document.querySelector(".leftNavContentContainer");
+  let title = document.querySelector(".leftNavTitle");
+  
+  leftNavWrapper.style.width = '250px';
+  leftNavWrapper.style.marginTop = '0px';
+  leftNavWrapper.style.height = '100%';
+  leftNavWrapper.style.opacity = '1';
+  //leftNavWrapper.style.borderRight = '2px solid #dddddd';
+  //leftNavWrapper.style.display = 'block';
+  
+  content.style.opacity = '1';
+  content.style.height = 'calc(100% - 340px)';
+
+  title.style.opacity = '1';
+};
+
+function leftNavNormalStyle() {
+  // set leftnav display for normal view
+  let leftNavWrapper = document.querySelector(".leftNavWrapper");
+  let content = document.querySelector(".leftNavContentContainer");
+  let title = document.querySelector(".leftNavTitle");
+
+  leftNavWrapper.style.width = '250px';
+  leftNavWrapper.style.marginTop = '75px';
+  leftNavWrapper.style.height = 'calc(100% - 75px)';
+  leftNavWrapper.style.opacity = '1';
+  //leftNavWrapper.style.borderRight = '2px solid #dddddd';
+
+  content.style.height = 'auto';
+};
+
+function hideLeftNav() {
+  let leftNavWrapper = document.querySelector(".leftNavWrapper");
+  leftNavWrapper.style.width = '0px';
+  leftNavWrapper.style.marginLeft = '-2px';
+
+  /*
+  // delays hiding the border until the element is already done shrinking
+  $(leftNavWrapper).delay(300).queue(function(next) {
+    //$(leftNavWrapper).css('border', 'none'); 
+    next(); 
+  });
+  */
+};
+
+function showLeftNav() {
+  let leftNavWrapper = document.querySelector(".leftNavWrapper");
+  leftNavWrapper.style.width = '250px';
+  leftNavWrapper.style.opacity = '1';
+  leftNavWrapper.style.marginLeft = '0px';
+  leftNavWrapper.style.marginTop = '75px';
+  leftNavWrapper.style.height = 'calc(100%-75px)';
+  //leftNavWrapper.style.borderRight = '2px solid #dddddd';
+};
+
+/*
+
+
 $(document).on("mousemove", function(event) {
     var x = event.pageX;
     var y = event.pageY; 
@@ -37,7 +177,7 @@ $(document).on("mousemove", function(event) {
     // check if the url indicates if the user is on a stream / video page
     // only change the nav settings if on stream / video page
     var url = window.location.href;
-    //console.log(url)
+
     if(url.indexOf("stream") > -1) {
         var isOnVideoPage = true;
 
@@ -65,10 +205,11 @@ $(document).on("mousemove", function(event) {
     // then display left nav
     var tenthHeight = window.innerHeight / 10;
     // if hovering over left nav and on stream / video page
-    if(x < 250 && isOnVideoPage == true) {
+    if(x && isOnVideoPage == true) {
       // if leftNav is being hovered over then load following list only after 
       // the leftNav is at full width
       // transition time takes 300ms -- in CSS
+      leftNavWrapper.css("opacity", "1")
       leftNavContentContainer.css("opacity", "1")
       leftNavTitle.css("opacity","1")
       leftNavContentContainer.css("visible", "visible")
@@ -127,6 +268,8 @@ $(document).on("mousemove", function(event) {
 
 }); 
 
+*/
+
 </script>
 
 <style>
@@ -147,12 +290,6 @@ $(document).on("mousemove", function(event) {
 body {
   margin: 0px;
   overflow: hidden;
-  /*
-  background-color: #373837;
-  background-image: url("https://www.transparenttextures.com/patterns/random-grey-variations.png");
-
-  */
-
   background-color: #333333;
   background-image: url("https://www.transparenttextures.com/patterns/black-linen.png");
   
