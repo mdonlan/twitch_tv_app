@@ -142,18 +142,26 @@ axios({
 }
 
 .topNavBtn {
-    height: 35px;
-    width: 100px;
-    border: solid 1px #dddddd;
-    margin-right: 10px;
-    margin-left: 10px;
-    line-height: 35px;
-    color: #dddddd;
-    -webkit-user-select: none;  /* Chrome all / Safari all */
-    -moz-user-select: none;     /* Firefox all */
-    -ms-user-select: none;      /* IE 10+ */
-    user-select: none;          /* Likely future */ 
-    text-decoration: none;
+  height: 35px;
+  width: 100px;
+  border: solid 2px #dddddd;
+  margin-right: 10px;
+  margin-left: 10px;
+  line-height: 35px;
+  color: #dddddd;
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */ 
+  text-decoration: none;
+  border-radius: 3px;
+  -webkit-transition: 0.3s linear;
+  -moz-transition: 0.3s linear;
+  -o-transition: 0.3s linear;
+  transition: 0.3s linear;
+  -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
 }
 
 .topNavBtn:hover {

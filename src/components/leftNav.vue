@@ -1,37 +1,39 @@
 <template>
   <div class="leftNavWrapper" id="leftNavWrapper">
-  <div class="leftNavTitle">LIVE FOLLOWING</div>
-  <div class="leftNavContentContainer">
-    <div class="followItemContainer" v-for="follow in following">
-      <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: follow.channel.name}}" @click.native="checkForPlayer"></router-link>
-      <div class="leftNavImageContainer">
-      <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo"></img>
+    <div class="leftNavTitle">LIVE FOLLOWING</div>
+    <div class="leftNavContentContainer">
+      <div class="followItemContainer" v-for="follow in following">
+        <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: follow.channel.name}}" @click.native="checkForPlayer"></router-link>
+        <div class="leftNavImageContainer">
+        <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo"></img>
+      </div>
+      <div class="leftNavTextContainer">
+        <div class="followingName leftNavItem">{{follow.channel.name}}</div>
+        <div class="followingGame leftNavItem">{{follow.channel.game}}</div>
+        <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
+      </div>
+      </div>
     </div>
-    <div class="leftNavTextContainer">
-      <div class="followingName leftNavItem">{{follow.channel.name}}</div>
-      <div class="followingGame leftNavItem">{{follow.channel.game}}</div>
-      <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
+
+    <div class="scrollBar"></div>
+
+    <div class="navButtons">
+      <div class="navButtonsContainer">
+        <router-link class="navButton" v-bind:to="{path: '/'}">Popular</router-link>
+        <router-link class="navButton" v-bind:to="{path: 'games'}">Games</router-link>
+        <router-link class="navButton" v-bind:to="{path: 'followed'}">Followed</router-link>
+        <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
+        <router-link class="navButton aboutButton" v-bind:to="{path: 'about'}">About</router-link>
+      </div>
     </div>
-    </div>
-  </div>
-  <div class="navButtons">
-    <div class="navButtonsContainer" v-if="showNavButtons">
-      <router-link class="navButton" v-bind:to="{path: '/'}">Popular</router-link>
-      <router-link class="navButton" v-bind:to="{path: 'games'}">Games</router-link>
-      <router-link class="navButton" v-bind:to="{path: 'followed'}">Followed</router-link>
-      <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
-      <router-link class="navButton aboutButton" v-bind:to="{path: 'about'}">About</router-link>
-    </div>
-  </div>
-  <div class="bottom"></div>
-    
+    <div class="bottom"></div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import $ from 'jquery'
-import Vue from 'vue'
+import axios from 'axios';
+import $ from 'jquery';
+import Vue from 'vue';
 
 export default {
   name: 'leftNav',
@@ -47,6 +49,7 @@ export default {
     this.getFollowing();
   },
   mounted () {
+    let self = this;
     this.updateLive();
   },
   filters: {
@@ -218,7 +221,7 @@ export default {
   background: #051f5c;
   color: #dddddd;
   margin-top: 75px;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   z-index: 5;
   border-right: 2px solid #dddddd;
@@ -246,7 +249,9 @@ export default {
   height: calc(100% - 340px);
   overflow-x: hidden;
   overflow-y: auto;
+  /* make width + padding overflow to hide native scrollbar */
   width: 100%;
+  padding-right: 20px;
 }
 
 .followItemContainer {
@@ -376,6 +381,19 @@ a {
   /* this element helps prevent following items from being too close to bottom of screen */
   height: 25px;
   width: 100%;
+}
+
+/* custom scroll bar */
+
+.scrollBar {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 20px;
+  width: 10px;
+  background: #dddddd;
+  z-index: 3;
+  opacity: 0.5;
 }
 
 </style>

@@ -15,17 +15,239 @@ export default {
   name: 'app',
   data: function () {
     return {
-      lastMouseMove: null,
+      isHovering: false,
     }
   },
-  created() {
-
+  mounted() {
+    // if user refreshes a page check if on video page or normal page
+    //this.checkPage();
+    this.startInterval();
+    this.setInitialCustomScroll();
   },
   methods: {
-    // global functions
-    // use only if need to access from more than one component
-  }
+    handleScroll(event) {
+      // handles custom scrollbar events / movement
+      let target = event.target;
+      let targetPos = target.getBoundingClientRect();
+      //console.log(target.getBoundingClientRect())
+      let targetLeft = targetPos.width - 40;
+      let scrollBar = document.querySelector(".scrollBar");
+      
+      scrollBar.style.top = target.scrollTop + 55 + 'px';
+      //scrollBar.style.left = '237px';
+      //let diff = target.scrollHeight - target.clientHeight
+  
+      //scrollBar.style.height =  target.clientHeight - diff - 2 + 'px';
+
+    },
+    setInitialCustomScroll() {
+      // sets up the custom scrollbar on app load
+
+      // scrollcontainer is the element we are scrolling in
+      let scrollContainer = document.querySelector(".leftNavContentContainer");
+      scrollContainer.addEventListener('scroll', this.handleScroll);
+
+      // set inital scrollbar properties
+      let scrollBar = document.querySelector(".scrollBar");
+
+      // these values are approx.
+      scrollBar.style.top = '55px';
+      scrollBar.style.left = '237px';
+
+      // if the height of the element is not equal to the scroll height of the element
+      // it means the element is overflowing and the scroll is needed
+      // if they are equal the element is completly in view and 
+      // scrolling is not needed, so set its height to zero
+      if(scrollContainer.clientHeight != scrollContainer.scrollHeight) {
+        scrollBar.style.height = scrollContainer.clientHeight - 4 + 'px';
+      } else {
+        scrollBar.style.height = '0px';
+      }
+
+    },
+    updateScroll() {
+      let scrollContainer = document.querySelector(".leftNavContentContainer");
+      let scrollBar = document.querySelector(".scrollBar");
+      // diff is the difference between the element current height and its total height
+      // this lets us know how large to make the scroll bar
+      let diff = scrollContainer.scrollHeight - scrollContainer.clientHeight
+      if(scrollContainer.clientHeight != scrollContainer.scrollHeight) {
+        scrollBar.style.height = scrollContainer.clientHeight - diff - 4 + 'px';
+      } else {
+        scrollBar.style.height = '0px';
+      }
+      //console.log(contentContainer.clientHeight)
+      //console.log(contentContainer.offsetHeight)
+      //console.log(contentContainer.scrollHeight)
+    },
+    startInterval() {
+      let self = this;
+      setInterval(function() {
+        // update interval
+        // checks which page user is on and if user is hovering over left nav
+        let leftNavWrapper = document.querySelector(".leftNavWrapper");
+        let url = window.location.href;
+
+        let onVideoPage;
+        if(url.indexOf("stream") > - 1) {
+          // is on video page
+          onVideoPage = true;
+        } else {
+          // not on video page
+          onVideoPage = false;
+        }
+
+        if(onVideoPage) {
+          // if on video page check if user is hovering over leftNav
+          setVideoView();
+          let hovering = checkHover();
+
+          if(hovering) {
+            leftNavWrapper.style.width = '250px';
+            leftNavWrapper.style.marginLeft = '0px';
+          } else {
+            leftNavWrapper.style.width = '0px';
+            leftNavWrapper.style.marginLeft = '-2px';
+          }
+        } else {
+          // if not on video page
+          setNormalView();
+        }
+
+        // update custom scrollbar
+        self.updateScroll();
+      }, 100);
+    },
+    /*
+    checkPage() {
+      let self = this;
+      let url = window.location.href;
+      if(url.indexOf("stream") > - 1) {
+        self.setVideoView();
+      } else {
+        self.setNormalView();
+      }
+    },
+    setNormalView() {
+      console.log('setting normal view');
+      // set the left nav to its normal view
+      // this view is shown on all pages except the video page
+
+      let leftNav = document.querySelector(".leftNavWrapper");
+      let content = document.querySelector(".leftNavContentContainer");
+      let title = document.querySelector(".leftNavTitle");
+
+      leftNav.style.width = '250px';
+      leftNav.style.marginTop = '75px';
+      leftNav.style.height = 'calc(100% - 75px)';
+      leftNav.style.opacity = '1';
+      leftNav.style.borderRight = '2px solid #dddddd';
+      content.style.height = 'auto';
+    },
+    setVideoView() {
+      let self = this;
+      console.log('setting video view');
+      // set the left nav to its normal view
+      // this view is shown on all pages except the video page
+      let leftNav = document.querySelector(".leftNavWrapper");
+      let content = document.querySelector(".leftNavContentContainer");
+      let title = document.querySelector(".leftNavTitle");
+
+      leftNav.style.width = '0px';
+      leftNav.style.marginTop = '0px';
+      leftNav.style.marginLeft = '-2px';
+      leftNav.style.height = '100%';
+      leftNav.style.opacity = '1';
+      leftNav.style.borderRight = '2px solid #dddddd';
+      content.style.opacity = '1';
+      content.style.height = 'calc(100% - 340px)';
+      title.style.opacity = '1';
+
+      //self.
+    },
+    checkForHover() {
+      $(document).on("mousemove", function(event) {
+        let leftNav = document.querySelector(".leftNavWrapper");
+        leftNav.style.width = '250px';
+        leftNav.style.marginLeft = '0px';
+      })
+    },
+    */
+  },
+  watch:{
+    /*
+    '$route': function (route) {
+      // this method watches for all router changes (including reloading same route / different params)
+      // user to change leftNav from video page style to normal style
+
+      // route contains the new routes data
+      let onPage = route.path;
+
+      if(onPage == '/stream') {
+        this.setVideoView();
+      } else {
+        this.setNormalView();
+      }
+      
+    }
+    */
+  } 
 }
+
+
+
+function setVideoView() {
+  let leftNav = document.querySelector(".leftNavWrapper");
+  let content = document.querySelector(".leftNavContentContainer");
+  let title = document.querySelector(".leftNavTitle");
+  let leftNavButtons = document.querySelector(".navButtonsContainer");
+  leftNav.style.width = '250px';
+  leftNav.style.marginTop = '0px';
+  leftNav.style.height = '100%';
+  leftNav.style.opacity = '1';
+  
+  content.style.opacity = '1';
+  content.style.height = 'calc(100% - 340px)';
+
+  title.style.opacity = '1';
+
+  leftNavButtons.style.display = "flex";
+};
+
+function setNormalView() {
+  let leftNav = document.querySelector(".leftNavWrapper");
+  let content = document.querySelector(".leftNavContentContainer");
+  let title = document.querySelector(".leftNavTitle");
+  let leftNavButtons = document.querySelector(".navButtonsContainer");
+  leftNav.style.width = '250px';
+  leftNav.style.marginLeft = '0px';
+  leftNav.style.marginTop = '75px';
+  leftNav.style.height = 'calc(100% - 75px)';
+  leftNav.style.opacity = '1';
+  
+  content.style.opacity = '1';
+  content.style.height = 'calc(100% - 75px)';
+
+  title.style.opacity = '1';
+
+  leftNavButtons.style.display = "none";
+};
+
+function checkHover() {
+  let leftNav = document.querySelector(".leftNavWrapper");
+  
+  let leftNavMouseWatcherHover = $('.mouseEventWatchLayerLeft').is(":hover");
+  let leftNavHover = $('.leftNavWrapper').is(":hover");
+
+  if(leftNavMouseWatcherHover || leftNavHover) {
+    //leftNav.style.width = '250px';
+    return true
+  } else {
+    //leftNav.style.width = '0px';
+    return false
+  }
+};
+
 
 //
 // detects mouse movements on all pages of the application
@@ -33,7 +255,10 @@ export default {
 //
 
 let lastMouseMove = null;
+let oneTimeAction = true;
+let isOnVideoStyle = false;
 
+/*
 $(document).on("mousemove", function(event) {
 
   // check if user is hovering over the left nav
@@ -75,36 +300,60 @@ $(document).on("mousemove", function(event) {
 
     content.style.height = 'auto';
   }
-  */
+  
 });
 
 // this interval runs on app load and checks if user is on video page and if so adjust the left nav view
 setInterval(function() {
-
+  let isOnVideoPage;
   let url = window.location.href;
-  if(url.indexOf("stream") > -1) {
+  
+  if(url.indexOf("stream") > - 1) {
+    isOnVideoPage = true;
+  } else {
+    isOnVideoPage = false;
+    leftNavNormalStyle();
+    isOnVideoStyle == false
+  }
+
+  if(isOnVideoPage) {
     leftNavStreamStyle();
   } else {
     leftNavNormalStyle();
-  }
+    }
   
 
   // every x seconds check if user is still hovering over left nav
   // if so, do nothing, if not hide left nav
   let leftNavIsHovered = $('.leftNavWrapper').is(":hover");
-  let time = Date.now()
+  
+  let time = Date.now();
+
   if(lastMouseMove) {
+    // if mouse has moved aleast once
     let timePassed = time - lastMouseMove;
     if(timePassed > 500 && leftNavIsHovered == false) {
-      if(window.location.href.indexOf("stream") > -1) {
-        hideLeftNav();
+      if(isOnVideoPage) {
+        console.log('hiding')
+        //hideLeftNav();
       } else {
+        console.log('showing')
         showLeftNav();
       }
     }
+  } else if(leftNavIsHovered) {
+    showLeftNav();
+  } else {
+    // if mouse not yet moved and on video page
+    if(isOnVideoPage) {
+      setTimeout(function() {
+        console.log('hiding')
+        hideLeftNav();
+      }, 1000)
+    }
   }
   
-}, 1000);
+}, 100);
 
 function leftNavStreamStyle() {
   //leftnav display for video view
@@ -112,7 +361,7 @@ function leftNavStreamStyle() {
   let content = document.querySelector(".leftNavContentContainer");
   let title = document.querySelector(".leftNavTitle");
   
-  leftNavWrapper.style.width = '250px';
+  //leftNavWrapper.style.width = '250px';
   leftNavWrapper.style.marginTop = '0px';
   leftNavWrapper.style.height = '100%';
   leftNavWrapper.style.opacity = '1';
@@ -131,7 +380,7 @@ function leftNavNormalStyle() {
   let content = document.querySelector(".leftNavContentContainer");
   let title = document.querySelector(".leftNavTitle");
 
-  leftNavWrapper.style.width = '250px';
+  //leftNavWrapper.style.width = '250px';
   leftNavWrapper.style.marginTop = '75px';
   leftNavWrapper.style.height = 'calc(100% - 75px)';
   leftNavWrapper.style.opacity = '1';
@@ -145,13 +394,13 @@ function hideLeftNav() {
   leftNavWrapper.style.width = '0px';
   leftNavWrapper.style.marginLeft = '-2px';
 
-  /*
+  
   // delays hiding the border until the element is already done shrinking
   $(leftNavWrapper).delay(300).queue(function(next) {
     //$(leftNavWrapper).css('border', 'none'); 
     next(); 
   });
-  */
+  
 };
 
 function showLeftNav() {
@@ -164,7 +413,7 @@ function showLeftNav() {
   //leftNavWrapper.style.borderRight = '2px solid #dddddd';
 };
 
-/*
+
 
 
 $(document).on("mousemove", function(event) {
@@ -269,6 +518,7 @@ $(document).on("mousemove", function(event) {
 }); 
 
 */
+
 
 </script>
 

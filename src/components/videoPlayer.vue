@@ -43,7 +43,7 @@ export default {
   },
   mounted () {
     this.loadPlayer();
-    this.hideLeftNav();    
+    //this.hideLeftNav();    
   },
   methods: {
     loadPlayer() {
@@ -128,40 +128,41 @@ export default {
 <style scoped>
 
 .videoPlayerWrapper {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    left: 0px;
-    top: 0px;
-    overflow: hidden;
-    z-index: 2;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+  z-index: 2;
 }
 
 .mouseEventWatchLayerTop {
-    position: absolute;
-    height: 10%;
-    width: 40%;
-    left: 20%;
-    top: 0px;
-    overflow: hidden;
-    z-index: 3;
-    opacity: 0.5;
+  position: absolute;
+  height: 10%;
+  width: 40%;
+  left: 20%;
+  top: 0px;
+  overflow: hidden;
+  z-index: 3;
+  opacity: 0.5;
 }
 
 .mouseEventWatchLayerLeft {
-    position: absolute;
-    height: 25%;
-    width: 20%;
-    left: 0px;
-    top: 33%;
-    overflow: hidden;
-    z-index: 3;
-    opacity: 0.5;
+  /*background: rgba(17, 17, 17, 0.4);*/
+  position: absolute;
+  height: 40%;
+  width: 10%;
+  left: 0px;
+  top: calc(25%);
+  overflow: hidden;
+  z-index: 3;
+  opacity: 0.5;
 }
 
 #twitch-embed {
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 .chromeAutoplayButton {
@@ -180,6 +181,12 @@ export default {
   box-shadow: 0px 0px 20px 2px rgba(0,0,0,0.75);
   transition: all 3s;
   border-radius: 3px;
+
+  /* 
+    font-smoothing fixes chrome bug where transform-translate causes weird pixel 
+    miscalculations in text which causes a blur / change to occur in text
+  */
+  -webkit-font-smoothing: antialiased;
 }
 
 </style>

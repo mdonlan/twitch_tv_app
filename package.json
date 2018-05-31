@@ -13,9 +13,12 @@
     "axios": "^0.17.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
+    "perfect-scrollbar": "^1.3.0",
+    "simplebar": "^2.6.1",
     "vue": "^2.5.2",
     "vue-awesome": "^2.3.4",
     "vue-axios": "^2.0.2",
+    "vue-perfect-scrollbar": "^0.1.0",
     "vue-resource": "^1.3.4",
     "vue-router": "^3.0.1"
   },

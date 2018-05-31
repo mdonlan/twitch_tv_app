@@ -9,6 +9,8 @@ import topNav from '@/components/topNav'
 import leftNav from '@/components/leftNav'
 import videoPlayer from '@/components/videoPlayer'
 
+
+
 Vue.config.productionTip = false
 
 Vue.component('topNav', topNav);
