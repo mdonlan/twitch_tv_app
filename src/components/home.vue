@@ -103,7 +103,7 @@ export default {
 }
 
 .streamContainer {
-  height: 250px;
+  height: 225px;
   width: 250px;
   background: #051f5c;
   color: #dddddd;

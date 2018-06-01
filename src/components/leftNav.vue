@@ -26,7 +26,6 @@
         <router-link class="navButton aboutButton" v-bind:to="{path: 'about'}">About</router-link>
       </div>
     </div>
-    <div class="bottom"></div>
   </div>
 </template>
 
@@ -143,35 +142,6 @@ export default {
         }
       }, 1000)
     },
-    toggleLeftNav() {
-      /*
-      let self = this;
-      let leftNav = document.querySelector(".leftNavWrapper");
-      let button = document.querySelector(".leftNavButton")
-      let isHidden = leftNav.classList.contains('leftNavHidden');
-      if(isHidden == true) {
-        // if alreay hidden then show
-        leftNav.classList.remove("leftNavHidden");
-        leftNav.classList.add("leftNavVideo");
-        // move button
-        button.style.left = '250px';
-        self.showingLeftNav = true;
-      } else {
-        // if showing then hide
-        leftNav.classList.add("leftNavHidden");
-        leftNav.classList.remove("leftNavVideo");
-        // move button
-        button.style.left = '0px';
-        self.showingLeftNav = false;
-      }
-
-      /*
-      $(".leftNavButton").hover(function(){
-        leftNav.style.background = 'red';
-      });
-      */
-     
-    },
   }
 }
 </script>
@@ -230,19 +200,6 @@ export default {
   -o-transition: width 0.3s linear;
   transition: width 0.3s linear;
 }
-
-/*
-.leftNavHidden {
-  width: 0px;
-  border: none;
-}
-
-.leftNavVideo {
-  margin-top: 0px;
-  height: 100%;
-}
-
-*/
 
 .leftNavContentContainer {
   position: absolute;
@@ -377,23 +334,17 @@ a {
   }
 }
 
-.bottom {
-  /* this element helps prevent following items from being too close to bottom of screen */
-  height: 25px;
-  width: 100%;
-}
-
 /* custom scroll bar */
-
 .scrollBar {
   position: absolute;
   top: 0px;
   left: 0px;
   height: 20px;
-  width: 10px;
+  width: 8px;
   background: #dddddd;
   z-index: 3;
-  opacity: 0.5;
+  opacity: 0.4;
+  border-radius: 4px;
 }
 
 </style>

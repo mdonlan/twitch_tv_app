@@ -52,7 +52,7 @@ export default {
 
       // these values are approx.
       scrollBar.style.top = '55px';
-      scrollBar.style.left = '237px';
+      scrollBar.style.left = '240px';
 
       // if the height of the element is not equal to the scroll height of the element
       // it means the element is overflowing and the scroll is needed
