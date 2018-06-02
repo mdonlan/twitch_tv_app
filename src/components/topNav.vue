@@ -7,7 +7,7 @@
       <router-link class="topNavBtn" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
       <router-link class="topNavBtn aboutButton" v-bind:to="{path: 'about'}">About</router-link>
     </div>
-    <a v-if="needToLogin" class="twitchConnectBtn" href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=034f31qw57vu405ondtxpqwp104q5o&redirect_uri=http://mdonlan.github.io/twitch_tv_app&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671"> Connect Twitch Account 
+    <a v-if="needToLogin" class="twitchConnectBtn" href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=034f31qw57vu405ondtxpqwp104q5o&redirect_uri=https://mdonlan.github.io/twitch_tv_app&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671"> Connect Twitch Account 
     </a>
   </div>
 </template>
