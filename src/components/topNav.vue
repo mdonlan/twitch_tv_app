@@ -7,12 +7,7 @@
       <router-link class="topNavBtn" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
       <router-link class="topNavBtn aboutButton" v-bind:to="{path: 'about'}">About</router-link>
     </div>
-    <a v-if="needToLogin" class="twitchConnectBtn" href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=yb1fpw6w2ldfn50b0ynr50trdcxn99&redirect_uri=https://mdonlan.github.io/twitch_tv_app&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671"> Connect Twitch Account 
-
-      <!--
-        034f31qw57vu405ondtxpqwp104q5o - localhost account id
-        yb1fpw6w2ldfn50b0ynr50trdcxn99 - live/prod account id
-        -->
+    <a v-if="needToLogin" class="twitchConnectBtn" href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=034f31qw57vu405ondtxpqwp104q5o&redirect_uri=http://localhost:8080&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671"> Connect Twitch Account 
     
     </a>
   </div>
@@ -68,12 +63,26 @@ export default {
         if(url.indexOf("access_token") > -1) {
             // after getting access token and id saved
             // redirect to home page so vue knows what to display
+            // this simply removes the extra data on the address when twitch does their redirect
+            
             // prod redirect
             //window.location.href = 'http://localhost:8080';
             // local redirect
             //window.location.href = 'http://localhost:8080/#/';
             // prod redirect
             window.location.href = 'https://mdonlan.github.io/twitch_tv_app';
+
+            /*
+              when connecting twitch account we need to give twitch a redirect link
+              --prod link address = https://mdonlan.github.io/twitch_tv_app
+              --dev link address = http://localhost:8080
+
+              we also change which twitch dev account when switching between dev and prod
+              ??why??
+
+              034f31qw57vu405ondtxpqwp104q5o - localhost twitch api account id
+              yb1fpw6w2ldfn50b0ynr50trdcxn99 - live/prod twitch api account id
+            */
         }
     },
     getFollowedStreams() {
@@ -176,15 +185,32 @@ axios({
 }
 
 .twitchConnectBtn {
-    height: 35px;
-    width: 175px;
-    border: solid 1px #dddddd;
-    margin-right: 10px;
-    margin-left: 10px;
-    line-height: 35px;
-    color: #dddddd;
-    background: #5a087e;
-    font-size: 14px;
+  height: 35px;
+  width: 175px;
+  border: solid 2px #dddddd;
+  margin-right: 10px;
+  margin-left: 10px;
+  line-height: 35px;
+  color: #dddddd;
+  background: #5a087e;
+  font-size: 14px;
+  -webkit-transition: 0.3s linear;
+  -moz-transition: 0.3s linear;
+  -o-transition: 0.3s linear;
+  transition: 0.3s linear;
+  -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */ 
+  text-decoration: none;
+  border-radius: 3px;
+}
+
+.twitchConnectBtn:hover {
+  background: #900fc7;
 }
 
 a {

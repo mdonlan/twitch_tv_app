@@ -8,6 +8,7 @@ import VueAxios from 'vue-axios'
 import topNav from '@/components/topNav'
 import leftNav from '@/components/leftNav'
 import videoPlayer from '@/components/videoPlayer'
+import notifications from '@/components/notifications'
 
 
 
@@ -16,6 +17,7 @@ Vue.config.productionTip = false
 Vue.component('topNav', topNav);
 Vue.component('leftNav', leftNav);
 Vue.component('videoPlayer', videoPlayer);
+Vue.component('notifications', notifications);
 
 
 /* eslint-disable no-new */

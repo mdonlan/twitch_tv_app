@@ -2,6 +2,7 @@
   <div id="app">
     <topNav></topNav>
     <leftNav></leftNav>
+    <notifications></notifications>
     <router-view :key="$route.fullPath"/>
   </div>
 </template>
@@ -23,6 +24,8 @@ export default {
     //this.checkPage();
     this.startInterval();
     this.setInitialCustomScroll();
+  },
+  created() {
   },
   methods: {
     handleScroll(event) {

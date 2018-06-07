@@ -120,7 +120,6 @@ export default {
 }
 
 .streamContainer:hover {
-  
   -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
@@ -142,6 +141,15 @@ export default {
   overflow: hidden;
 }
 
+.streamName {
+ font-size: 15px;
+ padding: 3px;
+}
+
+.streamGame, .streamViewers, .streamStatus {
+  color: rgba(221, 221, 221, 0.774);
+}
+
 .streamImage {
   height: 100%;
   width: 100%;
@@ -154,7 +162,7 @@ export default {
 
 .clickZone {
   position: absolute;
-  height: 250px;
+  height: 225px;
   width: 250px;
   background: #222222;
   opacity: 0;

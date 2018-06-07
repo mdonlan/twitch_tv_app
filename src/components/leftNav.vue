@@ -12,8 +12,8 @@
         <div class="followingGame leftNavItem">{{follow.channel.game}}</div>
         <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
       </div>
-      </div>
     </div>
+  </div>
 
     <div class="scrollBar"></div>
 
@@ -120,6 +120,7 @@ export default {
         .then(function(response) {
             var leftNavData = response.data.streams;
             self.following = leftNavData;
+            localStorage.setItem("following", JSON.stringify(self.following));
             //console.log(response);
         })
         .catch(function (error) {
@@ -129,7 +130,7 @@ export default {
     updateLive() {
         // run this function every x seconds
         // will update the left nav bar live followed
-        setInterval(this.getFollowing, 60000); // runs every 60 secons to check for changes
+        setInterval(this.getFollowing, 10000); // runs every 10 seconds to check for changes
     },
     checkRoute() {
       let self = this;
