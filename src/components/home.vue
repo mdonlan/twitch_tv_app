@@ -167,6 +167,7 @@ export default {
   background: #222222;
   opacity: 0;
   border-radius: 10px;
+  transition: 0.3s;
 }
 
 .clickZone:hover {

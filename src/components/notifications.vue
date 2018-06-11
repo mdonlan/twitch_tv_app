@@ -8,11 +8,11 @@
       <div class="closeButton" v-on:click="clickedClose($event)">x</div>
     </div>
     <img class="previewImg" v-bind:src="queue[0].stream.preview.medium" />
+    <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: queue[0].stream.channel.name}}"></router-link>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 
 export default {
   name: 'notifications',
@@ -37,10 +37,12 @@ export default {
       ],     
       transitionTime: 1000,
       showTime: 8000,
+      sound: null,
     }
   },
-  created () {
+  created() {
     let self = this;
+
 
     setInterval(function() {
       self.checkForNewLive();
@@ -48,6 +50,15 @@ export default {
     setInterval(function() {
       self.queueUpdate()
     }, 500)
+  },
+  mounted() {
+    let self = this;
+    // load sound file
+    // do this at start b/c chrome doesn't allow you to load sounds
+    // in active tabs, aka we couldn't hear notifications unless this was the active browser tab
+    let sound = new Audio("./src/assets/positive.wav");
+    sound.volume = 0.5;
+    self.sound = sound;
   },
   methods: {
     checkForNewLive() {
@@ -99,7 +110,7 @@ export default {
               stream: newItem,
             }
             self.queue.push(newQueueItem)
-            console.log('new item added to queue', + newQueueItem)
+            console.log('new item added to queue', newQueueItem)
             //this.displayNotifications();
           }
         });
@@ -145,10 +156,8 @@ export default {
           container.style.top = '75px';
 
           // play audio to signal a broadcaster started steaming
-          let sound = new Audio("./src/assets/positive.wav");
-          sound.volume = 0.5;
           setTimeout(() => {
-            sound.play();
+            self.sound.play();
           }, 750)
 
         } else {
@@ -224,7 +233,7 @@ export default {
   z-index: 3;
   top: -500px;
   left: calc(40% - 150px);
-  transition: 1s;
+  transition: top 1s;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -282,6 +291,12 @@ export default {
   font-size: 12px;
   line-height: 37px;
   cursor: pointer;
+}
+
+.clickZone {
+  height: 100px;
+  width: 100px;
+  background: green;
 }
 
 </style>

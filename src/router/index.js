@@ -8,6 +8,7 @@ import subscribedView from '@/components/subscribedView'
 import gameView from '@/components/gameView'
 import about from '@/components/about'
 import test from '@/components/test'
+import notifications from '@/components/notifications'
 
 Vue.use(Router)
 

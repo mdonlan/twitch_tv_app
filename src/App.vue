@@ -61,6 +61,7 @@ export default {
       // it means the element is overflowing and the scroll is needed
       // if they are equal the element is completly in view and 
       // scrolling is not needed, so set its height to zero
+      
       if(scrollContainer.clientHeight != scrollContainer.scrollHeight) {
         scrollBar.style.height = scrollContainer.clientHeight - 4 + 'px';
       } else {
@@ -74,14 +75,15 @@ export default {
       // diff is the difference between the element current height and its total height
       // this lets us know how large to make the scroll bar
       let diff = scrollContainer.scrollHeight - scrollContainer.clientHeight
+
       if(scrollContainer.clientHeight != scrollContainer.scrollHeight) {
         scrollBar.style.height = scrollContainer.clientHeight - diff - 4 + 'px';
       } else {
         scrollBar.style.height = '0px';
       }
-      //console.log(contentContainer.clientHeight)
-      //console.log(contentContainer.offsetHeight)
-      //console.log(contentContainer.scrollHeight)
+      //console.log(scrollContainer.clientHeight)
+      //console.log(scrollContainer.offsetHeight)
+      //console.log(scrollContainer.scrollHeight)
     },
     startInterval() {
       let self = this;
@@ -211,6 +213,7 @@ function setVideoView() {
   
   content.style.opacity = '1';
   content.style.height = 'calc(100% - 340px)';
+  content.style.paddingBottom = '0px';
 
   title.style.opacity = '1';
 
@@ -230,6 +233,7 @@ function setNormalView() {
   
   content.style.opacity = '1';
   content.style.height = 'calc(100% - 75px)';
+  content.style.paddingBottom = '22px';
 
   title.style.opacity = '1';
 

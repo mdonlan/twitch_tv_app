@@ -108,7 +108,7 @@ export default {
         //console.log('key', key)
         axios({
         method:'get',
-        url:'https://api.twitch.tv/kraken/streams/followed?limit=25',
+        url:'https://api.twitch.tv/kraken/streams/followed?limit=100',
         headers: {
             'Client-ID': '034f31qw57vu405ondtxpqwp104q5o',
             'Authorization' : key
@@ -130,7 +130,7 @@ export default {
     updateLive() {
         // run this function every x seconds
         // will update the left nav bar live followed
-        setInterval(this.getFollowing, 10000); // runs every 10 seconds to check for changes
+        setInterval(this.getFollowing, 30000); // runs every 30 seconds to check for changes
     },
     checkRoute() {
       let self = this;
@@ -174,13 +174,16 @@ export default {
   margin: 5px;
   color: #dddddd;
   border-radius: 7px;
+  transition: 1s;
+  font-variant: small-caps;
 }
 
 .navButton:hover {
   background: #dddddd;
   color: #051f5c;
-  transition: 1s;
-  box-shadow: 0 0 11px rgba(33,33,33,.8); 
+  -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
 }
 
 .leftNavWrapper {

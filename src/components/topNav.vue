@@ -1,15 +1,14 @@
 <template>
   <div class="topNavWrapper">
     <div class="topNavBtnContainer">
-      <router-link class="topNavBtn" v-bind:to="{path: '/'}">Popular</router-link>
-      <router-link class="topNavBtn" v-bind:to="{path: 'games'}">Games</router-link>
-      <router-link class="topNavBtn" v-bind:to="{path: 'followed'}">Followed</router-link>
-      <router-link class="topNavBtn" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
+      <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Popular' }" @click.native="clickedButton" v-bind:to="{path: '/'}">Popular</router-link>
+      <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Games' }" @click.native="clickedButton" v-bind:to="{path: 'games'}">Games</router-link>
+      <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Followed' }" @click.native="clickedButton" v-bind:to="{path: 'followed'}">Followed</router-link>
+      <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Subscribed' }" @click.native="clickedButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
       <router-link class="topNavBtn aboutButton" v-bind:to="{path: 'about'}">About</router-link>
     </div>
-    <a v-if="needToLogin" class="twitchConnectBtn" href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=034f31qw57vu405ondtxpqwp104q5o&redirect_uri=http://localhost:8080&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671"> Connect Twitch Account 
-    
-    </a>
+    <a v-if="needToLogin" class="twitchConnectBtn" href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=034f31qw57vu405ondtxpqwp104q5o&redirect_uri=http://localhost:8080&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671"> Connect Twitch Account </a>
+    <search></search>
   </div>
 </template>
 
@@ -20,16 +19,34 @@ export default {
   name: 'topNav',
   data: function () {
     return {
-      needToLogin: true
+      needToLogin: true,
+      activeButton: null,
     }
   },
   created () {
     this.checkLoggedIn();
     this.redirectFromTwitch();
   },
+  mounted() {
+    this.setStartingActiveButton();
+  },
   methods: {
-    connectTwitch() {
-        
+    setStartingActiveButton() {
+      let self = this;
+      let url = window.location.href;
+      if(url.indexOf("games") > -1) {
+        self.activeButton = 'Games'
+      } else if(url.indexOf("followed") > -1) {
+        self.activeButton = 'Followed'
+      } else if(url.indexOf("subscribed") > -1) {
+        self.activeButton = 'Subscribed'
+      } else {
+        self.activeButton = 'Popular'
+      }
+    },
+    clickedButton(event) {
+      let self = this;
+      self.activeButton = event.target.innerHTML;
     },
     checkLoggedIn() {
         var self = this;
@@ -47,16 +64,18 @@ export default {
         }
     },
     saveUserToken() {
-        var url = window.location.href;
-        if(url.indexOf("access_token") > -1) {
-            var urlString = url;
-            var urlAccessToken = urlString.match("access_token=(.*)&id_token");
-            var urlIdToken = urlString.match("id_token=(.*)&scope");
-            //console.log("accessToken: " + urlAccessToken[1]);
-            //console.log("idToken: " + urlIdToken[1]);
-            localStorage.setItem("access_token", urlAccessToken[1]);
-            localStorage.setItem("id_token", urlIdToken[1]);
-        }
+      var url = window.location.href;
+      if(url.indexOf("access_token") > -1) {
+        
+          var urlString = url;
+          var urlAccessToken = urlString.match("access_token=(.*)&id_token");
+          var urlIdToken = urlString.match("id_token=(.*)&scope");
+          //console.log("accessToken: " + urlAccessToken[1]);
+          //console.log("idToken: " + urlIdToken[1]);
+          localStorage.setItem("access_token", urlAccessToken[1]);
+          localStorage.setItem("id_token", urlIdToken[1]);
+          
+      }
     },
     redirectFromTwitch() {
         var url = window.location.href;
@@ -139,7 +158,6 @@ axios({
 
 .topNavWrapper {
     position: fixed;
-    z-index: 1;
     margin-top: 0px;
     background: #051f5c;
     height: 75px;
@@ -149,7 +167,7 @@ axios({
     align-items: center;
     justify-content: center;
     border-bottom: 2px solid #dddddd;
-    z-index: 2;
+    z-index: 1;
 }
 
 .topNavBtnContainer {
@@ -180,7 +198,7 @@ axios({
 }
 
 .topNavBtn:hover {
-    background: #dddddd;
+    background: #8d8d8dab;
     color: #111111;
 }
 
@@ -263,4 +281,13 @@ a {
         top: 24px;
     }
 }
+
+.activeButton {
+  background: #dddddd;
+  color: #111111;
+  -webkit-box-shadow: 0px 0px 20px 1px rgba(216, 214, 214, 0.5);
+  -moz-box-shadow: 0px 0px 20px 1px rgba(216, 214, 214, 0.5);
+  box-shadow: 0px 0px 20px 1px rgba(216, 214, 214, 0.5);
+}
+
 </style>
