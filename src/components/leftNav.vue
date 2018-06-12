@@ -2,7 +2,7 @@
   <div class="leftNavWrapper" id="leftNavWrapper">
     <div class="leftNavTitle">LIVE FOLLOWING</div>
     <div class="leftNavContentContainer">
-      <div class="followItemContainer" v-for="follow in following">
+      <div class="followItemContainer" :ref="follow._id" v-bind:key="follow._id" v-for="follow in following">
         <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: follow.channel.name}}" @click.native="checkForPlayer"></router-link>
         <div class="leftNavImageContainer">
         <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo"></img>
@@ -41,6 +41,9 @@ export default {
       following: [],
       showingLeftNav: false,
       showNavButtons: false,
+      loadingLeftNav: false,
+      listOrderNew: [],
+      listOrderOld: [],
     }
   },
   created () {
@@ -121,7 +124,6 @@ export default {
             var leftNavData = response.data.streams;
             self.following = leftNavData;
             localStorage.setItem("following", JSON.stringify(self.following));
-            //console.log(response);
         })
         .catch(function (error) {
             //console.log(error);
@@ -130,7 +132,7 @@ export default {
     updateLive() {
         // run this function every x seconds
         // will update the left nav bar live followed
-        setInterval(this.getFollowing, 30000); // runs every 30 seconds to check for changes
+        setInterval(this.getFollowing, 10000); // runs every 10 seconds to check for changes
     },
     checkRoute() {
       let self = this;
@@ -212,7 +214,7 @@ export default {
   overflow-y: auto;
   /* make width + padding overflow to hide native scrollbar */
   width: 100%;
-  padding-right: 20px;
+  padding-right: 150px;
 }
 
 .followItemContainer {

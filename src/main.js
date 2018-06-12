@@ -10,8 +10,7 @@ import leftNav from '@/components/leftNav'
 import videoPlayer from '@/components/videoPlayer'
 import notifications from '@/components/notifications'
 import search from '@/components/search'
-
-
+import loading from '@/components/loading'
 
 Vue.config.productionTip = false
 
@@ -20,6 +19,7 @@ Vue.component('leftNav', leftNav);
 Vue.component('videoPlayer', videoPlayer);
 Vue.component('notifications', notifications);
 Vue.component('search', search);
+Vue.component('loading', loading);
 
 
 /* eslint-disable no-new */

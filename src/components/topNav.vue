@@ -28,10 +28,12 @@ export default {
     this.redirectFromTwitch();
   },
   mounted() {
-    this.setStartingActiveButton();
+    setInterval(() => {
+      this.setActiveButton();
+    }, 250);
   },
   methods: {
-    setStartingActiveButton() {
+    setActiveButton() {
       let self = this;
       let url = window.location.href;
       if(url.indexOf("games") > -1) {
@@ -195,6 +197,7 @@ axios({
   -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
+  font-variant: small-caps;
 }
 
 .topNavBtn:hover {

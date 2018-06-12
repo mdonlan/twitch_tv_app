@@ -7,7 +7,7 @@ import followedView from '@/components/followedView'
 import subscribedView from '@/components/subscribedView'
 import gameView from '@/components/gameView'
 import about from '@/components/about'
-import test from '@/components/test'
+import loading from '@/components/loading'
 import notifications from '@/components/notifications'
 
 Vue.use(Router)
@@ -50,9 +50,9 @@ export default new Router({
       component: about
     },
     {
-      path: '/test/',
-      name: 'test',
-      component: test
+      path: '/loading/',
+      name: 'loading',
+      component: loading
     },
   ]
 })

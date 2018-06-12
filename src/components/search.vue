@@ -1,23 +1,50 @@
 <template>
   <div class="searchContainer">
     <input class="searchInput" placeholder="Search for channels, games, live streams" v-on:input="searchChangeEventHandler" />
-    <div class="searchResultsContainer">
-      <div class="searchResult" v-for="result in searchResults">
-        <!-- have a different container div for each type of search result -->
-        <div class="searchResultItemContainer" v-if="result.type == 'stream'">
-          <div class="searchResultItem">{{result.type}}</div>
-          <div class="searchResultItem">{{result.data.channel.name}}</div>
-          <div class="searchResultItem">{{result.data.viewers}}</div>
+    <div class="searchResultsOverflowContainer" v-if="searchResultsStreams.length > 0 || searchResultsGames.length > 0 || searchResultsChannels.length > 0">
+      <div class="searchResultsContainer">
+        <div class="streamResultsContainer resultsContainer" v-if="searchResultsStreams.length > 0">
+          <div class="sectionTitle">Live Streams</div>
+          <!-- use slice in the for loop to only show part of the list
+               we do this in order to show a few from each category to the user
+               the user can then expand each category if desired
+          -->
+          <div class="searchResult stream" v-for="result in searchResultsStreams.slice(0,streamsContainerNumToShow)">
+            <img class="streamImage" v-bind:src="result.data.channel.logo">
+            <div class="searchResultItem name">{{result.data.channel.name}}</div>
+            <div class="searchResultItem">{{result.data.viewers}}</div>
+            <div class="liveCircleIcon"></div>
+            <div class="searchResultItem live">Live!</div>
+          </div>
         </div>
-        <div class="searchResultItemContainer" v-if="result.type == 'channel'">
-          <div class="searchResultItem">{{result.type}}</div>
-          <div class="searchResultItem">{{result.data.name}}</div>
+        <div class="viewMoreStreams" v-if="searchResultsStreams.length > 0 && streamsContainerNumToShow == 3" v-on:click="clickedViewMore">View More Streams</div>
+
+        <div class="channelResultsContainer resultsContainer" v-if="searchResultsChannels.length > 0">
+          <div class="sectionTitle">Channels</div>
+          <div class="searchResult channel" v-for="result in searchResultsChannels.slice(0,channelsContainerNumToShow)">
+            <img class="streamImage" v-bind:src="result.data.logo">
+            <div class="searchResultItem name">{{result.data.name}}</div>
+            <div class="searchResultItem">Recent Game: {{result.data.game}}</div>
+            <div class="searchResultItem">Recent Status: {{result.data.status}}</div>
+            <div class="searchResultItem">Updated: {{result.data.updated_at | formatTime}}</div>
+            <div class="searchResultItem">Followers: {{result.data.followers | addComma}}</div>
+            <div class="searchResultItem">Views: {{result.data.views | addComma}}</div>
+          </div>
         </div>
-        <div class="searchResultItemContainer" v-if="result.type == 'game'">
-          <div class="searchResultItem">{{result.type}}</div>
-          <div class="searchResultItem">{{result.data.name}}</div>
+        <div class="viewMoreChannels" v-if="searchResultsChannels.length > 0 && channelsContainerNumToShow == 3" v-on:click="clickedViewMore">View More Channels</div>
+        
+        <div class="gameResultsContainer resultsContainer" v-if="searchResultsGames.length > 0">
+          <div class="sectionTitle">Games</div>
+          <div class="searchResult game" v-for="result in searchResultsGames.slice(0,gamesContainerNumToShow)">
+            <div class="searchResultItem name">{{result.data.name}}</div>
+          </div>
         </div>
+        <div class="viewMoreGames" v-if="searchResultsGames.length > 0 && gamesContainerNumToShow == 3" v-on:click="clickedViewMore">View More Games</div>
+
+        <div class="scrollbar"></div>
+        
       </div>
+
     </div>
   </div>
 </template>
@@ -25,7 +52,7 @@
 <script>
 
 import axios from 'axios';
-import shortid from 'shortid';
+import moment from 'moment';
 
 export default {
   name: 'search',
@@ -39,15 +66,54 @@ export default {
       gamesResultsComplete: false,
       streamsResultsComplete: false,
       requestStartTime: null,
+      streamsContainerNumToShow: 3,
+      gamesContainerNumToShow: 3,
+      channelsContainerNumToShow: 3,
     }
   },
   created() {
-
+    // create event handler to detect all click events
+    // we will use this to detect clicks outside of search component
+    // and if so close search results
+    document.addEventListener('click', this.documentClick)
   },
   mounted() {
 
   },
+  destroyed() {
+    // important to clean up!!
+    document.removeEventListener('click', this.documentClick)
+  },
+  filters: {
+    formatTime: function(value) {
+      
+      let date = new Date(value);
+      let fromNow = moment(date).fromNow();
+      return fromNow
+    },
+    addComma: function (string) {
+      return string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+  },
   methods: {
+    documentClick(e){
+      // this event fires for event click on a page that the search component is loaded on
+      // check the click to detect if it is outside of the search container component 
+      // and if so then clear search input and the search results elements
+
+      let self = this;
+      let searchContainerElem = document.querySelector(".searchContainer");
+      let searchInputElem = document.querySelector(".searchInput");
+      let target = e.target
+
+      if(searchContainerElem !== target && !searchContainerElem.contains(target)) {
+        //console.log('click does not match')
+        searchInputElem.value = '';
+        self.searchResultsStreams = [];
+        self.searchResultsGames = [];
+        self.searchResultsChannels = [];
+      }
+    },
     searchChangeEventHandler(event) {
       let self = this;
       let searchQuery = event.target.value;
@@ -61,6 +127,10 @@ export default {
       self.searchResultsChannels = [];
       self.searchResultsStreams = [];
       self.searchResultsGames = [];
+
+      // only search if query is longer than three characters
+      // this reduces api calls and your not likely to find a search
+      // match w/ only 3 or less characters
       if(searchQuery.length > 3) {
         self.doSearch(searchQuery);
       }
@@ -99,15 +169,17 @@ export default {
         // on promise return check to see if the start time we sent w/ this request
         // is the same as the most recent on set in data
         if(requestStartTime === self.requestStartTime) {
-          let channels = response.data.channels;
-          channels.forEach(channel => {
-            let newSearchItem = {
-              data: channel,
-              type: 'channel',
-              startTime: requestStartTime,
-            }
-            self.searchResultsChannels.push(newSearchItem);
-          });
+          if(response.data.channels) {
+            let channels = response.data.channels;
+            channels.forEach(channel => {
+              let newSearchItem = {
+                data: channel,
+                type: 'channel',
+                startTime: requestStartTime,
+              }
+              self.searchResultsChannels.push(newSearchItem);
+            });
+          }
           self.channelsResultsComplete = true;
 
           // attempt to sort, but only run if all complete
@@ -137,14 +209,17 @@ export default {
         })
       .then(function(response) {
         if(requestStartTime === self.requestStartTime) {
-          let games = response.data.games;
-          games.forEach(game => {
-            let newSearchItem = {
-              data: game,
-              type: 'game',
-            }
-            self.searchResultsGames.push(newSearchItem);
-          })
+          if(response.data.games) {
+            let games = response.data.games;
+            games.forEach(game => {
+              let newSearchItem = {
+                data: game,
+                type: 'game',
+              }
+              self.searchResultsGames.push(newSearchItem);
+            })
+          }
+          
           self.gamesResultsComplete = true;
 
           // attempt to sort, but only run if all complete
@@ -174,14 +249,17 @@ export default {
         })
       .then(function(response) {
         if(requestStartTime === self.requestStartTime) {
-          let streams = response.data.streams;
-          streams.forEach(stream => {
-            let newSearchItem = {
-              data: stream,
-              type: 'stream',
-            }
-            self.searchResultsStreams.push(newSearchItem);
-          })
+          if(response.data.streams) {
+            let streams = response.data.streams;
+            streams.forEach(stream => {
+              let newSearchItem = {
+                data: stream,
+                type: 'stream',
+              }
+              self.searchResultsStreams.push(newSearchItem);
+            })
+          }
+          
           self.streamsResultsComplete = true;
 
           // attempt to sort, but only run if all complete
@@ -202,39 +280,63 @@ export default {
 
       // sorting //
       // currently we only return results that completely match the search query
-      // ex a query of 'shroudd' would return shroud, but a query of 'shroutd' would not return shroud
+      // put each category into its own section of html and data
       
-      // put all streams first in results
-
+      let streams = [];
       self.searchResultsStreams.forEach((result) => {
         let name = result.data.channel.name;
         let nameContainsSearchQuery = name.includes(searchQuery);
         if(nameContainsSearchQuery) {
-          self.searchResults.push(result);
+          streams.push(result);
         }
       });
+      // set data w/ only direct matches
+      self.searchResultsStreams = streams;
 
-      // w/ in streams sort by closest to query and then by viewers
-
-      // put all channels in second and sort by something
-
+      let channels = [];
       self.searchResultsChannels.forEach((result) => {
         let name = result.data.name;
         let nameContainsSearchQuery = name.includes(searchQuery);
         if(nameContainsSearchQuery) {
-          self.searchResults.push(result);
+          channels.push(result);
         }
       });
 
-      // put all games last
+      let channelsSorted = self.sortChannels(channels);
 
+      self.searchResultsChannels = channelsSorted;
+
+      let games = [];
       self.searchResultsGames.forEach((result) => {
-          let name = result.data.name;
-          let nameContainsSearchQuery = name.includes(searchQuery);
-          if(nameContainsSearchQuery) {
-            self.searchResults.push(result);
-          }
+        let name = result.data.name;
+        let nameContainsSearchQuery = name.includes(searchQuery);
+        if(nameContainsSearchQuery) {
+          games.push(result);
+        }
       });
+      self.searchResultsGames = games;
+    },
+    sortChannels(channels) {
+      // sort channels by number of followers they have
+      channels.sort(function(a, b) {
+        return a.data.followers < b.data.followers
+      })
+      
+      return channels
+    },
+    clickedViewMore(event) {
+      let self = this;
+      let targetName = event.target.classList[0];
+      if(targetName.includes("Stream")) {
+        //console.log('clicked view more streams')
+        self.streamsContainerNumToShow = 10;
+      } else if(targetName.includes("Channels")) {
+        //console.log('clicked view more channels')
+        self.channelsContainerNumToShow = 10;
+      } else if(targetName.includes("Games")) {
+        //console.log('clicked view more games')
+        self.gamesContainerNumToShow = 10;
+      }
     },
   }
 }
@@ -255,6 +357,11 @@ input {
 
 .searchContainer {
   position: relative;
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */ 
+  text-decoration: none;
 }
 
 .searchInput {
@@ -270,29 +377,120 @@ input {
   border-radius: 3px;
 }
 
-.searchResultsContainer {
+.searchResultsOverflowContainer {
   position: absolute;
-  top: 40px;
-  left: 12px;
-  width: 300px;
-  background: green;
-  overflow: auto;
-  max-height: 300px;
+  top: 45px;
+  left: -38px;
+  width: 400px;
+  background: #333333;
+  overflow: hidden;
+  height: 600px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+} 
+
+.searchResultsContainer {
+  height: 100%;
+  /* for width offset padding-right */
+  width: calc(100% + 20px);
+  overflow-y: scroll;
+  position: absolute;
+  top: 0px;
+  padding-right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.resultsContainer {
+  width: 100%;
 }
 
 .searchResult {
-  color: #dddddd;
-}
-
-.searchResultItemContainer {
   display: flex;
   padding-left: 3px;
-  justify-content: flex-start;
+  padding-right: 3px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  height: 50px;
+  color: #dddddd83;
+  position: relative;
+  transition: 0.5s;
+  width: 100%;
+}
+
+.searchResult:hover {
+  background: #444444;
+  cursor: pointer;
+}
+
+.searchResult::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: calc(50% - 150px);
+  bottom: 0px;
+  width: 300px;
+  height: 0px;
+  border-bottom: 1px solid #dddddd2a;
+}
+
+.name {
+  color: #dddddd;
 }
 
 .searchResultItem {
   padding-left: 3px;
   padding-right: 3px;
+}
+
+.streamImage {
+  height: 30px;
+  width: 30px;
+}
+
+.liveCircleIcon {
+  height: 7px;
+  width: 7px;
+  border-radius: 50%;
+  background: red;
+  margin-left: 3px;
+}
+
+.live {
+  font-variant: small-caps;
+}
+
+.channel {
+  flex-direction: column;
+  height: auto;
+  flex-wrap: nowrap;
+}
+
+.sectionTitle {
+  color: #dddddd;
+  font-size: 18px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #dddddd;
+  border-top: 2px solid #dddddd;
+  margin-top: 15px;
+}
+
+/* custom scroll bar */
+.scrollBar {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 20px;
+  width: 8px;
+  background: #dddddd;
+  z-index: 3;
+  opacity: 0.4;
+  border-radius: 4px;
 }
 
 </style>

@@ -129,10 +129,16 @@ export default {
   flex-direction: column;
   border: 2px #dddddd solid;
   border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
 }
 
 .streamContainer:hover {
   opacity: 0.7;
+  -webkit-box-shadow: 0px 0px 25px 2px rgba(77, 76, 76, 0.75);
+  -moz-box-shadow: 0px 0px 25px 2px rgba(77, 76, 76, 0.75);
+  box-shadow: 0px 0px 25px 2px rgba(77, 76, 76, 0.75);
 }
 
 .streamTextContainer {

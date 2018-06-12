@@ -28,7 +28,7 @@ export default {
   created() {
   },
   methods: {
-    handleScroll(event) {
+    handleScrollLeftNav(event) {
       // handles custom scrollbar events / movement
       let target = event.target;
       let targetPos = target.getBoundingClientRect();
@@ -41,14 +41,13 @@ export default {
       //let diff = target.scrollHeight - target.clientHeight
   
       //scrollBar.style.height =  target.clientHeight - diff - 2 + 'px';
-
     },
     setInitialCustomScroll() {
       // sets up the custom scrollbar on app load
 
-      // scrollcontainer is the element we are scrolling in
-      let scrollContainer = document.querySelector(".leftNavContentContainer");
-      scrollContainer.addEventListener('scroll', this.handleScroll);
+      // scrollContainerLeftNav is the element we are scrolling in
+      let scrollContainerLeftNav = document.querySelector(".leftNavContentContainer");
+      scrollContainerLeftNav.addEventListener('scroll', this.handleScrollLeftNav);
 
       // set inital scrollbar properties
       let scrollBar = document.querySelector(".scrollBar");
@@ -62,28 +61,28 @@ export default {
       // if they are equal the element is completly in view and 
       // scrolling is not needed, so set its height to zero
       
-      if(scrollContainer.clientHeight != scrollContainer.scrollHeight) {
-        scrollBar.style.height = scrollContainer.clientHeight - 4 + 'px';
+      if(scrollContainerLeftNav.clientHeight != scrollContainerLeftNav.scrollHeight) {
+        scrollBar.style.height = scrollContainerLeftNav.clientHeight - 4 + 'px';
       } else {
         scrollBar.style.height = '0px';
       }
 
     },
     updateScroll() {
-      let scrollContainer = document.querySelector(".leftNavContentContainer");
+      let scrollContainerLeftNav = document.querySelector(".leftNavContentContainer");
       let scrollBar = document.querySelector(".scrollBar");
       // diff is the difference between the element current height and its total height
       // this lets us know how large to make the scroll bar
-      let diff = scrollContainer.scrollHeight - scrollContainer.clientHeight
+      let diff = scrollContainerLeftNav.scrollHeight - scrollContainerLeftNav.clientHeight
 
-      if(scrollContainer.clientHeight != scrollContainer.scrollHeight) {
-        scrollBar.style.height = scrollContainer.clientHeight - diff - 4 + 'px';
+      if(scrollContainerLeftNav.clientHeight != scrollContainerLeftNav.scrollHeight) {
+        scrollBar.style.height = scrollContainerLeftNav.clientHeight - diff - 4 + 'px';
       } else {
         scrollBar.style.height = '0px';
       }
-      //console.log(scrollContainer.clientHeight)
-      //console.log(scrollContainer.offsetHeight)
-      //console.log(scrollContainer.scrollHeight)
+      //console.log(scrollContainerLeftNav.clientHeight)
+      //console.log(scrollContainerLeftNav.offsetHeight)
+      //console.log(scrollContainerLeftNav.scrollHeight)
     },
     startInterval() {
       let self = this;
