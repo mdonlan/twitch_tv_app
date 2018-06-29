@@ -6,7 +6,7 @@
             <img class="gameImage" v-bind:src="game.game.box.large"></img>
         </div>
         <div class="gamesItemTextContainer">
-            <div class="gameName">{{game.game.name | truncate(15)}}</div>
+            <div class="gameName">{{game.game.name}}</div>
             <div class="gameNumViewers">{{game.viewers | addComma}}</div>
         </div>
     </div>
@@ -72,7 +72,7 @@ export default {
   box-sizing: border-box;
   margin: 0px;
   margin-top: 75px;
-  padding-top: 40px;
+  padding-top: 30px;
   margin-left: 250px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -83,18 +83,21 @@ export default {
 .gameContainer {
   height: 250px;
   width: 175px;
-  background: #061539;
+  background: #051f5c;
   color: #dddddd;
   margin: 7px;
   display: flex;
   flex-direction: column;
-  font-size: 14px;
   border-radius: 10px;
-  border: 2px solid #dddddd;
+  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
 }
 
 .gameContainer:hover {
-
+  -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
 }
 
 .gamesItemTextContainer {
@@ -125,10 +128,21 @@ export default {
   background: #222222;
   opacity: 0;
   border-radius: 10px;
+  transition: 0.5s;
 }
 
 .clickZone:hover {
-  opacity: 0.5;
+  opacity: 0.7;
+}
+
+.gameName {
+  width: calc(100% - 6px);
+  height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 
 </style>

@@ -6,9 +6,10 @@
         <img class="streamImage" v-bind:src="stream.preview.large">
       </div>
       <div class="streamTextContainer">
-        <div class="streamName">{{stream.channel.name}}</div>
-        <div class="streamStatus">{{stream.channel.status | truncate(40)}}</div>
-        <div class="streamViewers">{{stream.viewers}}</div>
+        <div class="streamName streamItem">{{stream.channel.name}}</div>
+        <div class="streamGame streamItem">{{stream.channel.game}}</div>
+        <div class="streamStatus streamItem">{{stream.channel.status}}</div>
+        <div class="streamViewers streamItem">{{stream.viewers | addComma}}</div>
       </div>
     </div>
   </div>
@@ -35,7 +36,10 @@ export default {
       } else {
         return string
       }
-    }
+    },
+    addComma: function (string) {
+      return string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
   },
   methods: {
     getGameName() {
@@ -76,7 +80,7 @@ export default {
   box-sizing: border-box;
   margin: 0px;
   margin-top: 75px;
-  padding-top: 40px;
+  padding-top: 30px;
   margin-left: 250px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -85,19 +89,23 @@ export default {
 }
 
 .streamContainer {
-  height: 250px;
+  height: 225px;
   width: 250px;
-  background: #061539;
+  background: #051f5c;
   color: #dddddd;
   margin: 7px;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  border: 2px solid #dddddd;
+  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
 }
 
 .streamContainer:hover {
-
+  -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
 }
 
 .streamTextContainer {
@@ -117,15 +125,31 @@ export default {
 
 .clickZone {
   position: absolute;
-  height: 250px;
+  height: 225px;
   width: 250px;
   opacity: 0;
   background: #222222;
   border-radius: 10px;
+  transition: 0.5s;
 }
 
 .clickZone:hover {
-  opacity: 0.5;
+  opacity: 0.7;
+}
+
+.streamItem {
+  width: calc(100% - 6px);
+  height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.streamGame, .streamViewers, .streamStatus {
+  color: rgba(221, 221, 221, 0.774);
+  font-size: 14px;
 }
 
 </style>

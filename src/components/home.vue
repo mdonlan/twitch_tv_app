@@ -94,7 +94,7 @@ export default {
   box-sizing: border-box;
   margin: 0px;
   margin-top: 75px;
-  padding-top: 40px;
+  padding-top: 30px;
   margin-left: 250px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -107,16 +107,13 @@ export default {
   width: 250px;
   background: #051f5c;
   color: #dddddd;
-  margin: 8px;
+  margin: 10px;
   display: flex;
   flex-direction: column;
-  font-size: 14px;
-  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  
+  -webkit-box-shadow: 0px 0px 0px 1.5px #141414;
+  -moz-box-shadow: 0px 0px 0px 1.5px #141414;
+  box-shadow: 0px 0px 0px 0.5px #e4e3e323;
   border-radius: 10px;
-  border: 2px solid rgba(232, 244, 255, 0.877);
 }
 
 .streamContainer:hover {
@@ -135,19 +132,22 @@ export default {
 }
 
 .streamItem {
-  width: 95%;
+  width: calc(100% - 6px);
+  height: 20px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 
 .streamName {
  font-size: 15px;
- padding: 3px;
 }
 
 .streamGame, .streamViewers, .streamStatus {
   color: rgba(221, 221, 221, 0.774);
+  font-size: 14px;
 }
 
 .streamImage {
@@ -167,11 +167,11 @@ export default {
   background: #222222;
   opacity: 0;
   border-radius: 10px;
-  transition: 0.3s;
+  transition: 0.5s;
 }
 
 .clickZone:hover {
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 @media only screen and (max-width: 1000px) {

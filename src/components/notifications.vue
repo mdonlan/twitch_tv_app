@@ -7,8 +7,10 @@
       <div class="game">{{queue[0].stream.channel.game}}</div>
       <div class="closeButton" v-on:click="clickedClose($event)">x</div>
     </div>
-    <img class="previewImg" v-bind:src="queue[0].stream.preview.medium" />
-    <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: queue[0].stream.channel.name}}"></router-link>
+    <div class="previewContainer">
+      <img class="previewImg" v-bind:src="queue[0].stream.preview.medium" />
+      <router-link class="clickZone" @click.native="clickedClose($event)" v-bind:to="{path: 'stream', query: { name: queue[0].stream.channel.name}}"></router-link>
+    </div>
   </div>
 </template>
 
@@ -218,6 +220,8 @@ export default {
       
     },
     clickedClose(event) {
+      // clicked either close notification or go to notification
+      // either way move the notification off the page
       let container = document.querySelector(".notificationsContainer");
       container.style.top = '-500px';
     },
@@ -282,7 +286,6 @@ export default {
 }
 
 .previewImg {
-  margin-top: 5px;
   border-radius: 5px;
 }
 
@@ -293,10 +296,19 @@ export default {
   cursor: pointer;
 }
 
+.previewContainer {
+  position: relative;
+  margin-top: 5px;
+}
+
 .clickZone {
-  height: 100px;
-  width: 100px;
-  background: green;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  top: 0px;
+  left: 0px;
+  border-radius: 5px;
 }
 
 </style>

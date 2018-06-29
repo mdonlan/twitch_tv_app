@@ -36,7 +36,7 @@ export default {
     setActiveButton() {
       let self = this;
       let url = window.location.href;
-      if(url.indexOf("games") > -1) {
+      if(url.indexOf("games") > -1 || url.indexOf("game") > -1) {
         self.activeButton = 'Games'
       } else if(url.indexOf("followed") > -1) {
         self.activeButton = 'Followed'

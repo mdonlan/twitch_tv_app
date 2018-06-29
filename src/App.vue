@@ -33,28 +33,29 @@ export default {
       let target = event.target;
       let targetPos = target.getBoundingClientRect();
       //console.log(target.getBoundingClientRect())
-      let targetLeft = targetPos.width - 40;
-      let scrollBar = document.querySelector(".scrollBar");
+      let scrollbar = document.querySelector(".scrollbarLeftNav");
       
-      scrollBar.style.top = target.scrollTop + 55 + 'px';
-      //scrollBar.style.left = '237px';
+      scrollbar.style.top = target.scrollTop + 55 + 'px';
+      //scrollbar.style.left = '237px';
       //let diff = target.scrollHeight - target.clientHeight
   
-      //scrollBar.style.height =  target.clientHeight - diff - 2 + 'px';
+      //scrollbar.style.height =  target.clientHeight - diff - 2 + 'px';
     },
     setInitialCustomScroll() {
-      // sets up the custom scrollbar on app load
+      // sets up the custom scrollbars on app load
+
+      // left nav scrollbar
 
       // scrollContainerLeftNav is the element we are scrolling in
       let scrollContainerLeftNav = document.querySelector(".leftNavContentContainer");
       scrollContainerLeftNav.addEventListener('scroll', this.handleScrollLeftNav);
 
       // set inital scrollbar properties
-      let scrollBar = document.querySelector(".scrollBar");
+      let scrollbarLeftNav = document.querySelector(".scrollbarLeftNav");
 
       // these values are approx.
-      scrollBar.style.top = '55px';
-      scrollBar.style.left = '240px';
+      scrollbarLeftNav.style.top = '55px';
+      scrollbarLeftNav.style.left = '240px';
 
       // if the height of the element is not equal to the scroll height of the element
       // it means the element is overflowing and the scroll is needed
@@ -62,27 +63,40 @@ export default {
       // scrolling is not needed, so set its height to zero
       
       if(scrollContainerLeftNav.clientHeight != scrollContainerLeftNav.scrollHeight) {
-        scrollBar.style.height = scrollContainerLeftNav.clientHeight - 4 + 'px';
+        scrollbarLeftNav.style.height = scrollContainerLeftNav.clientHeight - 4 + 'px';
       } else {
-        scrollBar.style.height = '0px';
+        scrollbarLeftNav.style.height = '0px';
       }
 
     },
     updateScroll() {
+      // left nav scrollbar
       let scrollContainerLeftNav = document.querySelector(".leftNavContentContainer");
-      let scrollBar = document.querySelector(".scrollBar");
+      let scrollbarLeftNav = document.querySelector(".scrollbarLeftNav");
       // diff is the difference between the element current height and its total height
       // this lets us know how large to make the scroll bar
-      let diff = scrollContainerLeftNav.scrollHeight - scrollContainerLeftNav.clientHeight
+      let diff = scrollContainerLeftNav.scrollHeight - scrollContainerLeftNav.clientHeight;
 
       if(scrollContainerLeftNav.clientHeight != scrollContainerLeftNav.scrollHeight) {
-        scrollBar.style.height = scrollContainerLeftNav.clientHeight - diff - 4 + 'px';
+        scrollbarLeftNav.style.height = scrollContainerLeftNav.clientHeight - diff - 4 + 'px';
       } else {
-        scrollBar.style.height = '0px';
+        scrollbarLeftNav.style.height = '0px';
       }
-      //console.log(scrollContainerLeftNav.clientHeight)
-      //console.log(scrollContainerLeftNav.offsetHeight)
-      //console.log(scrollContainerLeftNav.scrollHeight)
+
+      // search results scrollbar
+      let scrollContainerSearchResults = document.querySelector(".searchResultsContainer");
+      let scrollbarSearchResults = document.querySelector(".scrollbarSearchResults");
+      // diff is the difference between the element current height and its total height
+      // this lets us know how large to make the scroll bar
+      if(scrollContainerSearchResults && scrollbarSearchResults) {
+        let diff = scrollContainerSearchResults.scrollHeight - scrollContainerSearchResults.clientHeight;
+        if(scrollContainerSearchResults.clientHeight != scrollContainerSearchResults.scrollHeight) {
+          let height = Math.abs(scrollContainerSearchResults.clientHeight - diff) - 150 + 'px';
+          scrollbarSearchResults.style.height = height;
+        } else {
+          scrollbarSearchResults.style.height = '0px';
+        }
+      }
     },
     startInterval() {
       let self = this;
@@ -118,7 +132,7 @@ export default {
           setNormalView();
         }
 
-        // update custom scrollbar
+        // update custom scrollbars
         self.updateScroll();
       }, 100);
     },
@@ -215,6 +229,7 @@ function setVideoView() {
   content.style.paddingBottom = '0px';
 
   title.style.opacity = '1';
+  title.style.borderTop = 'none';
 
   leftNavButtons.style.display = "flex";
 };
@@ -235,6 +250,7 @@ function setNormalView() {
   content.style.paddingBottom = '22px';
 
   title.style.opacity = '1';
+  title.style.borderTop = '2px solid #dddddd';
 
   leftNavButtons.style.display = "none";
 };
@@ -546,7 +562,7 @@ $(document).on("mousemove", function(event) {
 body {
   margin: 0px;
   overflow: hidden;
-  background-color: #333333;
+  background-color: #444444;
   background-image: url("https://www.transparenttextures.com/patterns/black-linen.png");
   
 }

@@ -15,7 +15,7 @@
     </div>
   </div>
 
-    <div class="scrollBar"></div>
+    <div class="scrollbarLeftNav"></div>
 
     <div class="navButtons">
       <div class="navButtonsContainer">
@@ -176,7 +176,7 @@ export default {
   margin: 5px;
   color: #dddddd;
   border-radius: 7px;
-  transition: 1s;
+  transition: 0.5s;
   font-variant: small-caps;
 }
 
@@ -224,10 +224,7 @@ export default {
   margin-top: 2px;
   display: flex;
   align-items: center;
-  -webkit-transition: background 0.3s linear;
-  -moz-transition: background 0.3s linear;
-  -o-transition: background 0.3s linear;
-  transition: background 0.3s linear;
+  transition: background 0.5s linear;
   font-size: 14px;
 }
 
@@ -341,7 +338,7 @@ a {
 }
 
 /* custom scroll bar */
-.scrollBar {
+.scrollbarLeftNav {
   position: absolute;
   top: 0px;
   left: 0px;

@@ -17,7 +17,7 @@
             <div class="searchResultItem live">Live!</div>
           </div>
         </div>
-        <div class="viewMoreStreams" v-if="searchResultsStreams.length > 0 && streamsContainerNumToShow == 3" v-on:click="clickedViewMore">View More Streams</div>
+        <div class="viewMoreStreams viewMoreButton" v-if="searchResultsStreams.length > 0 && streamsContainerNumToShow == 3 && searchResultsStreams.length > streamsContainerNumToShow" v-on:click="clickedViewMore">View More Streams</div>
 
         <div class="channelResultsContainer resultsContainer" v-if="searchResultsChannels.length > 0">
           <div class="sectionTitle">Channels</div>
@@ -31,19 +31,20 @@
             <div class="searchResultItem">Views: {{result.data.views | addComma}}</div>
           </div>
         </div>
-        <div class="viewMoreChannels" v-if="searchResultsChannels.length > 0 && channelsContainerNumToShow == 3" v-on:click="clickedViewMore">View More Channels</div>
+        <div class="viewMoreChannels viewMoreButton" v-if="searchResultsChannels.length > 0 && channelsContainerNumToShow == 3 && searchResultsChannels.length > channelsContainerNumToShow" v-on:click="clickedViewMore">View More Channels</div>
         
         <div class="gameResultsContainer resultsContainer" v-if="searchResultsGames.length > 0">
           <div class="sectionTitle">Games</div>
           <div class="searchResult game" v-for="result in searchResultsGames.slice(0,gamesContainerNumToShow)">
+            <img class="gameBoxImage" v-bind:src="result.data.box.small">
             <div class="searchResultItem name">{{result.data.name}}</div>
           </div>
         </div>
-        <div class="viewMoreGames" v-if="searchResultsGames.length > 0 && gamesContainerNumToShow == 3" v-on:click="clickedViewMore">View More Games</div>
-
-        <div class="scrollbar"></div>
+        <div class="viewMoreGames viewMoreButton" v-if="searchResultsGames.length > 0 && gamesContainerNumToShow == 3 && searchResultsGames.length > gamesContainerNumToShow" v-on:click="clickedViewMore">View More Games</div>
         
       </div>
+
+      <div class="scrollbarSearchResults"></div>
 
     </div>
   </div>
@@ -112,6 +113,9 @@ export default {
         self.searchResultsStreams = [];
         self.searchResultsGames = [];
         self.searchResultsChannels = [];
+        self.streamsContainerNumToShow = 3;
+        self.gamesContainerNumToShow = 3;
+        self.channelsContainerNumToShow = 3;
       }
     },
     searchChangeEventHandler(event) {
@@ -210,6 +214,7 @@ export default {
       .then(function(response) {
         if(requestStartTime === self.requestStartTime) {
           if(response.data.games) {
+            //console.log(response.data.games)
             let games = response.data.games;
             games.forEach(game => {
               let newSearchItem = {
@@ -284,7 +289,7 @@ export default {
       
       let streams = [];
       self.searchResultsStreams.forEach((result) => {
-        let name = result.data.channel.name;
+        let name = result.data.channel.name.toLowerCase();
         let nameContainsSearchQuery = name.includes(searchQuery);
         if(nameContainsSearchQuery) {
           streams.push(result);
@@ -295,7 +300,7 @@ export default {
 
       let channels = [];
       self.searchResultsChannels.forEach((result) => {
-        let name = result.data.name;
+        let name = result.data.name.toLowerCase();
         let nameContainsSearchQuery = name.includes(searchQuery);
         if(nameContainsSearchQuery) {
           channels.push(result);
@@ -308,13 +313,16 @@ export default {
 
       let games = [];
       self.searchResultsGames.forEach((result) => {
-        let name = result.data.name;
+        let name = result.data.name.toLowerCase();
         let nameContainsSearchQuery = name.includes(searchQuery);
         if(nameContainsSearchQuery) {
           games.push(result);
         }
       });
       self.searchResultsGames = games;
+
+      // setup search results scroll
+      self.setupScrollbar();
     },
     sortChannels(channels) {
       // sort channels by number of followers they have
@@ -337,6 +345,41 @@ export default {
         //console.log('clicked view more games')
         self.gamesContainerNumToShow = 10;
       }
+    },
+    setupScrollbar() {
+      // setup custom search results scrollbar
+      let scrollContainerSearchResults = document.querySelector(".searchResultsContainer");
+      scrollContainerSearchResults.addEventListener('scroll', this.handleScrollSearchResults);
+
+      // set inital scrollbar properties
+      let scrollbarSearchResults = document.querySelector(".scrollbarSearchResults");
+      
+      // get position to set scrollbar left
+      let pos = scrollContainerSearchResults.getBoundingClientRect();
+      // these values are approx.
+      scrollbarSearchResults.style.top = '30px';
+      scrollbarSearchResults.style.left = '385px';
+
+      // if the height of the element is not equal to the scroll height of the element
+      // it means the element is overflowing and the scroll is needed
+      // if they are equal the element is completly in view and 
+      // scrolling is not needed, so set its height to zero
+      
+      if(scrollContainerSearchResults.clientHeight != scrollContainerSearchResults.scrollHeight) {
+        scrollbarSearchResults.style.height = scrollContainerSearchResults.clientHeight - 4 + 'px';
+      } else {
+        scrollbarSearchResults.style.height = '0px';
+      }
+
+    },
+    handleScrollSearchResults(event) {
+      console.log('running scroll handler')
+      // handles custom scrollbar events / movement
+      let target = event.target;
+      console.dir(target)
+      let targetPos = target.getBoundingClientRect();
+      let scrollbar = document.querySelector(".scrollbarSearchResults");
+      scrollbar.style.top = (target.scrollTop / 2) + 30 + 'px';
     },
   }
 }
@@ -384,7 +427,7 @@ input {
   width: 400px;
   background: #333333;
   overflow: hidden;
-  height: 600px;
+  height: 500px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 } 
@@ -427,6 +470,10 @@ input {
   cursor: pointer;
 }
 
+.searchResult:hover div {
+  color: #dddddd;
+}
+
 .searchResult::after {
   content: '';
   display: block;
@@ -452,6 +499,10 @@ input {
   width: 30px;
 }
 
+.gameBoxImage {
+
+}
+
 .liveCircleIcon {
   height: 7px;
   width: 7px;
@@ -464,33 +515,48 @@ input {
   font-variant: small-caps;
 }
 
-.channel {
+.channel, .game {
   flex-direction: column;
   height: auto;
   flex-wrap: nowrap;
 }
 
 .sectionTitle {
-  color: #dddddd;
-  font-size: 18px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #dddddd;
-  border-top: 2px solid #dddddd;
-  margin-top: 15px;
+  color: #222222;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #dddddd;
+  border-top: 1px solid #dddddd;
+  background: #dddddd;
 }
 
 /* custom scroll bar */
-.scrollBar {
+.scrollbarSearchResults {
+  /* making this fixed positioned solves some issues */
   position: absolute;
   top: 0px;
   left: 0px;
   height: 20px;
   width: 8px;
-  background: #dddddd;
+  background: #721313;
   z-index: 3;
   opacity: 0.4;
   border-radius: 4px;
+}
+
+.viewMoreButton {
+  height: 20px;
+  line-height: 20px;
+  color: #ddddddc4;
+  width: 100%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  transition: 0.5s;
+}
+
+.viewMoreButton:hover {
+  background: #444444;
+  cursor: pointer;
 }
 
 </style>

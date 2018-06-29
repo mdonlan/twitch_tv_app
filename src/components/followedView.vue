@@ -6,9 +6,9 @@
         <img class="streamImage" v-bind:src="follow.channel.logo">
       </div>
       <div class="streamTextContainer">
-        <div>{{follow.channel.name}}</div>
-        <div>Followers: {{follow.channel.followers | addComma}}</div>
-        <div>Total Views: {{follow.channel.views | addComma}}</div>
+        <div class="name">{{follow.channel.name}}</div>
+        <div class="followers">Followers: {{follow.channel.followers | addComma}}</div>
+        <div class="views">Total Views: {{follow.channel.views | addComma}}</div>
       </div>
     </div>
   </div>
@@ -111,12 +111,13 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  align-content: flex-start;
   margin: 0px;
   margin-top: 75px;
+  padding-top: 30px;
   margin-left: 250px;
   overflow-x: hidden;
   overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .streamContainer {
@@ -124,10 +125,9 @@ export default {
   width: 175px;
   background: #061539;
   color: #dddddd;
-  margin: 15px;
+  margin: 8px;
   display: flex;
   flex-direction: column;
-  border: 2px #dddddd solid;
   border-radius: 10px;
   -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
@@ -135,10 +135,9 @@ export default {
 }
 
 .streamContainer:hover {
-  opacity: 0.7;
-  -webkit-box-shadow: 0px 0px 25px 2px rgba(77, 76, 76, 0.75);
-  -moz-box-shadow: 0px 0px 25px 2px rgba(77, 76, 76, 0.75);
-  box-shadow: 0px 0px 25px 2px rgba(77, 76, 76, 0.75);
+  -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
 }
 
 .streamTextContainer {
@@ -150,9 +149,7 @@ export default {
 }
 
 .streamImageContainer {
-  height: 50%;
   width: 100%;
-  border-bottom: 2px solid #dddddd;
 }
 
 .streamImage {
@@ -166,7 +163,18 @@ export default {
   position: absolute;
   height: 250px;
   width: 175px;
+  background: #222222;
+  opacity: 0;
+  border-radius: 10px;
+  transition: 0.5s;
 }
 
+.clickZone:hover {
+  opacity: 0.7;
+}
+
+.followers, .views {
+  font-size: 14px;
+}
 
 </style>
