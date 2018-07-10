@@ -3,12 +3,14 @@
       <!--<div class="mouseEventWatchLayerTop"></div>-->
       <div class="mouseEventWatchLayerLeft"></div>
       <div class="leftNavButton"></div>
-      <div id="twitch-embed"></div>
-      <div class="chromeAutoplayButton" v-if="this.showAutoplayButton">Due to Chrome's autoplay policies this video starts muted. To unmute please click anywhere on the video.</div>
-      <div class="closeSmallPlayerContainer" v-if="isSmallVideo">
-        <div class="closeSmallPlayerButton" v-on:click="closeSmallPlayer">CLOSE</div>
-        <div class="restoreFullPlayerButton" v-on:click="restoreFullPlayer">RESTORE</div>
+      <div id="twitch-embed">
+        <div class="closeSmallPlayerContainer" v-if="isSmallVideo" v-on:click="moveSmallPlayer">
+          <div class="closeSmallPlayerButton" v-on:click="closeSmallPlayer">CLOSE</div>
+          <div class="restoreFullPlayerButton" v-on:click="restoreFullPlayer">RESTORE</div>
+        </div>
       </div>
+      <div class="chromeAutoplayButton" v-if="this.showAutoplayButton">Due to Chrome's autoplay policies this video starts muted. To unmute please click anywhere on the video.</div>
+      
     </div>
 </template>
 
@@ -28,6 +30,8 @@ export default {
       playerLoaded: false,
       player: null,
       isSmallVideo: false,
+      offset: null,
+      canDrag: false,
     }
   },
   created () {
@@ -56,8 +60,46 @@ export default {
       this.checkPlayingStatus();
     
     }, 1000);
+
+    //document.addEventListener("click", this.setClickData);
+    document.addEventListener("mouseup", this.mouseUp);
+    document.addEventListener("mousedown", this.setClickData);
+    document.addEventListener("mousemove", this.mouseMoved);
   },
   methods: {
+    moveSmallPlayer() {
+     
+    },
+    setClickData(event) {
+      console.log('clicked')
+      let self = this;
+      let target = event.target;
+      
+      if(target.className == 'closeSmallPlayerContainer') {
+        let clickPos = {x: event.clientX, y: event.clientY};
+        let elem = document.querySelector(".closeSmallPlayerContainer");
+        let elemPos = elem.getBoundingClientRect();
+        //console.log(elemPos)
+        let offset = {x: clickPos.x - elemPos.x, y: clickPos.y - elemPos.y};
+        self.offset = offset;
+        self.canDrag = true;
+        //console.log(offset)
+      } else {
+        self.canDrag = false;
+      }
+    },
+    mouseMoved(event) {
+      let self = this;
+      let video = document.querySelector(".videoPlayerWrapper");
+      
+      //console.log(self.offset)
+      if(event.buttons == 1 && self.canDrag) {
+        //video.style.transition = '0';
+        video.style.top = (event.clientY - self.offset.y) + 'px';
+        video.style.left = (event.clientX - self.offset.x) + 'px';
+      }
+      //console.log(video.style.top)
+    },
     checkPlayingStatus() {
       let self = this;
       let isPlaying = localStorage.getItem("isPlaying");
@@ -82,7 +124,14 @@ export default {
         video.style.width = window.innerWidth + 'px';
         video.style.height = window.innerHeight + 'px';
         video.style.top = '0px';
-        video.style.zIndex = '2';
+        video.style.left = '0px';
+        video.style.zIndex = '3';
+
+        let embedElem = document.querySelector("#twitch-embed"); 
+        //console.log(window.innerHeight)
+        embedElem.style.height = window.innerHeight + 'px';
+        embedElem.style.width = window.innerWidth + 'px';
+        embedElem.style.top = '0px';
       }
     },
     closeSmallPlayer() {
@@ -94,15 +143,21 @@ export default {
       let self = this;
       console.log('clicked restore full player')
       let video = document.querySelector(".videoPlayerWrapper"); 
-      console.log(window.innerHeight)
+      //console.log(window.innerHeight)
       video.style.height = window.innerHeight + 'px';
       video.style.width = window.innerWidth + 'px';
       video.style.top = '0px';
       localStorage.setItem("smallPlayer", false);
       self.isSmallVideo = false;
-      video.style.zIndex = '2';
-      let channelName = localStorage.getItem("streamName");
-      router.push({path: 'stream', query: { name: channelName}});
+      video.style.zIndex = '3';
+
+      let embed = document.querySelector("#twitch-embed"); 
+      //console.log(window.innerHeight)
+      embed.style.height = window.innerHeight + 'px';
+      embed.style.width = window.innerWidth + 'px';
+      embed.style.top = '0px';
+      //let channelName = localStorage.getItem("streamName");
+      //router.push({path: 'stream', query: { name: channelName}});
     },
     loadPlayer() {
       let self = this;
@@ -110,7 +165,7 @@ export default {
       var h = window.innerHeight;
       var channelName = localStorage.getItem("streamName");
       console.log(channelName)
-      let embed = new Twitch.Embed("twitch-embed", {
+      self.player = new Twitch.Embed("twitch-embed", {
           width: "100%",
           height: "100%",
           channel: channelName,
@@ -118,9 +173,13 @@ export default {
           theme: "dark",
       });
 
-      embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {
+      self.player.addEventListener(Twitch.Embed.VIDEO_READY, () => {
         let self = this;
-        self.player = embed.getPlayer();
+        //self.player = embed.getPlayer();
+        //console.log(embed.getPlayer())
+        //console.log(embed)
+        //embed.options.layout = 'video';
+        //embed.getOptions();
 
         // on the twitch player being ready
         // check if it is muted and if so
@@ -197,6 +256,17 @@ export default {
   top: 0px;
   overflow: hidden;
   z-index: 2;
+  /*transition: height 0.3s, width 0.5s, top 0.5s;*/
+}
+
+#twitch-embed {
+  height: 100%;
+  width: 100%;
+  /*transition: height 0.3s, width 0.5s, top 0.5s;*/
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  user-select: none;
 }
 
 .mouseEventWatchLayerTop {
@@ -220,11 +290,6 @@ export default {
   overflow: hidden;
   z-index: 3;
   opacity: 0.5;
-}
-
-#twitch-embed {
-  height: 100%;
-  width: 100%;
 }
 
 .chromeAutoplayButton {
@@ -261,16 +326,30 @@ export default {
 .closeSmallPlayerButton, .restoreFullPlayerButton {
   cursor: pointer;
   color: #dddddd;
+  border: 1px solid #dddddd;
+  padding: 3px;
+  margin: 3px;
+  transition: 0.6s;
+}
+
+.closeSmallPlayerButton:hover, .restoreFullPlayerButton:hover {
+  background: #dddddd;
+  color: #222222;
 }
 
 .videoPlayerWrapper:hover .closeSmallPlayerContainer {
   display: flex;
-  height: 100%;
   width: 100%;
-  background: #22222248;
+  background: #222222;
   
   justify-content: center;
   align-items: flex-start;
+  cursor: move;
+}
+
+#twitch-embed iframe {
+  width:100%;
+  height:100%;
 }
 
 </style>

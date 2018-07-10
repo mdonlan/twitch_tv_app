@@ -169,7 +169,7 @@ axios({
     align-items: center;
     justify-content: center;
     border-bottom: 2px solid #dddddd;
-    z-index: 1;
+    z-index: 3;
 }
 
 .topNavBtnContainer {

@@ -79,22 +79,20 @@ export default {
         }
     },
     loadPlayer() {
-        var w = window.innerWidth;
-        var h = window.innerHeight;
-        var channelName = localStorage.getItem("streamName");
-        var embed = new Twitch.Embed("twitch-embed", {
-            width: w,
-            height: h,
-            channel: channelName,
-            layout: "",
-            theme: "dark",
-            autoplay: false
-        });
+      var channelName = localStorage.getItem("streamName");
+      var embed = new Twitch.Embed("twitch-embed", {
+          width: '100%',
+          height: '100%',
+          channel: channelName,
+          layout: "",
+          theme: "dark",
+          autoplay: false
+      });
 
-        embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {
-            var player = embed.getPlayer();
-            player.play();
-        });
+      embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {
+          //var player = embed.getPlayer();
+          //player.play();
+      });
     },
     checkForStream() {
       var url = window.location.href;

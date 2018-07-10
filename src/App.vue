@@ -71,10 +71,14 @@ export default {
       localStorage.setItem("isPlaying", true);
 
       let videoContainer = document.querySelector(".videoPlayerWrapper");
-      videoContainer.style.height = '400px';
+      videoContainer.style.height = '225px';
       videoContainer.style.width = '400px';
       videoContainer.style.zIndex = '1000';
-      videoContainer.style.top = 'calc(100% - 300px)';
+      videoContainer.style.top = 'calc(100% - 225px)';
+
+      let twitchEmbed = document.querySelector("#twitch-embed");
+      twitchEmbed.style.height = '500px';
+      twitchEmbed.style.width = '400px';
 
       //let twitchEmbed = document.querySelector("#twitch-embed");
       //console.log(twitchEmbed);
