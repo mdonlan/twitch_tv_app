@@ -22,7 +22,7 @@ export default new Router({
     {
       path: '/stream/',
       name: 'videoPlayer',
-      component: videoPlayer
+      component: null
     },
     {
       path: '/games/',

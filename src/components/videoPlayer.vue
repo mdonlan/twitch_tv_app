@@ -5,7 +5,10 @@
       <div class="leftNavButton"></div>
       <div id="twitch-embed"></div>
       <div class="chromeAutoplayButton" v-if="this.showAutoplayButton">Due to Chrome's autoplay policies this video starts muted. To unmute please click anywhere on the video.</div>
-
+      <div class="closeSmallPlayerContainer" v-if="isSmallVideo">
+        <div class="closeSmallPlayerButton" v-on:click="closeSmallPlayer">CLOSE</div>
+        <div class="restoreFullPlayerButton" v-on:click="restoreFullPlayer">RESTORE</div>
+      </div>
     </div>
 </template>
 
@@ -22,11 +25,14 @@ export default {
       isChrome: false,
       showAutoplayButton: false,
       showingLeftNav: false,
+      playerLoaded: false,
+      player: null,
+      isSmallVideo: false,
     }
   },
   created () {
     let self = this;
-    this.checkForStream();
+    
     //Check if browser is Chrome and if so then display chrome autoplay button
     var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
     self.isChrome = isChrome;
@@ -42,15 +48,69 @@ export default {
     }
   },
   mounted () {
-    this.loadPlayer();
+    
     //this.hideLeftNav();    
+
+    // check if video player should be playing / visible
+    setInterval(() => {
+      this.checkPlayingStatus();
+    
+    }, 1000);
   },
   methods: {
+    checkPlayingStatus() {
+      let self = this;
+      let isPlaying = localStorage.getItem("isPlaying");
+      
+      if(isPlaying == 'true') {
+        self.checkForStream();
+        if(!self.playerLoaded) {
+          self.loadPlayer();
+          self.playerLoaded = true;
+        }
+      }
+
+      if(localStorage.getItem("smallPlayer") == 'true') {
+        //self.embed.options.layout = 'video';
+        self.isSmallVideo = true;
+      } else {
+        // if not small video check to make sure the player has returned to large size
+
+        self.isSmallVideo = false;
+        
+        let video = document.querySelector(".videoPlayerWrapper");
+        video.style.width = window.innerWidth + 'px';
+        video.style.height = window.innerHeight + 'px';
+        video.style.top = '0px';
+        video.style.zIndex = '2';
+      }
+    },
+    closeSmallPlayer() {
+      console.log('clicked close small player');
+      let video = document.querySelector("#twitch-embed");
+      video.parentNode.removeChild(video);
+    },
+    restoreFullPlayer() {
+      let self = this;
+      console.log('clicked restore full player')
+      let video = document.querySelector(".videoPlayerWrapper"); 
+      console.log(window.innerHeight)
+      video.style.height = window.innerHeight + 'px';
+      video.style.width = window.innerWidth + 'px';
+      video.style.top = '0px';
+      localStorage.setItem("smallPlayer", false);
+      self.isSmallVideo = false;
+      video.style.zIndex = '2';
+      let channelName = localStorage.getItem("streamName");
+      router.push({path: 'stream', query: { name: channelName}});
+    },
     loadPlayer() {
+      let self = this;
       var w = window.innerWidth;
       var h = window.innerHeight;
       var channelName = localStorage.getItem("streamName");
-      var embed = new Twitch.Embed("twitch-embed", {
+      console.log(channelName)
+      let embed = new Twitch.Embed("twitch-embed", {
           width: "100%",
           height: "100%",
           channel: channelName,
@@ -59,6 +119,8 @@ export default {
       });
 
       embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {
+        let self = this;
+        self.player = embed.getPlayer();
 
         // on the twitch player being ready
         // check if it is muted and if so
@@ -187,6 +249,28 @@ export default {
     miscalculations in text which causes a blur / change to occur in text
   */
   -webkit-font-smoothing: antialiased;
+}
+
+.closeSmallPlayerContainer {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: none;
+}
+
+.closeSmallPlayerButton, .restoreFullPlayerButton {
+  cursor: pointer;
+  color: #dddddd;
+}
+
+.videoPlayerWrapper:hover .closeSmallPlayerContainer {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background: #22222248;
+  
+  justify-content: center;
+  align-items: flex-start;
 }
 
 </style>

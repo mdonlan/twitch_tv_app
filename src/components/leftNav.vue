@@ -10,6 +10,7 @@
       <div class="leftNavTextContainer">
         <div class="followingName leftNavItem">{{follow.channel.name}}</div>
         <div class="followingGame leftNavItem">{{follow.channel.game}}</div>
+        <div class="followingStatus leftNavItem">{{follow.channel.status}}</div>
         <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
       </div>
     </div>
@@ -68,7 +69,7 @@ export default {
   },
   methods: {
       checkForPlayer() {
-		// checks to see if there is already a video player loaded
+		    // checks to see if there is already a video player loaded
         // if one is found it is removed
         
         if($("#twitch-embed").children().length > 0) {
@@ -219,13 +220,13 @@ export default {
 
 .followItemContainer {
   width: 250px;
-  height: 60px;
+  height: 65px;
   margin-bottom: 2px;
   margin-top: 2px;
   display: flex;
   align-items: center;
   transition: background 0.5s linear;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .followItemContainer:hover {
@@ -234,7 +235,7 @@ export default {
 
 .leftNavImageContainer {
   height: 50px;
-  width: 50px;
+  width: 75px;
   display: flex;
   align-items: center;
   margin-left: 5px;
@@ -252,7 +253,7 @@ a {
 }
 
 .leftNavTextContainer {
-  height: 50px;
+  height: 75px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -275,12 +276,20 @@ a {
   border-top: 2px solid #dddddd;
 }
 
-.followingGame, .followingName {
+.followingGame, .followingName, .followingStatus {
   width: 190px;
   overflow: hidden;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.followingName {
+  font-size: 12.5px;
+}
+
+.followingGame, .followingStatus, .followingViewers {
+  color: #ddddddaf;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -294,7 +303,7 @@ a {
     width: 25px;
   }
 
-  .followingGame, .followingViewers {
+  .followingGame, .followingViewers, .followingStatus {
     display: none;
   }
 

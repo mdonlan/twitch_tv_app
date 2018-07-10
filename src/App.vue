@@ -3,6 +3,7 @@
     <topNav></topNav>
     <leftNav></leftNav>
     <notifications></notifications>
+    <videoPlayer></videoPlayer>
     <router-view :key="$route.fullPath"/>
   </div>
 </template>
@@ -24,10 +25,60 @@ export default {
     //this.checkPage();
     this.startInterval();
     this.setInitialCustomScroll();
+
+    document.addEventListener('click', this.clicked);
+
+    localStorage.setItem("smallPlayer", false);
+
+    // check if the url the page loaded on is a video
+    let url = window.location.href;
+    if(url.indexOf("stream") > -1) {
+      // if link is a video
+      localStorage.setItem("isPlaying", true);
+    } else {
+      localStorage.setItem("isPlaying", false);
+    }
   },
   created() {
   },
   methods: {
+    clicked(event) {
+      // check all user clicks
+      // this is for detecting if the user clicked and 
+      // if so we should move the video to its small position
+      // check link url on click to make sure we only change to small pos
+      // if the link is not a stream 
+
+      if(event.target.href) {
+        // if clicked on a link
+        // videos will only be links so we only have to worry if the click is on a link
+        let link = event.target.href;
+        if(link.indexOf("stream") > -1) {
+          // if link is a video
+          localStorage.setItem("isPlaying", true);
+          localStorage.setItem("smallPlayer", false);
+        } else {
+          // if not a video then move video to small pos
+          this.makeVideoSmall();
+        }
+      }
+      
+    },
+    makeVideoSmall() {
+      console.log('making video small');
+
+      localStorage.setItem("smallPlayer", true);
+      localStorage.setItem("isPlaying", true);
+
+      let videoContainer = document.querySelector(".videoPlayerWrapper");
+      videoContainer.style.height = '400px';
+      videoContainer.style.width = '400px';
+      videoContainer.style.zIndex = '1000';
+      videoContainer.style.top = 'calc(100% - 300px)';
+
+      //let twitchEmbed = document.querySelector("#twitch-embed");
+      //console.log(twitchEmbed);
+    },
     handleScrollLeftNav(event) {
       // handles custom scrollbar events / movement
       let target = event.target;
@@ -106,6 +157,9 @@ export default {
         let leftNavWrapper = document.querySelector(".leftNavWrapper");
         let url = window.location.href;
 
+        let isPlaying = localStorage.getItem('isPlaying');
+        let isSmall = localStorage.getItem('smallPlayer');
+
         let onVideoPage;
         if(url.indexOf("stream") > - 1) {
           // is on video page
@@ -115,7 +169,7 @@ export default {
           onVideoPage = false;
         }
 
-        if(onVideoPage) {
+        if(onVideoPage || isPlaying == 'true' && isSmall == 'false') {
           // if on video page check if user is hovering over leftNav
           setVideoView();
           let hovering = checkHover();
