@@ -234,7 +234,7 @@ export default {
 
 .notificationsContainer {
   position: absolute;
-  z-index: 3;
+  z-index: 10;
   top: -500px;
   left: calc(40% - 150px);
   transition: top 1s;

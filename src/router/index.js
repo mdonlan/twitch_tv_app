@@ -12,7 +12,7 @@ import notifications from '@/components/notifications'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -56,3 +56,13 @@ export default new Router({
     },
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  // on each route change set the document title
+  if(to.path == '/stream') {
+    document.title = to.query.name;
+  }
+  next();
+})
+
+export default router

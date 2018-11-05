@@ -168,7 +168,7 @@ axios({
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 2px solid #dddddd;
+    border-bottom: 0.5px solid #2c65ce;
     z-index: 3;
 }
 
@@ -179,7 +179,6 @@ axios({
 .topNavBtn {
   height: 35px;
   width: 100px;
-  border: solid 2px #dddddd;
   margin-right: 10px;
   margin-left: 10px;
   line-height: 35px;
@@ -198,6 +197,7 @@ axios({
   -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
   font-variant: small-caps;
+  background: #214994;
 }
 
 .topNavBtn:hover {
@@ -208,7 +208,7 @@ axios({
 .twitchConnectBtn {
   height: 35px;
   width: 175px;
-  border: solid 2px #dddddd;
+  border: solid 0.5px #2c65ce;
   margin-right: 10px;
   margin-left: 10px;
   line-height: 35px;
@@ -262,7 +262,7 @@ a {
         height: 25px;
         width: 55px;
         font-size: 10px;
-        border: solid 1px #dddddd;
+       
         margin-right: 10px;
         margin-left: 10px;
         line-height: 25px;
@@ -286,7 +286,7 @@ a {
 }
 
 .activeButton {
-  background: #dddddd;
+  background: #c5cedd;
   color: #111111;
   -webkit-box-shadow: 0px 0px 20px 1px rgba(216, 214, 214, 0.5);
   -moz-box-shadow: 0px 0px 20px 1px rgba(216, 214, 214, 0.5);

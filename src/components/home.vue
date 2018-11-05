@@ -110,16 +110,16 @@ export default {
   margin: 10px;
   display: flex;
   flex-direction: column;
-  -webkit-box-shadow: 0px 0px 0px 1.5px #141414;
-  -moz-box-shadow: 0px 0px 0px 1.5px #141414;
-  box-shadow: 0px 0px 0px 0.5px #e4e3e323;
+  -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px 2px rgb(0, 0, 0);
   border-radius: 10px;
 }
 
 .streamContainer:hover {
   -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 50px 2px rgb(0, 0, 0);
 }
 
 .streamTextContainer {

@@ -3,11 +3,10 @@
       <!--<div class="mouseEventWatchLayerTop"></div>-->
       <div class="mouseEventWatchLayerLeft"></div>
       <div class="leftNavButton"></div>
-      <div id="twitch-embed">
-        <div class="closeSmallPlayerContainer" v-if="isSmallVideo" v-on:click="moveSmallPlayer">
-          <div class="closeSmallPlayerButton" v-on:click="closeSmallPlayer">CLOSE</div>
-          <div class="restoreFullPlayerButton" v-on:click="restoreFullPlayer">RESTORE</div>
-        </div>
+      <div id="twitch-embed"></div>
+      <div class="closeSmallPlayerContainer" v-if="isSmallVideo" v-on:click="moveSmallPlayer">
+        <div class="closeSmallPlayerButton" v-on:click="closeSmallPlayer">CLOSE</div>
+        <div class="restoreFullPlayerButton" v-on:click="restoreFullPlayer">RESTORE</div>
       </div>
       <div class="chromeAutoplayButton" v-if="this.showAutoplayButton">Due to Chrome's autoplay policies this video starts muted. To unmute please click anywhere on the video.</div>
       
@@ -37,7 +36,9 @@ export default {
   created () {
     let self = this;
     
+    /* 
     //Check if browser is Chrome and if so then display chrome autoplay button
+    // chrome auto mutes auto playing videos, and this helps the user know what to do
     var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
     self.isChrome = isChrome;
     if(self.isChrome == true) {
@@ -50,6 +51,7 @@ export default {
 
       }, 10000)
     }
+    */
   },
   mounted () {
     
@@ -103,6 +105,7 @@ export default {
     checkPlayingStatus() {
       let self = this;
       let isPlaying = localStorage.getItem("isPlaying");
+      let video = document.querySelector(".videoPlayerWrapper");
       
       if(isPlaying == 'true') {
         self.checkForStream();
@@ -110,6 +113,10 @@ export default {
           self.loadPlayer();
           self.playerLoaded = true;
         }
+      } else {
+        // if not playing video hide video player layer so it doesn't mess with z-indexs
+        console.log('testing test')
+        video.style.zIndex = '0';
       }
 
       if(localStorage.getItem("smallPlayer") == 'true') {
@@ -125,7 +132,9 @@ export default {
         video.style.height = window.innerHeight + 'px';
         video.style.top = '0px';
         video.style.left = '0px';
-        video.style.zIndex = '3';
+        if(isPlaying == 'true') {
+          video.style.zIndex = '3';
+        } 
 
         let embedElem = document.querySelector("#twitch-embed"); 
         //console.log(window.innerHeight)

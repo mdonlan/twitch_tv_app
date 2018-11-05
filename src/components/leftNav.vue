@@ -155,7 +155,7 @@ export default {
   margin-top: 15px;
   padding-top: 30px;
   padding-bottom: 30px;
-  border-top: 2px solid #dddddd;
+  border-top: 0.5px solid #2c65ce;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -170,7 +170,7 @@ export default {
 .navButton {
   height: 20px;
   width: 150px;
-  border: 2px solid #dddddd;
+  border: 0.5px solid #2c65ce;
   padding: 5px;
   margin: 5px;
   color: #dddddd;
@@ -193,17 +193,18 @@ export default {
   top: 0px;
   height: calc(100% - 75px);
   width: 250px;
-  background: #051f5c;
+  background: #051f5cf8;
   color: #dddddd;
   margin-top: 75px;
   overflow-y: hidden;
   overflow-x: hidden;
   z-index: 5;
-  border-right: 2px solid #dddddd;
+
   -webkit-transition: width 0.3s linear;
   -moz-transition: width 0.3s linear;
   -o-transition: width 0.3s linear;
   transition: width 0.3s linear;
+  
 }
 
 .leftNavContentContainer {
@@ -225,6 +226,7 @@ export default {
   align-items: center;
   transition: background 0.5s linear;
   font-size: 12px;
+  user-select: none;
 }
 
 .followItemContainer:hover {
@@ -270,8 +272,8 @@ a {
   height: 50px;
   width: 250px;
   line-height: 50px;
-  border-bottom: 2px solid #dddddd;
-  border-top: 2px solid #dddddd;
+  border-bottom: 0.5px solid #2c65ce;
+  border-top: 0.5px solid #2c65ce;
 }
 
 .followingGame, .followingName, .followingStatus {
