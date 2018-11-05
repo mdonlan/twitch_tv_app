@@ -21,13 +21,16 @@ export default {
     }
   },
   mounted() {
-    // if user refreshes a page check if on video page or normal page
-    //this.checkPage();
-    this.startInterval();
-    this.setInitialCustomScroll();
 
-    document.addEventListener('click', this.clicked);
-    document.addEventListener('mousemove', this.mouseMoved);
+    // when the app is first mounted check for if we are on a video page
+    this.checkIsVideo();
+
+    // if user refreshes a page check if on video page or normal page
+    //this.startInterval();
+    //this.setInitialCustomScroll();
+
+    //document.addEventListener('click', this.clicked);
+    //document.addEventListener('mousemove', this.mouseMoved);
 
     localStorage.setItem("smallPlayer", false);
 
@@ -43,6 +46,12 @@ export default {
   created() {
   },
   methods: {
+
+    checkIsVideo() {
+      let isOnVideoPage = this.$route.path.includes("/stream");
+      this.$store.commit("setOnVideoPage", isOnVideoPage);
+    },
+
     clicked(event) {
       // check all user clicks
       // this is for detecting if the user clicked and 

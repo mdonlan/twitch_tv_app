@@ -11,6 +11,9 @@ import videoPlayer from '@/components/videoPlayer'
 import notifications from '@/components/notifications'
 import search from '@/components/search'
 import loading from '@/components/loading'
+import scrollbar from '@/components/scrollbar'
+import Vuex from "vuex"
+import store from "./Store/store"
 
 Vue.config.productionTip = false
 
@@ -21,11 +24,14 @@ Vue.component('videoPlayer', videoPlayer);
 Vue.component('notifications', notifications);
 Vue.component('search', search);
 Vue.component('loading', loading);
+Vue.component('scrollbar', scrollbar);
+
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: { App }
+  components: { App },
+  store // load vuex store
 });

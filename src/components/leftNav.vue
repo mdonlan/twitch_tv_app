@@ -15,19 +15,16 @@
       </div>
     </div>
   </div>
-
-    <div class="scrollbarLeftNav"></div>
-
-    <div class="navButtons">
-      <div class="navButtonsContainer">
-        <router-link class="navButton" v-bind:to="{path: '/'}">Popular</router-link>
-        <router-link class="navButton" v-bind:to="{path: 'games'}">Games</router-link>
-        <router-link class="navButton" v-bind:to="{path: 'followed'}">Followed</router-link>
-        <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
-        <router-link class="navButton aboutButton" v-bind:to="{path: 'about'}">About</router-link>
-      </div>
-    </div>
+  <scrollbar />
+  
+  <div class="navButtonsContainer">
+    <router-link class="navButton" v-bind:to="{path: '/'}">Popular</router-link>
+    <router-link class="navButton" v-bind:to="{path: 'games'}">Games</router-link>
+    <router-link class="navButton" v-bind:to="{path: 'followed'}">Followed</router-link>
+    <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
+    <router-link class="navButton aboutButton" v-bind:to="{path: 'about'}">About</router-link>
   </div>
+</div>
 </template>
 
 <script>
@@ -50,6 +47,8 @@ export default {
   created () {
     this.checkRoute();
     this.getFollowing();
+
+    document.addEventListener("mousemove",this.mouseMoveHandler);
   },
   mounted () {
     let self = this;
@@ -68,6 +67,34 @@ export default {
     }
   },
   methods: {
+    mouseMoveHandler(event) {
+      // watches the mouse movement and checks whether we are over an IFRAME or not
+      // if we are over an Iframe it means we are over the video player / chat
+      // and that we should hide the leftNav
+      // otherwise show the leftNav
+
+      let toElem = event.toElement;
+      let tag = toElem.tagName;
+
+      let hide = tag.includes("IFRAME"); 
+      this. setLeftNavPos(hide);
+      
+    },
+
+    setLeftNavPos(hide) {
+      // show or hide the left nav
+
+      let leftNavElem = document.querySelector(".leftNavWrapper")
+      
+      if(hide) {
+        leftNavElem.classList.add("leftNavWrapperHide");
+      } else {
+        leftNavElem.classList.remove("leftNavWrapperHide");
+      }
+    },
+
+    
+
       checkForPlayer() {
 		    // checks to see if there is already a video player loaded
         // if one is found it is removed
@@ -152,9 +179,7 @@ export default {
 <style scoped>
 
 .navButtonsContainer {
-  margin-top: 15px;
-  padding-top: 30px;
-  padding-bottom: 30px;
+
   border-top: 0.5px solid #2c65ce;
   display: flex;
   flex-direction: column;
@@ -207,11 +232,15 @@ export default {
   
 }
 
+.leftNavWrapperHide {
+  width: 0px;
+}
+
 .leftNavContentContainer {
   position: absolute;
-  height: calc(100% - 340px);
+  height: calc(100% - 275px);
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
   /* make width + padding overflow to hide native scrollbar */
   width: 100%;
   padding-right: 150px;
