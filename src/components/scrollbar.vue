@@ -10,8 +10,13 @@ export default {
     parentElem: {
       type: String,
       required: true
+    },
+    offsetTop: {
+      type: Number,
+      required: true
     }
-  },
+  }
+  ,
   data: function() {
     return {
       
@@ -28,23 +33,29 @@ export default {
       // set the scroll listener on the parent element for this scrollbar
       let parentElem = document.querySelector("." + this.parentElem);
       parentElem.addEventListener("scroll", this.scrollHandler);
+
+      if(parentElem.clientHeight >= parentElem.scrollHeight) {
+        // we shouldn't need a scrollbar here
+        console.log('no scroll needed');
+      }
     },
 
     scrollHandler(event) {
+      console.log('scrollbar event!')
       // on a scroll event, set the pos and size of the scrollbar
 
       let containerElem = document.querySelector("." + this.parentElem);
       let scrollElem = document.querySelector("." + this.parentElem + 'Scrollbar');
       this.setHeight(containerElem, scrollElem);
-      this.setPos(containerElem, scrollElem)
+      this.setPos(containerElem, scrollElem);
     },
 
     setHeight(containerElem, scrollElem) {
+      console.log('setting scrollHeight')
       // set the scrollbar height
       let totalHeight = containerElem.scrollHeight;
       let currentHeight = containerElem.clientHeight;
       let scrollbarHeight = currentHeight * (currentHeight / totalHeight);
-      
       // update elem size in DOM
       scrollElem.style.height = scrollbarHeight + "px";
     },
@@ -52,13 +63,21 @@ export default {
     setPos(containerElem, scrollElem) {
       // the the position of the scrollbar
 
-      // set the top pos
-      let scrollTop = containerElem.scrollTop;
-      if((scrollTop + scrollElem.clientHeight) < containerElem.clientHeight) {
-        scrollElem.style.top = scrollTop + 50 + "px"; // 50 is from the top offset
-      } else {
-        scrollElem.style.top = containerElem.clientHeight - scrollElem.clientHeight + 50 + "px";
-      }
+      let parentScrollTop = containerElem.scrollTop;
+      // let offsetTop = getComputedStyle(containerElem, null).getPropertyValue("margin-top");
+      // offsetTop = parseInt(offsetTop.substr(0, offsetTop.length - 2));
+      
+      let pos = parentScrollTop * (containerElem.clientHeight / containerElem.scrollHeight);
+      let posWithOffset = pos + this.offsetTop;
+
+      console.log(typeof this.offsetTop)
+
+      console.log(pos);
+      console.log(posWithOffset);
+
+      scrollElem.style.top = posWithOffset + "px";
+      //console.log(scrollElem.style.top);
+      //console.log(this.offsetTop)
     }
   }
 }
@@ -69,7 +88,7 @@ export default {
 <style scoped>
 
 .scrollbar {
-  background: red;
+  background: #222222;
   width: 30px;
   position: absolute;
   left: calc(100% - 30px);

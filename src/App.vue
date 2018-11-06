@@ -341,9 +341,8 @@ function checkHover() {
 body {
   margin: 0px;
   overflow: hidden;
-  background-color: #444444;
-  background-image: url("https://www.transparenttextures.com/patterns/black-linen.png");
-  
+  background-color: #111111;
+  /* background-image: url("https://www.transparenttextures.com/patterns/black-linen.png"); */
 }
 
 .topNavContainer {

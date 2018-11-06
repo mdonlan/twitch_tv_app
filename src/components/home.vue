@@ -1,18 +1,21 @@
 <template>
-  <div class="twitchWrapper">
-    <scrollbar :parentElem="scrollbarParent"/>
-    <div class="streamContainer" v-for="stream in streams">
-      <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: stream.channel.name}}"></router-link>
-      <div class="streamImageContainer">
-        <img class="streamImage" v-bind:src="stream.preview.large">
-      </div>
-      <div class="streamTextContainer">
-        <div class="streamName streamItem">{{stream.channel.name}}</div>
-        <div class="streamGame streamItem">{{stream.channel.game}}</div>
-        <div class="streamStatus streamItem">{{stream.channel.status}}</div>
-        <div class="streamViewers streamItem">{{stream.viewers | addComma}}</div>
+  <div class="homeComponent">
+    <div class="twitchWrapper">
+      <div class="streamContainer" v-for="stream in streams">
+        <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: stream.channel.name}}"></router-link>
+        <div class="streamImageContainer">
+          <img class="streamImage" v-bind:src="stream.preview.large">
+        </div>
+        <div class="streamTextContainer">
+          <div class="streamName streamItem">{{stream.channel.name}}</div>
+          <div class="streamGame streamItem">{{stream.channel.game}}</div>
+          <div class="streamStatus streamItem">{{stream.channel.status}}</div>
+          <div class="streamViewers streamItem">{{stream.viewers | addComma}}</div>
+        </div>
       </div>
     </div>
+    <scrollbar :parentElem="scrollbarParent" :offsetTop="offsetTop"/>
+
   </div>
 </template>
 
@@ -26,7 +29,8 @@ export default {
     return {
       streams: [],
       pageSize: null,
-      scrollbarParent: "twitchWrapper"
+      scrollbarParent: "twitchWrapper",
+      offsetTop: 75 // height of the top nav bar container
     }
   },
   created () {
@@ -62,19 +66,6 @@ export default {
         let streamData = response.data.streams;
         self.streams = streamData;
       });
-    },
-    handleScroll(event) {
-      var last = $(".streamContainer").last();
-      var elementTop = last.offset().top;
-      var elementBottom = elementTop + last.outerHeight();
-      var viewportTop = $(window).scrollTop();
-      var viewportBottom = viewportTop + $(window).height();
-
-      if(elementBottom > viewportTop && elementTop < viewportBottom) {
-        //console.log('last element is visible');
-      } else {
-        //console.log('last element is NOT visible');
-      }
     }
   }
 }
@@ -87,6 +78,10 @@ export default {
 
 $streamHeight: 32%;
 $streamWidth: 18%;
+
+.homeComponent {
+  position: absoulte;
+}
 
 .twitchWrapper {
   position: absolute;
@@ -102,6 +97,8 @@ $streamWidth: 18%;
   overflow-x: hidden;
   overflow-y: scroll;
   height: calc(100% - 75px);
+  width: calc(100% - 250px);
+  padding-right: 18px;
 }
 
 .streamContainer {
@@ -114,6 +111,7 @@ $streamWidth: 18%;
   flex-direction: column;
   box-shadow: 0px 0px 10px 3px rgb(0, 0, 0);
   transition: 0.5s;
+  position: relative;
 }
 
 .streamContainer:hover {
@@ -155,8 +153,8 @@ $streamWidth: 18%;
 
 .clickZone {
   position: absolute;
-  height: $streamHeight;
-  width: $streamWidth;
+  height: 100%;
+  width: 100%;
   background: #222222;
   opacity: 0;
   transition: 0.5s;

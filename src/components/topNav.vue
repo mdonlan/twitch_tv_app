@@ -169,7 +169,6 @@ axios({
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 0.5px solid #2c65ce;
     z-index: 3;
 }
 
@@ -189,22 +188,24 @@ axios({
   -ms-user-select: none;      /* IE 10+ */
   user-select: none;          /* Likely future */ 
   text-decoration: none;
-  -webkit-transition: 0.3s linear;
-  -moz-transition: 0.3s linear;
-  -o-transition: 0.3s linear;
-  transition: 0.3s linear;
-  box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
+  // -webkit-transition: 0.3s linear;
+  // -moz-transition: 0.3s linear;
+  // -o-transition: 0.3s linear;
+  // transition: 0.3s linear;
+  // box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
   font-variant: small-caps;
-  background: #222222;
+  // background: #222222;
 }
 
 .topNavBtn:hover {
-  background: #333333;
+  // background: #333333;
+  border-bottom: 1px solid #dddddd;
 }
 
 .activeButton {
   background: #d5d9df;
   color: #111111;
+  border: none !important;
 }
 
 .twitchConnectBtn {

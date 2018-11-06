@@ -1,9 +1,10 @@
 <template>
   <div class="leftNavWrapper" id="leftNavWrapper">
     <div class="leftNavTitle">LIVE FOLLOWING</div>
+    <scrollbar :parentElem="scrollbarParent" :offsetTop="scrollbarOffsetTop" />
     <div class="leftNavContentContainer">
       <div class="followItemContainer" :ref="follow._id" v-bind:key="follow._id" v-for="follow in following">
-        <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: follow.channel.name}}" @click.native="checkForPlayer"></router-link>
+        <div class="clickZone" @click="clickedVideoLink(follow)"></div>
         <div class="leftNavImageContainer">
         <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo"></img>
       </div>
@@ -15,14 +16,13 @@
       </div>
     </div>
   </div>
-  <scrollbar :parentElem="scrollbarParent" />
   
   <div class="navButtonsContainer" :class="[{navButtonsHide: hideButtons}]">
-    <router-link class="navButton" v-bind:to="{path: '/'}">Popular</router-link>
-    <router-link class="navButton" v-bind:to="{path: 'games'}">Games</router-link>
-    <router-link class="navButton" v-bind:to="{path: 'followed'}">Followed</router-link>
-    <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
-    <router-link class="navButton aboutButton" v-bind:to="{path: 'about'}">About</router-link>
+    <div class="navButton" @click="clickedButton('home')">Popular</div>
+    <div class="navButton" @click="clickedButton('games')">Games</div>
+    <div class="navButton" @click="clickedButton('following')">Followed</div>
+    <!-- <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link> -->
+    <div class="navButton aboutButton" v-bind:to="{path: 'about'}" @click="clickedButton('about')">About</div>
   </div>
 </div>
 </template>
@@ -43,7 +43,8 @@ export default {
       listOrderNew: [],
       listOrderOld: [],
       hideButtons: false,
-      scrollbarParent: "leftNavContentContainer"
+      scrollbarParent: "leftNavContentContainer",
+      scrollbarOffsetTop: 75 // size of left nav title container
     }
   },
   created () {
@@ -71,6 +72,10 @@ export default {
     }
   },
   methods: {
+    clickedButton(to) {
+      this.$router.push(to);
+    },
+
     mouseMoveHandler(event) {
       // watches the mouse movement and checks whether we are over an IFRAME or not
       // if we are over an Iframe it means we are over the video player / chat
@@ -99,22 +104,27 @@ export default {
       } else {
         leftNavElem.classList.remove("leftNavWrapperHide");
       }
+    },    
+
+    clickedVideoLink(stream) {
+      // clicked a link to a stream on the leftNav
+      
+      let to = {path: 'stream', query: {name: stream.channel.name}};
+      this.$router.push(to);
+      this.$store.commit("setOnVideoPage", true);
+      this.$store.commit("setOnChannel", to.query.name);
+      
+      // if($("#twitch-embed").children().length > 0) {
+          
+      // }
+      // $("#twitch-embed").empty();
+      // this.checkForStream();
+      // this.loadPlayer();
     },
 
-    
-
-      checkForPlayer() {
-		    // checks to see if there is already a video player loaded
-        // if one is found it is removed
-        
-        if($("#twitch-embed").children().length > 0) {
-            
-        }
-        $("#twitch-embed").empty();
-            this.checkForStream();
-            this.loadPlayer();
-    },
     loadPlayer() {
+
+
       var channelName = localStorage.getItem("streamName");
       var embed = new Twitch.Embed("twitch-embed", {
           width: '100%',
@@ -218,23 +228,30 @@ export default {
   overflow-y: scroll;
   /* make width + padding overflow to hide native scrollbar */
   width: 100%;
-  padding-right: 150px;
+  padding-right: 18px;
 }
 
 .followItemContainer {
   width: 250px;
   height: 65px;
-  margin-bottom: 2px;
-  margin-top: 2px;
   display: flex;
   align-items: center;
   transition: background 0.5s linear;
   font-size: 12px;
   user-select: none;
+  position: relative;
 }
 
 .followItemContainer:hover {
   background: $lighterBackgroundColor;
+}
+
+.clickZone {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  top: 0px;
 }
 
 .leftNavImageContainer {
@@ -257,7 +274,7 @@ a {
 }
 
 .leftNavTextContainer {
-  height: 75px;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -266,16 +283,10 @@ a {
   margin-left: 5px;
 }
 
-.clickZone {
-  position: absolute;
-  height: 60px;
-  width: 100%;
-}
-
 .leftNavTitle {
-  height: 50px;
+  height: 75px;
   width: 250px;
-  line-height: 50px;
+  line-height: 75px;
   border-bottom: 0.5px solid $mainBorderColor;
   border-top: 0.5px solid $mainBorderColor;
 }
@@ -315,7 +326,7 @@ a {
 }
 
 .navButton {
-  background: #222222;
+  background: #2c2a2a;
   height: 20px;
   width: 150px;
   padding: 5px;
@@ -323,6 +334,7 @@ a {
   color: #dddddd;
   transition: 0.5s;
   font-variant: small-caps;
+  cursor: pointer;
 }
 
 .navButton:hover {

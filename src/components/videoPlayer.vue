@@ -4,7 +4,7 @@
       <div class="mouseEventWatchLayerLeft"></div>
       <div class="leftNavButton"></div>
       <div id="twitch-embed"></div>
-      <div class="closeSmallPlayerContainer" v-if="!this.$store.state.onVideoPage">
+      <div class="closeSmallPlayerContainer" v-if="!this.$store.state.onVideoPage && this.$store.state.onChannel">
         <div class="closeSmallPlayerButton" v-on:click="closeSmallPlayer">CLOSE</div>
         <router-link class="restoreFullPlayerButton" v-on:click="restoreFullPlayer" :to="{path: 'stream', query: { name: this.$store.state.onChannel}}">RESTORE</router-link>
       </div>      
@@ -51,6 +51,8 @@ export default {
       let twitchEmbed = document.querySelector("#twitch-embed");
       videoContainer.classList.remove("videoPlayerSmall");
       twitchEmbed.classList.remove("embedSmall");
+      videoContainer.classList.remove("hideSmallVideoPlayer")
+
     },
     setSmall() {
       // set the video player to small
@@ -58,6 +60,10 @@ export default {
       let twitchEmbed = document.querySelector("#twitch-embed");
       videoContainer.classList.add("videoPlayerSmall");
       twitchEmbed.classList.add("embedSmall");
+
+      if(!this.$store.state.onChannel) {
+        videoContainer.classList.add("hideSmallVideoPlayer")
+      }
     },
     setupStoreWatcher() {
       // watch for changes in store
@@ -66,6 +72,7 @@ export default {
           return this.$store.state.onVideoPage; // what this value
         },
         (newValue, oldValue) => { // when value changes do this
+          console.log("ROUTE HAS CHANGED")
           if(newValue == true) {
             this.setPlayerSize(true)
             this.loadPlayer(); // on video page, show player
@@ -74,23 +81,33 @@ export default {
           }
         }
       )
+
+      // watch onChannel
+      // if this changes update the video player to load a new channel
+      this.$store.watch((state) => {return this.$store.state.onChannel}, onChannel => {
+        console.log('watched: ', onChannel);
+        this.loadPlayer();
+      })
     },
     closeSmallPlayer() {
       // remove the video element
       let video = document.querySelector("#twitch-embed");
       video.parentNode.removeChild(video);
+      this.$store.commit("setOnChannel", null);
+      let videoContainer = document.querySelector(".videoPlayerWrapper");
+      videoContainer.classList.add("hideSmallVideoPlayer")
     },
     restoreFullPlayer() {
       this.$store.commit("setOnVideoPage", true)
     },
+
     clearOldPlayers() {
       // when loading a new video, we create a new player 
-      // that means we have to clear the old player
+      // that means we have to clear any old players
       let elem = document.querySelector("#twitch-embed");
-      while(elem.children.length > 0) {
-        elem.removeChild();
-      }
+      elem.innerHTML = ''; // clear elem
     },
+
     loadPlayer() {
       // load a new channel in a new player
 
@@ -127,6 +144,10 @@ export default {
   width: 400px;
   top: calc(100% - 225px);
   z-index: 5;
+}
+
+.hideSmallVideoPlayer {
+  z-index: 0;
 }
  
 #twitch-embed {
