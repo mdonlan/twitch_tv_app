@@ -29,12 +29,11 @@ export default {
   mounted () {
     // at first load check if we need to load a video
     if(this.$store.state.onVideoPage) {
+      this.setPlayerSize(true); // make sure to load correct size for the page we load on      
       this.loadPlayer();
+    } else {
+      this.setPlayerSize(false);
     }
-
-    // document.addEventListener("mouseup", this.mouseUp);
-    // document.addEventListener("mousedown", this.setClickData);
-    // document.addEventListener("mousemove", this.mouseMoved);
   },
   methods: {
     setPlayerSize(isLarge) {
@@ -76,60 +75,13 @@ export default {
         }
       )
     },
-    setClickData(event) {
-      console.log('clicked')
-      let self = this;
-      let target = event.target;
-      
-      if(target.className == 'closeSmallPlayerContainer') {
-        let clickPos = {x: event.clientX, y: event.clientY};
-        let elem = document.querySelector(".closeSmallPlayerContainer");
-        let elemPos = elem.getBoundingClientRect();
-        //console.log(elemPos)
-        let offset = {x: clickPos.x - elemPos.x, y: clickPos.y - elemPos.y};
-        self.offset = offset;
-        self.canDrag = true;
-        //console.log(offset)
-      } else {
-        self.canDrag = false;
-      }
-    },
-    mouseMoved(event) {
-      let self = this;
-      let video = document.querySelector(".videoPlayerWrapper");
-      
-      //console.log(self.offset)
-      if(event.buttons == 1 && self.canDrag) {
-        //video.style.transition = '0';
-        video.style.top = (event.clientY - self.offset.y) + 'px';
-        video.style.left = (event.clientX - self.offset.x) + 'px';
-      }
-      //console.log(video.style.top)
-    },
     closeSmallPlayer() {
-      console.log('clicked close small player');
+      // remove the video element
       let video = document.querySelector("#twitch-embed");
       video.parentNode.removeChild(video);
     },
     restoreFullPlayer() {
       this.$store.commit("setOnVideoPage", true)
-      // let self = this;
-      // console.log('clicked restore full player')
-      // let video = document.querySelector(".videoPlayerWrapper"); 
-      // //console.log(window.innerHeight)
-      // video.style.height = window.innerHeight + 'px';
-      // video.style.width = window.innerWidth + 'px';
-      // video.style.top = '0px';
-      // localStorage.setItem("smallPlayer", false);
-      // video.style.zIndex = '3';
-
-      // let embed = document.querySelector("#twitch-embed"); 
-      // //console.log(window.innerHeight)
-      // embed.style.height = window.innerHeight + 'px';
-      // embed.style.width = window.innerWidth + 'px';
-      // embed.style.top = '0px';
-      // //let channelName = localStorage.getItem("streamName");
-      // //router.push({path: 'stream', query: { name: channelName}});
     },
     clearOldPlayers() {
       // when loading a new video, we create a new player 
@@ -157,7 +109,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
 
 .videoPlayerWrapper {
   position: absolute;

@@ -156,12 +156,13 @@ axios({
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+@import "../global_styles.scss";
 
 .topNavWrapper {
     position: fixed;
     margin-top: 0px;
-    background: #051f5c;
+    background: $mainBackgroundColor;
     height: 75px;
     width: 100%;
     top:0px;
@@ -188,21 +189,22 @@ axios({
   -ms-user-select: none;      /* IE 10+ */
   user-select: none;          /* Likely future */ 
   text-decoration: none;
-  border-radius: 3px;
   -webkit-transition: 0.3s linear;
   -moz-transition: 0.3s linear;
   -o-transition: 0.3s linear;
   transition: 0.3s linear;
-  -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
   font-variant: small-caps;
-  background: #214994;
+  background: #222222;
 }
 
 .topNavBtn:hover {
-    background: #8d8d8dab;
-    color: #111111;
+  background: #333333;
+}
+
+.activeButton {
+  background: #d5d9df;
+  color: #111111;
 }
 
 .twitchConnectBtn {
@@ -235,62 +237,54 @@ axios({
 }
 
 a {
-    text-decoration: none;
-    color: #dddddd;
+  text-decoration: none;
+  color: #dddddd;
 }
 
 .twitchLogo {
-    position: absolute;
-    top: 25px;
-    left: 80px;
-    height: 25px;
-    width: 75px;
+  position: absolute;
+  top: 25px;
+  left: 80px;
+  height: 25px;
+  width: 75px;
 }
 
 .aboutButton {
-    position: absolute;
-    top: 20px;
-    right: 100px;
+  position: absolute;
+  top: 20px;
+  right: 100px;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 @media only screen and (max-width: 1000px) {
-    .topNavBtn {
-        height: 25px;
-        width: 55px;
-        font-size: 10px;
-       
-        margin-right: 10px;
-        margin-left: 10px;
-        line-height: 25px;
-        color: #dddddd;
-        -webkit-user-select: none;  /* Chrome all / Safari all */
-        -moz-user-select: none;     /* Firefox all */
-        -ms-user-select: none;      /* IE 10+ */
-        user-select: none;          /* Likely future */ 
-        text-decoration: none;
-    }
+  .topNavBtn {
+    height: 25px;
+    width: 55px;
+    font-size: 10px;
+    
+    margin-right: 10px;
+    margin-left: 10px;
+    line-height: 25px;
+    color: #dddddd;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */ 
+    text-decoration: none;
+  }
 
-    .topNavWrapper {
-        align-items: center;
-        justify-content: flex-start;
-    }
+  .topNavWrapper {
+    align-items: center;
+    justify-content: flex-start;
+  }
 
-    .aboutButton {
-        right: 1px;
-        top: 24px;
-    }
-}
-
-.activeButton {
-  background: #c5cedd;
-  color: #111111;
-  -webkit-box-shadow: 0px 0px 20px 1px rgba(216, 214, 214, 0.5);
-  -moz-box-shadow: 0px 0px 20px 1px rgba(216, 214, 214, 0.5);
-  box-shadow: 0px 0px 20px 1px rgba(216, 214, 214, 0.5);
+  .aboutButton {
+    right: 1px;
+    top: 24px;
+  }
 }
 
 </style>

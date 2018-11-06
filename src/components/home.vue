@@ -1,5 +1,6 @@
 <template>
-  <div class="twitchWrapper" v-on:scroll="handleScroll">
+  <div class="twitchWrapper">
+    <scrollbar :parentElem="scrollbarParent"/>
     <div class="streamContainer" v-for="stream in streams">
       <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: stream.channel.name}}"></router-link>
       <div class="streamImageContainer">
@@ -24,14 +25,11 @@ export default {
   data: function () {
     return {
       streams: [],
-      pageSize: null
+      pageSize: null,
+      scrollbarParent: "twitchWrapper"
     }
   },
   created () {
-    
-    //console.log(this.$store)
-    //this.$store.commit("increment");
-    // this runs after data has been created but before anything is rendered
     this.getPopularStreams();
   },
   filters: {
@@ -48,19 +46,20 @@ export default {
   },
   methods: {
     getPopularStreams() {
+      // send a request for the most poular live streams
+
       var self = this;
-      // on home page load pull data from twitch
       axios({
         method:'get',
         url:'https://api.twitch.tv/kraken/streams/?limit=100&offset=0',
         headers: {'Client-ID': '034f31qw57vu405ondtxpqwp104q5o'}
         // client ids
         // dev -- 034f31qw57vu405ondtxpqwp104q5o
-        //prod -- yb1fpw6w2ldfn50b0ynr50trdcxn99
+        // prod -- yb1fpw6w2ldfn50b0ynr50trdcxn99
         
       })
       .then(function(response) {
-        var streamData = response.data.streams;
+        let streamData = response.data.streams;
         self.streams = streamData;
       });
     },
@@ -80,13 +79,14 @@ export default {
   }
 }
 
-
-
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+@import "../global_styles.scss";
+
+$streamHeight: 32%;
+$streamWidth: 18%;
 
 .twitchWrapper {
   position: absolute;
@@ -100,29 +100,24 @@ export default {
   padding-top: 30px;
   margin-left: 250px;
   overflow-x: hidden;
-  overflow-y: auto;
-  
+  overflow-y: scroll;
   height: calc(100% - 75px);
 }
 
 .streamContainer {
-  height: 225px;
-  width: 250px;
-  background: #051f5c;
+  height: $streamHeight;
+  width: $streamWidth;
+  background: $mainBackgroundColor;
   color: #dddddd;
-  margin: 10px;
+  margin: 15px;
   display: flex;
   flex-direction: column;
-  -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 10px 2px rgb(0, 0, 0);
-  border-radius: 10px;
+  box-shadow: 0px 0px 10px 3px rgb(0, 0, 0);
+  transition: 0.5s;
 }
 
 .streamContainer:hover {
-  -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 50px 2px rgb(0, 0, 0);
+  box-shadow: 0px 0px 20px 3px rgb(0, 0, 0);
 }
 
 .streamTextContainer {
@@ -156,25 +151,19 @@ export default {
 .streamImage {
   height: 100%;
   width: 100%;
-  
-  
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  
 }
 
 .clickZone {
   position: absolute;
-  height: 225px;
-  width: 250px;
+  height: $streamHeight;
+  width: $streamWidth;
   background: #222222;
   opacity: 0;
-  border-radius: 10px;
   transition: 0.5s;
 }
 
 .clickZone:hover {
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 @media only screen and (max-width: 1000px) {

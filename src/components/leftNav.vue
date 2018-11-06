@@ -15,7 +15,7 @@
       </div>
     </div>
   </div>
-  <scrollbar />
+  <scrollbar :parentElem="scrollbarParent" />
   
   <div class="navButtonsContainer" :class="[{navButtonsHide: hideButtons}]">
     <router-link class="navButton" v-bind:to="{path: '/'}">Popular</router-link>
@@ -42,7 +42,8 @@ export default {
       loadingLeftNav: false,
       listOrderNew: [],
       listOrderOld: [],
-      hideButtons: false
+      hideButtons: false,
+      scrollbarParent: "leftNavContentContainer"
     }
   },
   created () {
@@ -184,45 +185,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-.navButtonsContainer {
-
-  border-top: 0.5px solid #2c65ce;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  width: 250px;
-  height: 225px;
-  position: absolute;
-  bottom: 0px;
-}
-
-.navButtonsHide {
-  display: none;
-}
-
-.navButton {
-  height: 20px;
-  width: 150px;
-  border: 0.5px solid #2c65ce;
-  padding: 5px;
-  margin: 5px;
-  color: #dddddd;
-  border-radius: 7px;
-  transition: 0.5s;
-  font-variant: small-caps;
-}
-
-.navButton:hover {
-  background: #dddddd;
-  color: #051f5c;
-  -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
-}
+<style lang="scss" scoped>
+@import "../global_styles.scss";
 
 .leftNavWrapper {
   position: fixed;
@@ -230,7 +194,7 @@ export default {
   top: 0px;
   height: calc(100%);
   width: 250px;
-  background: #051f5cf8;
+  background: $mainBackgroundColor;
   color: #dddddd;
   overflow-y: hidden;
   overflow-x: hidden;
@@ -270,7 +234,7 @@ export default {
 }
 
 .followItemContainer:hover {
-  background: #0f327c;
+  background: $lighterBackgroundColor;
 }
 
 .leftNavImageContainer {
@@ -312,8 +276,8 @@ a {
   height: 50px;
   width: 250px;
   line-height: 50px;
-  border-bottom: 0.5px solid #2c65ce;
-  border-top: 0.5px solid #2c65ce;
+  border-bottom: 0.5px solid $mainBorderColor;
+  border-top: 0.5px solid $mainBorderColor;
 }
 
 .followingGame, .followingName, .followingStatus {
@@ -331,6 +295,44 @@ a {
 .followingGame, .followingStatus, .followingViewers {
   color: #ddddddaf;
 }
+
+.navButtonsContainer {
+  background: $darkerBackgroundColor;
+  border-top: 0.5px solid $mainBorderColor;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 225px;
+  position: absolute;
+  bottom: 0px;
+}
+
+.navButtonsHide {
+  display: none;
+}
+
+.navButton {
+  background: #222222;
+  height: 20px;
+  width: 150px;
+  padding: 5px;
+  margin: 5px;
+  color: #dddddd;
+  transition: 0.5s;
+  font-variant: small-caps;
+}
+
+.navButton:hover {
+  background: #dddddd;
+  color: #051f5c;
+  -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+}
+
 
 @media only screen and (max-width: 1000px) {
   .leftNavWrapper {
