@@ -63,21 +63,11 @@ export default {
     setPos(containerElem, scrollElem) {
       // the the position of the scrollbar
 
-      let parentScrollTop = containerElem.scrollTop;
-      // let offsetTop = getComputedStyle(containerElem, null).getPropertyValue("margin-top");
-      // offsetTop = parseInt(offsetTop.substr(0, offsetTop.length - 2));
-      
+      let parentScrollTop = containerElem.scrollTop;      
       let pos = parentScrollTop * (containerElem.clientHeight / containerElem.scrollHeight);
       let posWithOffset = pos + this.offsetTop;
 
-      console.log(typeof this.offsetTop)
-
-      console.log(pos);
-      console.log(posWithOffset);
-
       scrollElem.style.top = posWithOffset + "px";
-      //console.log(scrollElem.style.top);
-      //console.log(this.offsetTop)
     }
   }
 }
@@ -88,10 +78,11 @@ export default {
 <style scoped>
 
 .scrollbar {
-  background: #222222;
-  width: 30px;
+  background: #beb9b994;
+  width: 10px;
   position: absolute;
-  left: calc(100% - 30px);
+  left: calc(100% - 10px);
+  z-index: 10;
 }
 
 </style>

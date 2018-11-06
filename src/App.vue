@@ -341,7 +341,7 @@ function checkHover() {
 body {
   margin: 0px;
   overflow: hidden;
-  background-color: #111111;
+  background-color: rgb(9, 2, 12);
   /* background-image: url("https://www.transparenttextures.com/patterns/black-linen.png"); */
 }
 

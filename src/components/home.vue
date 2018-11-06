@@ -97,7 +97,7 @@ $streamWidth: 18%;
   overflow-x: hidden;
   overflow-y: scroll;
   height: calc(100% - 75px);
-  width: calc(100% - 250px);
+  width: calc(100% - (250px - 18px));
   padding-right: 18px;
 }
 

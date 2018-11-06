@@ -43,8 +43,7 @@
         <div class="viewMoreGames viewMoreButton" v-if="searchResultsGames.length > 0 && gamesContainerNumToShow == 3 && searchResultsGames.length > gamesContainerNumToShow" v-on:click="clickedViewMore">View More Games</div>
         
       </div>
-
-      <div class="scrollbarSearchResults"></div>
+      <scrollbar :parentElem="scrollbarParent" :offsetTop="offsetTop"/>
 
     </div>
   </div>
@@ -70,6 +69,8 @@ export default {
       streamsContainerNumToShow: 3,
       gamesContainerNumToShow: 3,
       channelsContainerNumToShow: 3,
+      scrollbarParent: "searchResultsContainer",
+      offsetTop: 0
     }
   },
   created() {
@@ -320,9 +321,6 @@ export default {
         }
       });
       self.searchResultsGames = games;
-
-      // setup search results scroll
-      self.setupScrollbar();
     },
     sortChannels(channels) {
       // sort channels by number of followers they have
@@ -345,41 +343,6 @@ export default {
         //console.log('clicked view more games')
         self.gamesContainerNumToShow = 10;
       }
-    },
-    setupScrollbar() {
-      // setup custom search results scrollbar
-      let scrollContainerSearchResults = document.querySelector(".searchResultsContainer");
-      scrollContainerSearchResults.addEventListener('scroll', this.handleScrollSearchResults);
-
-      // set inital scrollbar properties
-      let scrollbarSearchResults = document.querySelector(".scrollbarSearchResults");
-      
-      // get position to set scrollbar left
-      let pos = scrollContainerSearchResults.getBoundingClientRect();
-      // these values are approx.
-      scrollbarSearchResults.style.top = '30px';
-      scrollbarSearchResults.style.left = '385px';
-
-      // if the height of the element is not equal to the scroll height of the element
-      // it means the element is overflowing and the scroll is needed
-      // if they are equal the element is completly in view and 
-      // scrolling is not needed, so set its height to zero
-      
-      if(scrollContainerSearchResults.clientHeight != scrollContainerSearchResults.scrollHeight) {
-        scrollbarSearchResults.style.height = scrollContainerSearchResults.clientHeight - 4 + 'px';
-      } else {
-        scrollbarSearchResults.style.height = '0px';
-      }
-
-    },
-    handleScrollSearchResults(event) {
-      console.log('running scroll handler')
-      // handles custom scrollbar events / movement
-      let target = event.target;
-      console.dir(target)
-      let targetPos = target.getBoundingClientRect();
-      let scrollbar = document.querySelector(".scrollbarSearchResults");
-      scrollbar.style.top = (target.scrollTop / 2) + 30 + 'px';
     },
   }
 }

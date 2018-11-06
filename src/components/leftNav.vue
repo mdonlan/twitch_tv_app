@@ -18,7 +18,7 @@
   </div>
   
   <div class="navButtonsContainer" :class="[{navButtonsHide: hideButtons}]">
-    <div class="navButton" @click="clickedButton('home')">Popular</div>
+    <div class="navButton" @click="clickedButton('/')">Popular</div>
     <div class="navButton" @click="clickedButton('games')">Games</div>
     <div class="navButton" @click="clickedButton('following')">Followed</div>
     <!-- <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link> -->
@@ -223,7 +223,7 @@ export default {
 
 .leftNavContentContainer {
   position: absolute;
-  height: calc(100% - 275px);
+  height: calc(100% - (225px + 75px)); // 225px for buttons container, 75px for offset top 
   overflow-x: hidden;
   overflow-y: scroll;
   /* make width + padding overflow to hide native scrollbar */
@@ -289,6 +289,7 @@ a {
   line-height: 75px;
   border-bottom: 0.5px solid $mainBorderColor;
   border-top: 0.5px solid $mainBorderColor;
+  // background: $darkerBackgroundColor;
 }
 
 .followingGame, .followingName, .followingStatus {
@@ -398,19 +399,6 @@ a {
     align-items: center;
     margin-left: 2px;
   }
-}
-
-/* custom scroll bar */
-.scrollbarLeftNav {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  height: 20px;
-  width: 8px;
-  background: #dddddd;
-  z-index: 3;
-  opacity: 0.4;
-  border-radius: 4px;
 }
 
 </style>

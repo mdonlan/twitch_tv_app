@@ -20,7 +20,7 @@ export default {
   name: 'videoPlayer',
   data: function() {
     return {
-      
+      currentPlayerChannel: null
     }
   },
   created () {
@@ -72,7 +72,7 @@ export default {
           return this.$store.state.onVideoPage; // what this value
         },
         (newValue, oldValue) => { // when value changes do this
-          console.log("ROUTE HAS CHANGED")
+          //console.log(newValue, oldValue)
           if(newValue == true) {
             this.setPlayerSize(true)
             this.loadPlayer(); // on video page, show player
@@ -80,22 +80,24 @@ export default {
             this.setPlayerSize(false)
           }
         }
-      )
+      );
 
       // watch onChannel
       // if this changes update the video player to load a new channel
-      this.$store.watch((state) => {return this.$store.state.onChannel}, onChannel => {
-        console.log('watched: ', onChannel);
+      this.$store.watch((state) => {return this.$store.state.onChannel}, (onChannel, oldValue) => {
+        //console.log('watched: ', onChannel);
+        //console.log(onChannel, oldValue)
         this.loadPlayer();
-      })
+      });
     },
     closeSmallPlayer() {
       // remove the video element
-      let video = document.querySelector("#twitch-embed");
-      video.parentNode.removeChild(video);
+      // let video = document.querySelector("#twitch-embed");
+      // video.parentNode.removeChild(video);
+      // this.$store.commit("setOnChannel", null);
+      // let videoContainer = document.querySelector(".videoPlayerWrapper");
+      // videoContainer.classList.add("hideSmallVideoPlayer")
       this.$store.commit("setOnChannel", null);
-      let videoContainer = document.querySelector(".videoPlayerWrapper");
-      videoContainer.classList.add("hideSmallVideoPlayer")
     },
     restoreFullPlayer() {
       this.$store.commit("setOnVideoPage", true)
@@ -111,14 +113,24 @@ export default {
     loadPlayer() {
       // load a new channel in a new player
 
-      this.clearOldPlayers();
-      let newPlayer = new Twitch.Embed("twitch-embed", {
-          width: "100%",
-          height: "100%",
-          channel: this.$store.state.onChannel,
-          layout: "",
-          theme: "dark",
-      });
+      // check if we are trying to load a channel that is already playing and prevent it
+      // only load a new player if not a match
+      if(this.$store.state.onChannel == null) {
+        this.clearOldPlayers();
+        return;
+      }
+
+      if(this.$store.state.onChannel != this.currentPlayerChannel) {
+        this.clearOldPlayers();
+        let newPlayer = new Twitch.Embed("twitch-embed", {
+            width: "100%",
+            height: "100%",
+            channel: this.$store.state.onChannel,
+            layout: "",
+            theme: "dark",
+        });
+        this.currentPlayerChannel = newPlayer.options.channel;  
+      }
     } 
   }
 }
