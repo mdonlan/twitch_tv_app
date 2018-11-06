@@ -10,6 +10,8 @@ import about from '@/components/about'
 import loading from '@/components/loading'
 import notifications from '@/components/notifications'
 
+import store from "../Store/store"
+
 Vue.use(Router)
 
 const router = new Router({
@@ -58,9 +60,16 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  // on each route change set the document title
+  //
+  // whenever we change routes set some data
+  // 
+
   if(to.path == '/stream') {
     document.title = to.query.name;
+    store.commit("setOnVideoPage", true);
+    store.commit("setOnChannel", to.query.name);
+  } else {
+    store.commit("setOnVideoPage", false);    
   }
   next();
 })

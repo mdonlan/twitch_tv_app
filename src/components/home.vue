@@ -29,7 +29,7 @@ export default {
   },
   created () {
     
-    console.log(this.$store)
+    //console.log(this.$store)
     //this.$store.commit("increment");
     // this runs after data has been created but before anything is rendered
     this.getPopularStreams();

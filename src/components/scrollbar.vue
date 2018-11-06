@@ -45,17 +45,14 @@ export default {
 
     setPos(containerElem, scrollElem) {
       // the the position of the scrollbar
+
+      // set the top pos
       let scrollTop = containerElem.scrollTop;
-
-      console.log(scrollTop + scrollElem.clientHeight);
-      console.log(containerElem.clientHeight);
-
       if((scrollTop + scrollElem.clientHeight) < containerElem.clientHeight) {
         scrollElem.style.top = scrollTop + 50 + "px"; // 50 is from the top offset
       } else {
         scrollElem.style.top = containerElem.clientHeight - scrollElem.clientHeight + 50 + "px";
       }
-       
     }
   }
 }
@@ -69,6 +66,7 @@ export default {
   background: red;
   width: 30px;
   position: absolute;
+  left: calc(100% - 30px);
 }
 
 </style>

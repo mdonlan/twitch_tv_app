@@ -4,12 +4,10 @@
       <div class="mouseEventWatchLayerLeft"></div>
       <div class="leftNavButton"></div>
       <div id="twitch-embed"></div>
-      <div class="closeSmallPlayerContainer" v-if="isSmallVideo" v-on:click="moveSmallPlayer">
+      <div class="closeSmallPlayerContainer" v-if="!this.$store.state.onVideoPage">
         <div class="closeSmallPlayerButton" v-on:click="closeSmallPlayer">CLOSE</div>
-        <div class="restoreFullPlayerButton" v-on:click="restoreFullPlayer">RESTORE</div>
-      </div>
-      <div class="chromeAutoplayButton" v-if="this.showAutoplayButton">Due to Chrome's autoplay policies this video starts muted. To unmute please click anywhere on the video.</div>
-      
+        <router-link class="restoreFullPlayerButton" v-on:click="restoreFullPlayer" :to="{path: 'stream', query: { name: this.$store.state.onChannel}}">RESTORE</router-link>
+      </div>      
     </div>
 </template>
 
@@ -17,60 +15,66 @@
 import axios from 'axios'
 import twitchEmbedScript from '@/assets/twitchEmbedScript_1.js'
 import $ from 'jquery'
-import Vue from 'vue';
 
 export default {
   name: 'videoPlayer',
   data: function() {
     return {
-      isChrome: false,
-      showAutoplayButton: false,
-      showingLeftNav: false,
-      playerLoaded: false,
-      player: null,
-      isSmallVideo: false,
-      offset: null,
-      canDrag: false,
+      
     }
   },
   created () {
-    let self = this;
-    
-    /* 
-    //Check if browser is Chrome and if so then display chrome autoplay button
-    // chrome auto mutes auto playing videos, and this helps the user know what to do
-    var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-    self.isChrome = isChrome;
-    if(self.isChrome == true) {
-      self.showAutoplayButton = true;
-      setTimeout(function() {
-        let autoplayButton = document.querySelector(".chromeAutoplayButton");
-        let emptyButtonTop = document.querySelector(".emptyButtonTop");
-        let emptyButtonBottom = document.querySelector(".emptyButtonBottom");
-        autoplayButton.style.transform = "translateY(200px)";
-
-      }, 10000)
-    }
-    */
+    this.setupStoreWatcher();
   },
   mounted () {
-    
-    //this.hideLeftNav();    
+    // at first load check if we need to load a video
+    if(this.$store.state.onVideoPage) {
+      this.loadPlayer();
+    }
 
-    // check if video player should be playing / visible
-    setInterval(() => {
-      this.checkPlayingStatus();
-    
-    }, 1000);
-
-    //document.addEventListener("click", this.setClickData);
-    document.addEventListener("mouseup", this.mouseUp);
-    document.addEventListener("mousedown", this.setClickData);
-    document.addEventListener("mousemove", this.mouseMoved);
+    // document.addEventListener("mouseup", this.mouseUp);
+    // document.addEventListener("mousedown", this.setClickData);
+    // document.addEventListener("mousemove", this.mouseMoved);
   },
   methods: {
-    moveSmallPlayer() {
-     
+    setPlayerSize(isLarge) {
+      console.log('setting video player size');
+      console.log(isLarge)
+      if(isLarge) {
+        this.setLarge();
+      } else {
+        this.setSmall();
+      }
+    },
+    setLarge() {
+      // set the video player to large(fullscreen size)
+      let videoContainer = document.querySelector(".videoPlayerWrapper");
+      let twitchEmbed = document.querySelector("#twitch-embed");
+      videoContainer.classList.remove("videoPlayerSmall");
+      twitchEmbed.classList.remove("embedSmall");
+    },
+    setSmall() {
+      // set the video player to small
+      let videoContainer = document.querySelector(".videoPlayerWrapper");
+      let twitchEmbed = document.querySelector("#twitch-embed");
+      videoContainer.classList.add("videoPlayerSmall");
+      twitchEmbed.classList.add("embedSmall");
+    },
+    setupStoreWatcher() {
+      // watch for changes in store
+      this.$store.watch(
+        (state) => {
+          return this.$store.state.onVideoPage; // what this value
+        },
+        (newValue, oldValue) => { // when value changes do this
+          if(newValue == true) {
+            this.setPlayerSize(true)
+            this.loadPlayer(); // on video page, show player
+          } else {
+            this.setPlayerSize(false)
+          }
+        }
+      )
     },
     setClickData(event) {
       console.log('clicked')
@@ -102,153 +106,51 @@ export default {
       }
       //console.log(video.style.top)
     },
-    checkPlayingStatus() {
-      let self = this;
-      let isPlaying = localStorage.getItem("isPlaying");
-      let video = document.querySelector(".videoPlayerWrapper");
-      
-      if(isPlaying == 'true') {
-        self.checkForStream();
-        if(!self.playerLoaded) {
-          self.loadPlayer();
-          self.playerLoaded = true;
-        }
-      } else {
-        // if not playing video hide video player layer so it doesn't mess with z-indexs
-        console.log('testing test')
-        video.style.zIndex = '0';
-      }
-
-      if(localStorage.getItem("smallPlayer") == 'true') {
-        //self.embed.options.layout = 'video';
-        self.isSmallVideo = true;
-      } else {
-        // if not small video check to make sure the player has returned to large size
-
-        self.isSmallVideo = false;
-        
-        let video = document.querySelector(".videoPlayerWrapper");
-        video.style.width = window.innerWidth + 'px';
-        video.style.height = window.innerHeight + 'px';
-        video.style.top = '0px';
-        video.style.left = '0px';
-        if(isPlaying == 'true') {
-          video.style.zIndex = '3';
-        } 
-
-        let embedElem = document.querySelector("#twitch-embed"); 
-        //console.log(window.innerHeight)
-        embedElem.style.height = window.innerHeight + 'px';
-        embedElem.style.width = window.innerWidth + 'px';
-        embedElem.style.top = '0px';
-      }
-    },
     closeSmallPlayer() {
       console.log('clicked close small player');
       let video = document.querySelector("#twitch-embed");
       video.parentNode.removeChild(video);
     },
     restoreFullPlayer() {
-      let self = this;
-      console.log('clicked restore full player')
-      let video = document.querySelector(".videoPlayerWrapper"); 
-      //console.log(window.innerHeight)
-      video.style.height = window.innerHeight + 'px';
-      video.style.width = window.innerWidth + 'px';
-      video.style.top = '0px';
-      localStorage.setItem("smallPlayer", false);
-      self.isSmallVideo = false;
-      video.style.zIndex = '3';
+      this.$store.commit("setOnVideoPage", true)
+      // let self = this;
+      // console.log('clicked restore full player')
+      // let video = document.querySelector(".videoPlayerWrapper"); 
+      // //console.log(window.innerHeight)
+      // video.style.height = window.innerHeight + 'px';
+      // video.style.width = window.innerWidth + 'px';
+      // video.style.top = '0px';
+      // localStorage.setItem("smallPlayer", false);
+      // video.style.zIndex = '3';
 
-      let embed = document.querySelector("#twitch-embed"); 
-      //console.log(window.innerHeight)
-      embed.style.height = window.innerHeight + 'px';
-      embed.style.width = window.innerWidth + 'px';
-      embed.style.top = '0px';
-      //let channelName = localStorage.getItem("streamName");
-      //router.push({path: 'stream', query: { name: channelName}});
+      // let embed = document.querySelector("#twitch-embed"); 
+      // //console.log(window.innerHeight)
+      // embed.style.height = window.innerHeight + 'px';
+      // embed.style.width = window.innerWidth + 'px';
+      // embed.style.top = '0px';
+      // //let channelName = localStorage.getItem("streamName");
+      // //router.push({path: 'stream', query: { name: channelName}});
+    },
+    clearOldPlayers() {
+      // when loading a new video, we create a new player 
+      // that means we have to clear the old player
+      let elem = document.querySelector("#twitch-embed");
+      while(elem.children.length > 0) {
+        elem.removeChild();
+      }
     },
     loadPlayer() {
-      let self = this;
-      var w = window.innerWidth;
-      var h = window.innerHeight;
-      var channelName = localStorage.getItem("streamName");
-      console.log(channelName)
-      self.player = new Twitch.Embed("twitch-embed", {
+      // load a new channel in a new player
+
+      this.clearOldPlayers();
+      let newPlayer = new Twitch.Embed("twitch-embed", {
           width: "100%",
           height: "100%",
-          channel: channelName,
+          channel: this.$store.state.onChannel,
           layout: "",
           theme: "dark",
       });
-
-      self.player.addEventListener(Twitch.Embed.VIDEO_READY, () => {
-        let self = this;
-        //self.player = embed.getPlayer();
-        //console.log(embed.getPlayer())
-        //console.log(embed)
-        //embed.options.layout = 'video';
-        //embed.getOptions();
-
-        // on the twitch player being ready
-        // check if it is muted and if so
-        // try to unmute, this can only happen though
-        // if the user has already intereacted w/ the iframe
-
-        //
-        // UPDATE: twitch has updated their embeded player to have an unmute button 
-        // when the player starts muted, this is a good enough solution for now
-        //
-
-        /*
-        let checkForClick = setInterval(function() {
-          let player = embed.getPlayer();
-          let isMuted = player.getMuted();
-          
-          if(isMuted == true) {
-            player.setMuted();
-            player = embed.getPlayer();
-            isMuted = player.getMuted();
-          }
-        }, 1000)
-        */
-
-		  });
-    },
-    checkForStream() {
-      var url = window.location.href;
-      if(url.indexOf("stream") > -1) {
-        //console.log('user is trying to load a stream');
-        var nameString = url.match(/name=(.*)/)[1]
-        localStorage.setItem("streamName", nameString);
-      }
-    },
-    hideLeftNav() {
-      // set leftNav to not show
-      let leftNav = document.querySelector(".leftNavWrapper");
-      let content = document.querySelector(".leftNavContentContainer");
-      let title = document.querySelector(".leftNavTitle");
-
-      leftNav.style.marginTop = '0px';
-      //leftNav.style.display = 'none';
-      leftNav.style.opacity = '0';
-      leftNav.style.width = '0px';
-
-      content.style.opacity = '0';
-
-      //title.style.display = 'none';
-      title.style.opacity = '0';
-
-      /*
-      $(".leftNavWrapper").css("margin-top","0px")
-      $(".leftNavWrapper").css("border-right","2px solid #dddddd")
-      $(".leftNavWrapper").css("display","none")
-      $(".leftNavContentContainer").css("opacity","0")
-      $(".leftNavTitle").css("opacity","0")
-      $(".leftNavTitle").css("display","none")
-      $(".leftNavWrapper").css("width","0")
-      */
-    },
+    } 
   }
 }
 
@@ -264,10 +166,17 @@ export default {
   left: 0px;
   top: 0px;
   overflow: hidden;
-  z-index: 2;
+  z-index: 3;
   /*transition: height 0.3s, width 0.5s, top 0.5s;*/
 }
 
+.videoPlayerSmall {
+  height: 225px;
+  width: 400px;
+  top: calc(100% - 225px);
+  z-index: 5;
+}
+ 
 #twitch-embed {
   height: 100%;
   width: 100%;
@@ -276,6 +185,11 @@ export default {
   top: 0px;
   left: 0px;
   user-select: none;
+}
+
+.embedSmall {
+  height: 500px !important;
+  width: 400px !important;
 }
 
 .mouseEventWatchLayerTop {

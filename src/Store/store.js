@@ -5,13 +5,17 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    onVideoPage: false
+    onVideoPage: false,
+    onChannel: null
   },
   mutations: {
     setOnVideoPage(state, payload) {
       state.onVideoPage = payload;
+    },
+    setOnChannel(state, payload) {
+      state.onChannel = payload;
     }
-  }
+  },
 });
 
 //console.log(store)

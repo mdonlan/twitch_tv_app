@@ -17,7 +17,7 @@
   </div>
   <scrollbar />
   
-  <div class="navButtonsContainer">
+  <div class="navButtonsContainer" :class="[{navButtonsHide: hideButtons}]">
     <router-link class="navButton" v-bind:to="{path: '/'}">Popular</router-link>
     <router-link class="navButton" v-bind:to="{path: 'games'}">Games</router-link>
     <router-link class="navButton" v-bind:to="{path: 'followed'}">Followed</router-link>
@@ -42,11 +42,14 @@ export default {
       loadingLeftNav: false,
       listOrderNew: [],
       listOrderOld: [],
+      hideButtons: false
     }
   },
   created () {
-    this.checkRoute();
+    //this.checkRoute();
     this.getFollowing();
+
+    
 
     document.addEventListener("mousemove",this.mouseMoveHandler);
   },
@@ -73,12 +76,16 @@ export default {
       // and that we should hide the leftNav
       // otherwise show the leftNav
 
-      let toElem = event.toElement;
-      let tag = toElem.tagName;
+      // only do this if we are video page
+      if(this.$store.state.onVideoPage) {
+        
+        let toElem = event.toElement;
+        let tag = toElem.tagName;
 
-      let hide = tag.includes("IFRAME"); 
-      this. setLeftNavPos(hide);
-      
+        let hide = tag.includes("IFRAME"); 
+        this.setLeftNavPos(hide);
+        
+      }
     },
 
     setLeftNavPos(hide) {
@@ -100,10 +107,11 @@ export default {
         // if one is found it is removed
         
         if($("#twitch-embed").children().length > 0) {
-            $("#twitch-embed").empty();
+            
+        }
+        $("#twitch-embed").empty();
             this.checkForStream();
             this.loadPlayer();
-        }
     },
     loadPlayer() {
       var channelName = localStorage.getItem("streamName");
@@ -192,6 +200,10 @@ export default {
   bottom: 0px;
 }
 
+.navButtonsHide {
+  display: none;
+}
+
 .navButton {
   height: 20px;
   width: 150px;
@@ -216,11 +228,10 @@ export default {
   position: fixed;
   left: 0px;
   top: 0px;
-  height: calc(100% - 75px);
+  height: calc(100%);
   width: 250px;
   background: #051f5cf8;
   color: #dddddd;
-  margin-top: 75px;
   overflow-y: hidden;
   overflow-x: hidden;
   z-index: 5;
