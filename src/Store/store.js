@@ -6,7 +6,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     onVideoPage: false,
-    onChannel: null
+    onChannel: null,
+    username: null
   },
   mutations: {
     setOnVideoPage(state, payload) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     setOnChannel(state, payload) {
       state.onChannel = payload;
+    },
+    setUserName(state, payload) {
+      state.username = payload;
     }
   },
 });

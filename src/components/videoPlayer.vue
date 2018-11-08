@@ -11,9 +11,11 @@
     </div>
 </template>
 
+
 <script>
 import axios from 'axios'
-import twitchEmbedScript from '@/assets/twitchEmbedScript_1.js'
+//import twitchEmbedScript from '@/assets/twitchEmbedScript_1.js'
+
 import $ from 'jquery'
 
 export default {
@@ -27,12 +29,22 @@ export default {
     this.setupStoreWatcher();
   },
   mounted () {
-    // at first load check if we need to load a video
-    if(this.$store.state.onVideoPage) {
-      this.setPlayerSize(true); // make sure to load correct size for the page we load on      
-      this.loadPlayer();
-    } else {
-      this.setPlayerSize(false);
+
+    // when first mounting the video player we need to import the twitchEmbed script from their site
+    // only once the script is loaded can we then try to load a new embed player
+    let embedScript = document.createElement('script');
+    embedScript.setAttribute("src", "https://embed.twitch.tv/embed/v1.js");
+    document.head.appendChild(embedScript);
+    embedScript.async = true;
+    embedScript.onload = () => {
+      // once script is loaded  
+      // check if we need to load a video
+      if(this.$store.state.onVideoPage) {
+        this.setPlayerSize(true); // make sure to load correct size for the page we load on      
+        this.loadPlayer();
+      } else {
+        this.setPlayerSize(false);
+      }
     }
   },
   methods: {
@@ -122,14 +134,38 @@ export default {
 
       if(this.$store.state.onChannel != this.currentPlayerChannel) {
         this.clearOldPlayers();
-        let newPlayer = new Twitch.Embed("twitch-embed", {
-            width: "100%",
-            height: "100%",
-            channel: this.$store.state.onChannel,
-            layout: "",
-            theme: "dark",
-        });
+        let embedOptions = {
+          width: "100%",
+          height: "100%",
+          channel: this.$store.state.onChannel,
+          layout: "",
+          theme: "dark",
+          autoplay: "default",
+          muted: false
+        }
+        let newPlayer = new window.Twitch.Embed("twitch-embed", embedOptions);
         this.currentPlayerChannel = newPlayer.options.channel;  
+
+        // setup event listener for when the player is ready
+        // when ready, wait a few seconds and then send an unmute command
+        // we need to do this b/c for some reason i mutes it self like 1sec 
+        // into the video playing
+        newPlayer.addEventListener(Twitch.Embed.VIDEO_PLAY, () => {
+          //console.log("VIDEO IS PLAYING");
+          // let player = newPlayer.getPlayer(); // get the actual player from the larger video that was loaded
+          // console.log(player.setMuted);
+          // setTimeout(() => {
+          //   console.log("TIMEOUT1");
+          //   console.log(player._playerState.muted);
+          //   player.setMuted(false);
+          //   console.log(player._playerState.muted);
+          //   player.setMuted(false);
+          // }, 5000);
+          // setTimeout(() => {
+          //   console.log("TIMEOUT2");
+          //   player.setMuted(false);
+          // }, 10000);
+        });
       }
     } 
   }

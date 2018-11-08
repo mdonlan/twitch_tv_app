@@ -43,7 +43,7 @@
         <div class="viewMoreGames viewMoreButton" v-if="searchResultsGames.length > 0 && gamesContainerNumToShow == 3 && searchResultsGames.length > gamesContainerNumToShow" v-on:click="clickedViewMore">View More Games</div>
         
       </div>
-      <scrollbar :parentElem="scrollbarParent" :offsetTop="offsetTop"/>
+      <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="offsetTop"/>
 
     </div>
   </div>
@@ -53,6 +53,7 @@
 
 import axios from 'axios';
 import moment from 'moment';
+import { devID, prodID } from '../clientID.js';
 
 export default {
   name: 'search',
@@ -69,7 +70,7 @@ export default {
       streamsContainerNumToShow: 3,
       gamesContainerNumToShow: 3,
       channelsContainerNumToShow: 3,
-      scrollbarParent: "searchResultsContainer",
+      scrollbarAttachedElem: "searchResultsContainer",
       offsetTop: 0
     }
   },
@@ -159,15 +160,12 @@ export default {
     },
     searchChannels(searchQuery, requestStartTime) {
       let self = this;
-      let accessToken = localStorage.getItem("access_token");
-      let key = "OAuth " + accessToken;
       axios({
         method:'get',
         url:'https://api.twitch.tv/kraken/search/channels?query=' + searchQuery,
         headers: {
           'Accept': 'application/vnd.twitchtv.v5+json',
-          'Client-ID': '034f31qw57vu405ondtxpqwp104q5o',
-          'Authorization' : key
+          'Client-ID': devID,
           }
         })
       .then(function(response) {
@@ -201,15 +199,12 @@ export default {
     },
     searchGames(searchQuery, requestStartTime) {
       let self = this;
-      let accessToken = localStorage.getItem("access_token");
-      let key = "OAuth " + accessToken;
       axios({
         method:'get',
         url:'https://api.twitch.tv/kraken/search/games?query=' + searchQuery,
         headers: {
           'Accept': 'application/vnd.twitchtv.v5+json',
-          'Client-ID': '034f31qw57vu405ondtxpqwp104q5o',
-          'Authorization' : key
+          'Client-ID': devID,
           }
         })
       .then(function(response) {
@@ -242,15 +237,12 @@ export default {
     },
     searchStreams(searchQuery, requestStartTime) {
       let self = this;
-      let accessToken = localStorage.getItem("access_token");
-      let key = "OAuth " + accessToken;
       axios({
         method:'get',
         url:'https://api.twitch.tv/kraken/search/streams?query=' + searchQuery,
         headers: {
           'Accept': 'application/vnd.twitchtv.v5+json',
-          'Client-ID': '034f31qw57vu405ondtxpqwp104q5o',
-          'Authorization' : key
+          'Client-ID': devID,
           }
         })
       .then(function(response) {
@@ -349,7 +341,8 @@ export default {
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "../global_styles.scss";
 
 input {
   /* for search input element */
@@ -357,7 +350,7 @@ input {
   font-weight: 200;
   color: white;
   padding: 0px;
-  border: 2px solid #dddddd;
+  border: none;
   outline: none;
 }
 
@@ -368,19 +361,18 @@ input {
   -ms-user-select: none;      /* IE 10+ */
   user-select: none;          /* Likely future */ 
   text-decoration: none;
+  height: 35px;
+  border: none;
 }
 
 .searchInput {
   width: 300px;
   text-align: center;
-  height: 35px;
+  height: 34px;
   margin-right: 10px;
   margin-left: 10px;
   line-height: 35px;
-  -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
-  border-radius: 3px;
+  border-bottom: 1px solid $lighterBackgroundColor;
 }
 
 .searchResultsOverflowContainer {

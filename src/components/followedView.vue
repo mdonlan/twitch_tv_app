@@ -25,7 +25,7 @@ export default {
     }
   },
   created () {
-    this.getUsername();
+    //this.getUsername();
   },
   filters: {
     addComma: function (string) {
@@ -102,7 +102,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+@import "../global_styles.scss";
 
 .followedViewWrapper {
   position: absolute;
@@ -123,21 +124,11 @@ export default {
 .streamContainer {
   height: 250px;
   width: 175px;
-  background: #061539;
+  background: $mainBackgroundColor;
   color: #dddddd;
-  margin: 8px;
+  margin: 12px;
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
-  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-}
-
-.streamContainer:hover {
-  -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
 }
 
 .streamTextContainer {
@@ -155,8 +146,6 @@ export default {
 .streamImage {
   height: 100%;
   width: 100%;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
 }
 
 .clickZone {
@@ -165,7 +154,6 @@ export default {
   width: 175px;
   background: #222222;
   opacity: 0;
-  border-radius: 10px;
   transition: 0.5s;
 }
 

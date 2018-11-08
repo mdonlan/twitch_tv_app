@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <scrollbar :parentElem="scrollbarParent" :offsetTop="offsetTop"/>
+    <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="offsetTop"/>
 
   </div>
 </template>
@@ -22,6 +22,7 @@
 <script>
 import axios from 'axios';
 import $ from 'jquery';
+import { devID, prodID } from '../clientID.js';
 
 export default {
   name: 'Home',
@@ -29,7 +30,7 @@ export default {
     return {
       streams: [],
       pageSize: null,
-      scrollbarParent: "twitchWrapper",
+      scrollbarAttachedElem: "twitchWrapper",
       offsetTop: 75 // height of the top nav bar container
     }
   },
@@ -51,16 +52,12 @@ export default {
   methods: {
     getPopularStreams() {
       // send a request for the most poular live streams
-
+      console.log(devID)
       var self = this;
       axios({
         method:'get',
         url:'https://api.twitch.tv/kraken/streams/?limit=100&offset=0',
-        headers: {'Client-ID': '034f31qw57vu405ondtxpqwp104q5o'}
-        // client ids
-        // dev -- 034f31qw57vu405ondtxpqwp104q5o
-        // prod -- yb1fpw6w2ldfn50b0ynr50trdcxn99
-        
+        headers: {'Client-ID': devID}
       })
       .then(function(response) {
         let streamData = response.data.streams;

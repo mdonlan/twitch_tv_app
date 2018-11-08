@@ -93,7 +93,8 @@ export default {
         // loop over each item in the followingNew array
         // check to see if there is a matching one in the old data
         // if no match then it is a recent login
-        followingNew.forEach((newItem) => {
+        if(followingNew && followingNew.length > 0) {
+          followingNew.forEach((newItem) => {
           let match = false
           self.following.forEach((oldItem) => {
             
@@ -116,6 +117,7 @@ export default {
             //this.displayNotifications();
           }
         });
+        }
 
         //console.log(newLive)
 
@@ -148,7 +150,7 @@ export default {
         }
       }
       
-      if(first) {
+      if(first && container) {
         if(!first.data.startTime) {
           // if first in queue has no start time it means it has not been started
           // yet and startTime needs to be set and the element needs to fade in

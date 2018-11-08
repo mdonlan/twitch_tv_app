@@ -162,7 +162,7 @@ axios({
 .topNavWrapper {
     position: fixed;
     margin-top: 0px;
-    background: $darkerBackgroundColor;
+    background: $mainBackgroundColor;
     height: 75px;
     width: 100%;
     top:0px;

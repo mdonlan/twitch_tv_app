@@ -1,7 +1,7 @@
 <template>
   <div class="leftNavWrapper" id="leftNavWrapper">
     <div class="leftNavTitle">LIVE FOLLOWING</div>
-    <scrollbar :parentElem="scrollbarParent" :offsetTop="scrollbarOffsetTop" />
+    <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="scrollbarOffsetTop" />
     <div class="leftNavContentContainer">
       <div class="followItemContainer" :ref="follow._id" v-bind:key="follow._id" v-for="follow in following">
         <div class="clickZone" @click="clickedVideoLink(follow)"></div>
@@ -43,15 +43,13 @@ export default {
       listOrderNew: [],
       listOrderOld: [],
       hideButtons: false,
-      scrollbarParent: "leftNavContentContainer",
+      scrollbarAttachedElem: "leftNavContentContainer",
       scrollbarOffsetTop: 75 // size of left nav title container
     }
   },
   created () {
     //this.checkRoute();
     this.getFollowing();
-
-    
 
     document.addEventListener("mousemove",this.mouseMoveHandler);
   },
@@ -289,7 +287,7 @@ a {
   line-height: 75px;
   border-bottom: 0.5px solid $mainBorderColor;
   border-top: 0.5px solid $mainBorderColor;
-  // background: $darkerBackgroundColor;
+  background: $darkerBackgroundColor;
 }
 
 .followingGame, .followingName, .followingStatus {

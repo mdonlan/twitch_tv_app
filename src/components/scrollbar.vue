@@ -1,5 +1,5 @@
 <template>
-  <div :class="['scrollbar', parentElem + 'Scrollbar']"></div>
+  <div :class="['scrollbar', attachedElem + 'Scrollbar']"></div>
 </template>
 
 <script>
@@ -7,7 +7,7 @@
 export default {
   name: 'scrollbar',
   props: {
-    parentElem: {
+    attachedElem: {
       type: String,
       required: true
     },
@@ -26,32 +26,61 @@ export default {
 
   },
   mounted () {
+    this.setIntialPosAndSize();
     this.setParentScrollListener();
+    this.setMutationObserver();
   },
   methods: {
     setParentScrollListener() {
       // set the scroll listener on the parent element for this scrollbar
-      let parentElem = document.querySelector("." + this.parentElem);
-      parentElem.addEventListener("scroll", this.scrollHandler);
+      let attachedElem = document.querySelector("." + this.attachedElem);
+      attachedElem.addEventListener("scroll", this.scrollHandler);
 
-      if(parentElem.clientHeight >= parentElem.scrollHeight) {
+      if(attachedElem.clientHeight >= attachedElem.scrollHeight) {
         // we shouldn't need a scrollbar here
         console.log('no scroll needed');
       }
     },
 
+    setMutationObserver(event) {
+      // mutation observer
+      // watches for any changes in the container child list
+      // this lets us know that some async calls have come back 
+      // and have been added to the elem
+      // this means we need to update the scrollbar size
+      let mutationObserver = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          // console.log("ELEM MUTATION DETECTED");
+          // console.log(mutation);
+          let containerElem = document.querySelector("." + this.attachedElem);
+          let scrollElem = document.querySelector("." + this.attachedElem + 'Scrollbar');
+          this.setHeight(containerElem, scrollElem);
+          this.setPos(containerElem, scrollElem);
+        });
+      });
+
+      // set container elem to be observed
+      let containerElem = document.querySelector("." + this.attachedElem);
+      mutationObserver.observe(containerElem, {
+        attributes: false,
+        characterData: false,
+        childList: true,
+        subtree: false,
+        attributeOldValue: false,
+        characterDataOldValue: false
+      });
+    },
+
     scrollHandler(event) {
-      console.log('scrollbar event!')
       // on a scroll event, set the pos and size of the scrollbar
 
-      let containerElem = document.querySelector("." + this.parentElem);
-      let scrollElem = document.querySelector("." + this.parentElem + 'Scrollbar');
+      let containerElem = document.querySelector("." + this.attachedElem);
+      let scrollElem = document.querySelector("." + this.attachedElem + 'Scrollbar');
       this.setHeight(containerElem, scrollElem);
       this.setPos(containerElem, scrollElem);
     },
 
     setHeight(containerElem, scrollElem) {
-      console.log('setting scrollHeight')
       // set the scrollbar height
       let totalHeight = containerElem.scrollHeight;
       let currentHeight = containerElem.clientHeight;
@@ -68,6 +97,14 @@ export default {
       let posWithOffset = pos + this.offsetTop;
 
       scrollElem.style.top = posWithOffset + "px";
+    },
+
+    setIntialPosAndSize() {
+      // set the scrollbars inital position and size
+      let containerElem = document.querySelector("." + this.attachedElem);
+      let scrollElem = document.querySelector("." + this.attachedElem + 'Scrollbar');
+      this.setHeight(containerElem, scrollElem);
+      this.setPos(containerElem, scrollElem);
     }
   }
 }

@@ -61,7 +61,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+@import "../global_styles.scss";
 
 .gamesViewWrapper {
   position: absolute;
@@ -83,33 +84,20 @@ export default {
 .gameContainer {
   height: 250px;
   width: 175px;
-  background: #051f5c;
+  background: $mainBackgroundColor;
   color: #dddddd;
-  margin: 7px;
+  margin: 12px;
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
-  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-}
-
-.gameContainer:hover {
-  -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
 }
 
 .gamesItemTextContainer {
-    display: flex;
+  display: flex;
 }
 
 .gameImage {
   height: 200px;
-  width: 175px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  
+  width: 175px;  
 }
 
 .gamesItemTextContainer {
@@ -127,7 +115,6 @@ export default {
   padding: 0px;
   background: #222222;
   opacity: 0;
-  border-radius: 10px;
   transition: 0.5s;
 }
 
