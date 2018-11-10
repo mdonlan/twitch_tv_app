@@ -1,36 +1,39 @@
 <template>
-  <div class="leftNavWrapper" id="leftNavWrapper">
-    <div class="leftNavTitle">LIVE FOLLOWING</div>
-    <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="scrollbarOffsetTop" />
-    <div class="leftNavContentContainer">
-      <div class="followItemContainer" :ref="follow._id" v-bind:key="follow._id" v-for="follow in following">
-        <div class="clickZone" @click="clickedVideoLink(follow)"></div>
-        <div class="leftNavImageContainer">
-        <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo"></img>
+  <div>
+    <div class="leftNavWrapper" id="leftNavWrapper">
+      <div class="leftNavTitle">LIVE FOLLOWING</div>
+      <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="scrollbarOffsetTop" />
+      <div class="leftNavContentContainer">
+        <div class="followItemContainer" :ref="follow._id" v-bind:key="follow._id" v-for="follow in following">
+          <div class="clickZone" @click="clickedVideoLink(follow)" :data-channel="follow.channel.name" ></div>
+          <div class="leftNavImageContainer">
+            <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo">
+          </div>
+          <div class="leftNavTextContainer">
+            <div class="followingName leftNavItem">{{follow.channel.name}}</div>
+            <div class="followingGame leftNavItem">{{follow.channel.game}}</div>
+            <div class="followingStatus leftNavItem">{{follow.channel.status}}</div>
+            <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
+          </div>
+        </div>
       </div>
-      <div class="leftNavTextContainer">
-        <div class="followingName leftNavItem">{{follow.channel.name}}</div>
-        <div class="followingGame leftNavItem">{{follow.channel.game}}</div>
-        <div class="followingStatus leftNavItem">{{follow.channel.status}}</div>
-        <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
+      
+      <div class="navButtonsContainer" :class="[{navButtonsHide: hideButtons}]">
+        <div class="navButton" @click="clickedButton('/')">Popular</div>
+        <div class="navButton" @click="clickedButton('games')">Games</div>
+        <div class="navButton" @click="clickedButton('following')">Followed</div>
+        <!-- <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link> -->
+        <div class="navButton aboutButton" v-bind:to="{path: 'about'}" @click="clickedButton('about')">About</div>
       </div>
     </div>
+    <img class="hoverPreview" v-if="hoveringChannelPreviewSrc" :src="hoveringChannelPreviewSrc" :style="{top: hoverPreviewTop + 'px'}" />
+    <!-- v-if="follow.channel.name == hoveringOverChannel" :src="follow.preview.medium" -->
   </div>
-  
-  <div class="navButtonsContainer" :class="[{navButtonsHide: hideButtons}]">
-    <div class="navButton" @click="clickedButton('/')">Popular</div>
-    <div class="navButton" @click="clickedButton('games')">Games</div>
-    <div class="navButton" @click="clickedButton('following')">Followed</div>
-    <!-- <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link> -->
-    <div class="navButton aboutButton" v-bind:to="{path: 'about'}" @click="clickedButton('about')">About</div>
-  </div>
-</div>
 </template>
 
 <script>
 import axios from 'axios';
-import $ from 'jquery';
-import Vue from 'vue';
+import $ from 'jquery';;
 
 export default {
   name: 'leftNav',
@@ -44,19 +47,22 @@ export default {
       listOrderOld: [],
       hideButtons: false,
       scrollbarAttachedElem: "leftNavContentContainer",
-      scrollbarOffsetTop: 75 // size of left nav title container
+      scrollbarOffsetTop: 75, // size of left nav title container
+      hoveringChannelPreviewSrc: null,
+      hoverPreviewTop: null
     }
   },
   created () {
     //this.checkRoute();
     this.getFollowing();
 
-    document.addEventListener("mousemove",this.mouseMoveHandler);
+    document.addEventListener("mousemove", this.mouseMoveHandler);
   },
   mounted () {
     let self = this;
     this.updateLive();
   },
+
   filters: {
     truncate: function (string, value) {
       if(string.length > 15) {
@@ -69,6 +75,7 @@ export default {
       return string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
+  
   methods: {
     clickedButton(to) {
       this.$router.push(to);
@@ -79,16 +86,40 @@ export default {
       // if we are over an Iframe it means we are over the video player / chat
       // and that we should hide the leftNav
       // otherwise show the leftNav
+    
+      let toElem = event.toElement;
+      let tag = toElem.tagName;
+
+      let hide = tag.includes("IFRAME"); 
 
       // only do this if we are video page
       if(this.$store.state.onVideoPage) {
-        
-        let toElem = event.toElement;
-        let tag = toElem.tagName;
-
-        let hide = tag.includes("IFRAME"); 
         this.setLeftNavPos(hide);
+      }
+
+      this.checkHoveringOverStream(toElem);
+    },
+
+    checkHoveringOverStream(toElem) {
+      // check if we are hovering over a left nav stream
+      // if so then show a preview image of the stream
+      if(toElem.getAttribute("data-channel")) {
+        let hoverElemChannel = toElem.getAttribute("data-channel");
+        console.log(hoverElemChannel);
+        let hoverSrc = null;
+        this.following.forEach((stream) => {
+          if(stream.channel.name == hoverElemChannel) {
+            hoverSrc = stream.preview.medium;
+          }
+        });
+    
+        let elemPos = toElem.getBoundingClientRect();
+        this.hoverPreviewTop = elemPos.top - (toElem.clientHeight / 2);
+        this.hoveringChannelPreviewSrc = hoverSrc;
         
+      } else {
+        // if not hovering over a stream
+        this.hoveringChannelPreviewSrc = null;
       }
     },
 
@@ -260,12 +291,6 @@ export default {
   margin-left: 5px;
 }
 
-img {
-  height: 50px;
-  width: 50px;
-  border-radius: 5px;
-}
-
 a {
   text-decoration: none;
   outline: none;
@@ -296,6 +321,12 @@ a {
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.followingLogo { /* the image in each left nav stream */
+  height: 50px;
+  width: 50px;
+  border-radius: 5px;
 }
 
 .followingName {
@@ -342,6 +373,15 @@ a {
   -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+}
+
+.hoverPreview {
+  position: absolute;
+  height: 180px;
+  width: 320px;
+  left: 250px;
+  background: rebeccapurple;
+  z-index: 15;
 }
 
 
