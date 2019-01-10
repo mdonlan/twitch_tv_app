@@ -64,6 +64,9 @@ export default {
   },
   mounted () {
     let self = this;
+
+    document.addEventListener("mousemove", this.mouseMoveHandler);
+
     this.updateLive();
 
     this.$store.watch((state) => {return this.$store.state.onVideoPage}, (onVideoPage, oldValue) => {
@@ -139,6 +142,7 @@ export default {
           //player.play();
       });
     },
+
     checkForStream() {
       var url = window.location.href;
       if(url.indexOf("stream") > -1) {
@@ -147,6 +151,7 @@ export default {
           localStorage.setItem("streamName", nameString);
       }
     },
+
     getFollowing() {
         //console.log('updating leftNav data');
         var self = this;
@@ -173,11 +178,13 @@ export default {
             //console.log(error);
         });
     },
+
     updateLive() {
         // run this function every x seconds
         // will update the left nav bar live followed
         setInterval(this.getFollowing, 10000); // runs every 10 seconds to check for changes
     },
+
     checkRoute() {
       let self = this;
       setInterval(function() {
@@ -188,6 +195,86 @@ export default {
           self.showNavButtons = false;
         }
       }, 1000)
+    },
+
+    mouseMoveHandler(event) {
+      // watches the mouse movement and checks whether we are over an IFRAME or not
+      // if we are over an Iframe it means we are over the video player / chat
+      // and that we should hide the leftNav
+      // otherwise show the leftNav
+    
+      let toElem = event.toElement;
+      let tag = toElem.tagName;
+      let className = toElem.className;
+      //console.log(className);
+      //console.log(tag)
+        
+        if(tag == "IFRAME") {
+            if(this.$store.state.onVideoPage) {
+                this.setLeftNavPos(true);
+            }
+        }
+
+        if(className == "mouseEventWatchLayerLeft") {
+            if(this.$store.state.onVideoPage) {
+                this.setLeftNavPos(false);
+            }
+        }
+      this.checkHoveringOverStream(toElem);
+
+      let mousePos = {x: event.clientX, y: event.clientY};
+      this.$store.commit("setMousePos", mousePos);
+    },
+
+    setLeftNavPos(hide) {
+        // show or hide the left nav
+
+      let leftNavElem = document.querySelector(".leftNavWrapper")
+      
+      if(hide) {
+        leftNavElem.classList.add("leftNavWrapperHide");
+      } else {
+        leftNavElem.classList.remove("leftNavWrapperHide");
+      }
+    },
+
+    checkHoveringOverStream(toElem) {
+      // check if we are hovering over a left nav stream
+      // if so then show a preview image of the stream
+
+      // check if the elem we are over has data-channel
+      // left nav streams are the only ones that have this data
+      if(toElem.getAttribute("data-channel")) {
+        this.isHovering = true;
+        let hoverElemChannel = toElem.getAttribute("data-channel");
+        let hoverSrc = null;
+        
+        // find which stream we are hovering over
+        this.following.forEach((stream) => {
+          if(stream.channel.name == hoverElemChannel) {
+            hoverSrc = stream.preview.large;
+          }
+        });
+    
+        // set the hover preview elem pos and src
+        let elemPos = toElem.getBoundingClientRect();
+        let hoverElemContainer = document.querySelector(".hoverPreviewImg");
+        let hoverElemImg = document.querySelector(".hoverPreview");
+        // :style="{top: hoverPreviewTop + 'px'}"
+        if(hoverElemContainer) {
+            let top = hoverElemContainer.style.top = elemPos.top + "px";
+            hoverElemImg.src = hoverSrc;
+        }
+
+        let hoverTriangle = document.querySelector(".hoverPreviewTriangle");
+        if(hoverTriangle) {
+            hoverTriangle.style.top = elemPos.top + "px";
+        }
+      } else {
+        this.isHovering = false;
+        // if not hovering over a stream clear image
+        // this.hoveringChannelPreviewSrc = null;
+      }
     },
   }
 }

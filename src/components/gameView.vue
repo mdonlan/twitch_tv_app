@@ -69,7 +69,11 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss"scoped>
+@import "../global_styles.scss";
+
+$streamHeight: 32%;
+$streamWidth: 18%;
 
 .gameViewWrapper {
   position: absolute;
@@ -89,23 +93,14 @@ export default {
 }
 
 .streamContainer {
-  height: 225px;
-  width: 250px;
-  background: #051f5c;
+  height: $streamHeight;
+  width: $streamWidth;
+  background: $mainBackgroundColor;
   color: #dddddd;
-  margin: 7px;
+  margin: 12px;
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
-  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-}
-
-.streamContainer:hover {
-  -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.75);
+  position: relative;
 }
 
 .streamTextContainer {
@@ -119,17 +114,14 @@ export default {
 .streamImage {
   height: 100%;
   width: 100%;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
 }
 
 .clickZone {
   position: absolute;
-  height: 225px;
-  width: 250px;
+  height: 100%;
+  width: 100%;
   opacity: 0;
   background: #222222;
-  border-radius: 10px;
   transition: 0.5s;
 }
 

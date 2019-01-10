@@ -192,6 +192,7 @@ export default {
   width: 400px;
   top: calc(100% - 225px);
   z-index: 5;
+  overflow: hidden;
 }
 
 .hideSmallVideoPlayer {

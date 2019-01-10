@@ -11,7 +11,6 @@
 
 <script>
 import axios from 'axios'
-import $ from 'jquery'
 import { devID, prodID } from './clientID.js';
 
 export default {
@@ -20,8 +19,6 @@ export default {
     return {}
   },
   mounted() {
-    document.addEventListener("mousemove", this.mouseMoveHandler);
-
     this.checkIfUserIsLoggedIn();
     
     // get and update the users followed streams
@@ -68,82 +65,6 @@ export default {
       .catch(error => {
           console.log(error);
       });
-    },
-    mouseMoveHandler(event) {
-      // watches the mouse movement and checks whether we are over an IFRAME or not
-      // if we are over an Iframe it means we are over the video player / chat
-      // and that we should hide the leftNav
-      // otherwise show the leftNav
-    
-      let toElem = event.toElement;
-      let tag = toElem.tagName;
-      let className = toElem.className;
-      //console.log(className);
-      //console.log(tag)
-        
-        if(tag == "IFRAME") {
-            if(this.$store.state.onVideoPage) {
-                this.setLeftNavPos(true);
-            }
-        }
-
-        if(className == "mouseEventWatchLayerLeft") {
-            if(this.$store.state.onVideoPage) {
-                this.setLeftNavPos(false);
-            }
-        }
-      this.checkHoveringOverStream(toElem);
-
-      let mousePos = {x: event.clientX, y: event.clientY};
-      this.$store.commit("setMousePos", mousePos);
-    },
-
-    setLeftNavPos(hide) {
-        // show or hide the left nav
-
-      let leftNavElem = document.querySelector(".leftNavWrapper")
-      
-      if(hide) {
-        leftNavElem.classList.add("leftNavWrapperHide");
-      } else {
-        leftNavElem.classList.remove("leftNavWrapperHide");
-      }
-    },
-
-    checkHoveringOverStream(toElem) {
-      // check if we are hovering over a left nav stream
-      // if so then show a preview image of the stream
-
-      // check if the elem we are over has data-channel
-      // left nav streams are the only ones that have this data
-      if(toElem.getAttribute("data-channel")) {
-        this.isHovering = true;
-        let hoverElemChannel = toElem.getAttribute("data-channel");
-        let hoverSrc = null;
-        
-        // find which stream we are hovering over
-        this.following.forEach((stream) => {
-          if(stream.channel.name == hoverElemChannel) {
-            hoverSrc = stream.preview.large;
-          }
-        });
-    
-        // set the hover preview elem pos and src
-        let elemPos = toElem.getBoundingClientRect();
-        let hoverElemContainer = document.querySelector(".hoverPreviewImg");
-        let hoverElemImg = document.querySelector(".hoverPreview");
-        // :style="{top: hoverPreviewTop + 'px'}"
-        let top = hoverElemContainer.style.top = elemPos.top + "px";
-        hoverElemImg.src = hoverSrc;
-        // this.hoveringChannelPreviewSrc = hoverSrc;
-
-        let hoverTriangle = document.querySelector(".hoverPreviewTriangle");
-        hoverTriangle.style.top = elemPos.top + "px";
-      } else {
-        this.isHovering = false;
-        // if not hovering over a stream clear image
-        // this.hoveringChannelPreviewSrc = null;
-      }
     },
   } 
 }
