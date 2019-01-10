@@ -9,7 +9,8 @@
                we do this in order to show a few from each category to the user
                the user can then expand each category if desired
           -->
-          <div class="searchResult stream" v-for="result in searchResultsStreams.slice(0,streamsContainerNumToShow)">
+          <div class="searchResult stream" v-bind:key="result._id" v-for="result in searchResultsStreams.slice(0,streamsContainerNumToShow)">
+            <div class="clickZone" @click="clickedChannelLink(result)" ></div>
             <img class="streamImage" v-bind:src="result.data.channel.logo">
             <div class="searchResultItem name">{{result.data.channel.name}}</div>
             <div class="searchResultItem">{{result.data.viewers}}</div>
@@ -336,6 +337,21 @@ export default {
         self.gamesContainerNumToShow = 10;
       }
     },
+    clickedChannelLink(stream) {
+      // console.log(stream.data.channel.name)
+      
+      let to = {path: 'stream', query: {name: stream.data.channel.name}};
+      this.$router.push(to);
+      //this.$store.commit("setOnVideoPage", true);
+      //this.$store.commit("setOnChannel", to.query.name);
+      
+      // if($("#twitch-embed").children().length > 0) {
+          
+      // }
+      // $("#twitch-embed").empty();
+      // this.checkForStream();
+      // this.loadPlayer();
+    },
   }
 }
 
@@ -512,6 +528,14 @@ input {
 .viewMoreButton:hover {
   background: #444444;
   cursor: pointer;
+}
+
+.clickZone {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  top: 0px;
 }
 
 </style>

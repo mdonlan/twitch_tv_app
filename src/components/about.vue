@@ -1,8 +1,7 @@
 <template>
   <div class="aboutWrapper">
     <div class="title">About</div>
-    <div class="aboutText">
-      
+    <div class="aboutText">      
       <div class="text">This website was made using <a href="https://vuejs.org/">Vue.js</a>.</div>
       <div class="text">All data on the site is from <a href="https://dev.twitch.tv/docs/v5">Twitch's API</a>.</div>
       <div class="text">Made by <a href="http://michaeldonlan.com">Michael Donlan</a></div>
@@ -13,22 +12,9 @@
 <script>
 
 export default {
-  name: 'about',
-  data: function () {
-    return {
-
-    }
-  },
-  created () {
-
-  },
-  filters: {
-    
-  },
-  methods: {
-    
-  }
+  name: 'about'
 }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

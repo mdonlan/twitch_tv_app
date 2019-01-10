@@ -194,13 +194,46 @@ axios({
   // transition: 0.3s linear;
   // box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
   font-variant: small-caps;
+  position: relative;
   // background: #222222;
 }
 
-.topNavBtn:hover {
-  // background: #333333;
-  border-bottom: 1px solid #dddddd;
+.topNavBtn::before {
+  content: '';
+  width: 0px;
+  background: #dddddd;
+  height: 1px;
+  position: absolute;
+  top: calc(100% - 3px);
+  transition: 0.5s;
+  left: 50%;
 }
+
+.topNavBtn:hover::before {
+  content: '';
+  width: 50%;
+  left: 0%;
+}
+
+.topNavBtn::after {
+  content: '';
+  left: 50%;
+  width: 0%;
+  background: #dddddd;
+  height: 1px;
+  position: absolute;
+  top: calc(100% - 3px);
+  transition: 0.5s;
+}
+
+.topNavBtn:hover::after {
+  width: 50%;
+}
+
+// .topNavBtn:hover {
+//   // background: #333333;
+//   border-bottom: 1px solid #dddddd;
+// }
 
 .activeButton {
   background: #d5d9df;

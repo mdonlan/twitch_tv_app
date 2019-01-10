@@ -12,6 +12,7 @@ import notifications from '@/components/notifications'
 import search from '@/components/search'
 import loading from '@/components/loading'
 import scrollbar from '@/components/scrollbar'
+import panel from '@/components/panel'
 import Vuex from "vuex"
 import store from "./Store/store"
 
@@ -25,6 +26,7 @@ Vue.component('notifications', notifications);
 Vue.component('search', search);
 Vue.component('loading', loading);
 Vue.component('scrollbar', scrollbar);
+Vue.component('panel', panel);
 
 
 /* eslint-disable no-new */

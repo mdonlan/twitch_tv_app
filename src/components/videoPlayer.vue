@@ -3,6 +3,8 @@
       <!--<div class="mouseEventWatchLayerTop"></div>-->
       <div class="mouseEventWatchLayerLeft"></div>
       <div class="leftNavButton"></div>
+    <panel></panel>
+
       <div id="twitch-embed"></div>
       <div class="closeSmallPlayerContainer" v-if="!this.$store.state.onVideoPage && this.$store.state.onChannel">
         <div class="closeSmallPlayerButton" v-on:click="closeSmallPlayer">CLOSE</div>
@@ -11,12 +13,7 @@
     </div>
 </template>
 
-
 <script>
-import axios from 'axios'
-//import twitchEmbedScript from '@/assets/twitchEmbedScript_1.js'
-
-import $ from 'jquery'
 
 export default {
   name: 'videoPlayer',
@@ -146,6 +143,8 @@ export default {
         let newPlayer = new window.Twitch.Embed("twitch-embed", embedOptions);
         this.currentPlayerChannel = newPlayer.options.channel;  
 
+        
+
         // setup event listener for when the player is ready
         // when ready, wait a few seconds and then send an unmute command
         // we need to do this b/c for some reason i mutes it self like 1sec 
@@ -182,8 +181,9 @@ export default {
   width: 100%;
   left: 0px;
   top: 0px;
-  overflow: hidden;
   z-index: 3;
+  overflow-y: auto;
+  padding-right: 17px; /* hide scrollbar */
   /*transition: height 0.3s, width 0.5s, top 0.5s;*/
 }
 

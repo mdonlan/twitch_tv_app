@@ -14,9 +14,8 @@ export default {
     offsetTop: {
       type: Number,
       required: true
-    }
-  }
-  ,
+    },
+  },
   data: function() {
     return {
       
@@ -73,11 +72,53 @@ export default {
 
     scrollHandler(event) {
       // on a scroll event, set the pos and size of the scrollbar
+      // also check what leftNav stream we are hovering over
+      
+      let mousePos = this.$store.state.mousePos;
+      let leftNav = document.querySelector(".leftNavContentContainer");
+      let leftNavItems = Array.from(leftNav.children);
+
+      // find which stream we are over
+      leftNavItems.forEach((item) => {
+        let rect = item.getBoundingClientRect();
+        if(rect.left < mousePos.x &&
+          rect.right > mousePos.x &&
+          rect.top < mousePos.y &&
+          rect.bottom > mousePos.y
+        )
+          this.checkHoveringOverStream(item);
+      })
+      
 
       let containerElem = document.querySelector("." + this.attachedElem);
       let scrollElem = document.querySelector("." + this.attachedElem + 'Scrollbar');
       this.setHeight(containerElem, scrollElem);
       this.setPos(containerElem, scrollElem);
+    },
+
+    checkHoveringOverStream(item) {
+      // now that we now which elem we are over load that streams preview
+      // and set the hover preview to the stream we are over
+
+      let hoverElemChannelName = item.children[0].dataset.channel; // get hovering channel name
+      let hoverSrc = null; // clear old image
+      
+      // find which stream we are hovering over based on name 
+      // and get the correct preview
+      this.$store.state.following.forEach((stream) => {
+        if(stream.channel.name == hoverElemChannelName) {
+          hoverSrc = stream.preview.large;
+        }
+      });
+  
+      let elemPos = item.getBoundingClientRect(); // get pos of the new stream for the preview top pos
+
+      let previewElemContainer = document.querySelector(".hoverPreviewImg");
+      let previewElem = document.querySelector(".hoverPreview")
+      previewElemContainer.style.top = elemPos.top + "px";
+      previewElem.src = hoverSrc;
+      let hoverTriangle = document.querySelector(".hoverPreviewTriangle");
+      hoverTriangle.style.top = elemPos.top + "px";
     },
 
     setHeight(containerElem, scrollElem) {

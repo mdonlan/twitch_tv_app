@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="leftNavComponent">
     <div class="leftNavWrapper" id="leftNavWrapper">
       <div class="leftNavTitle">LIVE FOLLOWING</div>
       <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="scrollbarOffsetTop" />
@@ -22,18 +22,22 @@
         <div class="navButton" @click="clickedButton('/')">Popular</div>
         <div class="navButton" @click="clickedButton('games')">Games</div>
         <div class="navButton" @click="clickedButton('following')">Followed</div>
-        <!-- <router-link class="navButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link> -->
         <div class="navButton aboutButton" v-bind:to="{path: 'about'}" @click="clickedButton('about')">About</div>
       </div>
     </div>
-    <img class="hoverPreview" v-if="hoveringChannelPreviewSrc" :src="hoveringChannelPreviewSrc" :style="{top: hoverPreviewTop + 'px'}" />
-    <!-- v-if="follow.channel.name == hoveringOverChannel" :src="follow.preview.medium" -->
+
+    <div class="hoverPreviewImg" v-if="isHovering">
+      <img class="hoverPreview"/>
+    </div>
+    
+    <div class="hoverPreviewTriangle" v-if="isHovering">  
+      <div class="triangle"></div>      
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import $ from 'jquery';;
 
 export default {
   name: 'leftNav',
@@ -49,18 +53,26 @@ export default {
       scrollbarAttachedElem: "leftNavContentContainer",
       scrollbarOffsetTop: 75, // size of left nav title container
       hoveringChannelPreviewSrc: null,
-      hoverPreviewTop: null
+      hoverPreviewTop: null,
+      isHovering: false
     }
   },
   created () {
     //this.checkRoute();
     this.getFollowing();
 
-    document.addEventListener("mousemove", this.mouseMoveHandler);
   },
   mounted () {
     let self = this;
     this.updateLive();
+
+    this.$store.watch((state) => {return this.$store.state.onVideoPage}, (onVideoPage, oldValue) => {
+      //console.log('watched: ', onChannel);
+      //console.log(onChannel, oldValue)
+      if(onVideoPage == false) {
+        this.setLeftNavPos(false);
+      }
+    });
   },
 
   filters: {
@@ -81,48 +93,6 @@ export default {
       this.$router.push(to);
     },
 
-    mouseMoveHandler(event) {
-      // watches the mouse movement and checks whether we are over an IFRAME or not
-      // if we are over an Iframe it means we are over the video player / chat
-      // and that we should hide the leftNav
-      // otherwise show the leftNav
-    
-      let toElem = event.toElement;
-      let tag = toElem.tagName;
-
-      let hide = tag.includes("IFRAME"); 
-
-      // only do this if we are video page
-      if(this.$store.state.onVideoPage) {
-        this.setLeftNavPos(hide);
-      }
-
-      this.checkHoveringOverStream(toElem);
-    },
-
-    checkHoveringOverStream(toElem) {
-      // check if we are hovering over a left nav stream
-      // if so then show a preview image of the stream
-      if(toElem.getAttribute("data-channel")) {
-        let hoverElemChannel = toElem.getAttribute("data-channel");
-        console.log(hoverElemChannel);
-        let hoverSrc = null;
-        this.following.forEach((stream) => {
-          if(stream.channel.name == hoverElemChannel) {
-            hoverSrc = stream.preview.medium;
-          }
-        });
-    
-        let elemPos = toElem.getBoundingClientRect();
-        this.hoverPreviewTop = elemPos.top - (toElem.clientHeight / 2);
-        this.hoveringChannelPreviewSrc = hoverSrc;
-        
-      } else {
-        // if not hovering over a stream
-        this.hoveringChannelPreviewSrc = null;
-      }
-    },
-
     setLeftNavPos(hide) {
       // show or hide the left nav
 
@@ -140,8 +110,8 @@ export default {
       
       let to = {path: 'stream', query: {name: stream.channel.name}};
       this.$router.push(to);
-      this.$store.commit("setOnVideoPage", true);
-      this.$store.commit("setOnChannel", to.query.name);
+      //this.$store.commit("setOnVideoPage", true);
+      //this.$store.commit("setOnChannel", to.query.name);
       
       // if($("#twitch-embed").children().length > 0) {
           
@@ -238,12 +208,7 @@ export default {
   overflow-y: hidden;
   overflow-x: hidden;
   z-index: 5;
-
-  -webkit-transition: width 0.3s linear;
-  -moz-transition: width 0.3s linear;
-  -o-transition: width 0.3s linear;
   transition: width 0.3s linear;
-  
 }
 
 .leftNavWrapperHide {
@@ -356,32 +321,94 @@ a {
 }
 
 .navButton {
-  background: #2c2a2a;
-  height: 20px;
+  // background: #2c2a2a;
+  position: relative;
+  height: 20%;
   width: 150px;
-  padding: 5px;
-  margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // padding: 5px;
+  // margin-top: 5px;
+  // margin-bottom: 5px;
   color: #dddddd;
   transition: 0.5s;
   font-variant: small-caps;
   cursor: pointer;
 }
 
-.navButton:hover {
+.navButton::before {
+  content: '';
+  width: 0px;
   background: #dddddd;
-  color: #051f5c;
-  -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+  height: 1px;
+  position: absolute;
+  top: calc(100% - 3px);
+  transition: 0.5s;
+  left: 50%;
+}
+
+.navButton:hover::before {
+  content: '';
+  width: 50%;
+  left: 0%;
+}
+
+.navButton::after {
+  content: '';
+  left: 50%;
+  width: 0%;
+  background: #dddddd;
+  height: 1px;
+  position: absolute;
+  top: calc(100% - 3px);
+  transition: 0.5s;
+}
+
+.navButton:hover::after {
+  width: 50%;
+}
+
+// .navButton:hover {
+//   background: #dddddd;
+//   color: #051f5c;
+//   -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+//   -moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+//   box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+// }
+
+.hoverPreviewImg {
+  position: absolute;
+  height: 360px;
+  width: 640px;
+  left: 250px;
+  z-index: 4;
+  box-shadow: 0px 0px 15px 5px $lighterBackgroundColor;
+  transition: 0.5s;
 }
 
 .hoverPreview {
+  z-index: 0;
+}
+
+.hoverPreviewTriangle {
   position: absolute;
-  height: 180px;
-  width: 320px;
+  height: 360px;
+  width: 640px;
   left: 250px;
-  background: rebeccapurple;
-  z-index: 15;
+  z-index: 5;
+}
+
+.triangle {
+  position: absolute;
+  top: 0px;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 32.5px 0 32.5px 40px;
+  border-color: transparent transparent transparent $lighterBackgroundColor;
+  z-index: 100;
 }
 
 
