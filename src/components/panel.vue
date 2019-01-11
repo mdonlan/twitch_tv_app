@@ -66,20 +66,137 @@ export default {
         })
     },
 
-    checkForLinks(text) {
-        // checks for any links in panel text
-        // if links are found return a link element rather than just text
-        let linkElem = ``;
-        let myArray;
-        while ((myArray = this.linkRegex.exec(text)) !== null) {
-            linkElem += `<a class="panelTextLink" href="${myArray[2]}">${myArray[1]}</a>`
+    format(str) {
+        let match = this.linkRegex.exec(str);
+        let count = 0;
+        if(match) {
+            console.log(count);
+            count++;
+            console.log(match)
+            let temp = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
+            return temp;
         }
-        
-        if(linkElem.length > 0) {
-            return linkElem;
-        }
+        return str;
+    },
 
+    checkForLinks(text) {
+        let match;
+        while ((match = this.linkRegex.exec(text)) !== null) {
+            let textMatch = `[${match[1]}](${match[2]})`;
+            console.log(match[0])
+            // console.log(textMatch)
+            let link = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
+            text = text.replace(match[0], link)
+        }
         return text;
+
+        // console.log(text.replace(this.linkRegex, this.format(text)));
+        // return text;
+
+    //     if(text.includes("just")) {
+    //         let linkElem = text;
+    //         let match;
+    //         let addedToLength = 0;
+    //         let count = 0;
+    //         let indexOffset = 0;
+    //         linkElem.replace(this.linkRegex, "red");
+    //         console.log(linkElem)
+    //         while ((match = this.linkRegex.exec(text)) !== null) {
+    //             // console.log('COUNT: ' + count);
+
+    //             // let temp = linkElem.substr(0, match.index + addedToLength);
+    //             // let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
+    //             // temp += linkString;
+    //             // addedToLength += linkString.length;
+    //             // linkElem = temp;
+
+    //             // linkElem.replace(this.linkRegex, "red");
+    //             // console.log(linkElem)
+
+    //             // if(count == 0) {
+    //             //     console.log('0')
+    //             //     let temp = text.substr(0, match.index);
+    //             //     console.log(temp);
+    //             //     let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
+    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
+    //             //     // let temp = linkElem.substr(0, match.index);
+    //             //     temp += linkString;
+    //             //     // indexOffset = originalLinkLength - linkString;
+    //             //     linkElem = temp;
+    //             //     // console.log(temp)
+    //             // }
+
+    //             // if(count == 1) {
+    //             //      console.log('1')
+    //             //      let temp = text.substr(0, match.index);
+    //             //     console.log(temp);
+    //             //     // // console.log(linkElem)
+    //             //     // let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
+    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
+    //             //     // let temp = linkElem.substr(0, match.index + originalLinkLength);
+    //             //     // temp += linkString;
+    //             //     // linkElem = temp;
+    //             //     // console.log(temp)
+    //             // }
+
+    //             // if(count == 2) {
+    //             //     // console.log('2')
+    //             //     // let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
+    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
+    //             //     // let temp = linkElem.substr(0, match.index + originalLinkLength);
+    //             //     // temp += linkString;
+    //             //     // linkElem = temp;
+    //             //     // console.log(temp)
+    //             // }
+
+    //             // if(count == 3) {
+    //             //     // console.log('3')
+    //             //     // let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
+    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
+    //             //     // let temp = linkElem.substr(0, match.index + originalLinkLength);
+    //             //     // temp += linkString;
+    //             //     // linkElem = temp;
+    //             //     // console.log(temp)
+    //             // }
+
+    //             // if(count == 4) {                    
+    //             //     // console.log(text)
+    //             //     console.log('4')
+
+    //             //     let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
+    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
+    //             //     let temp = text.substr(0, match.index);
+
+    //             //     // console.log(temp.length, linkElem.length)
+    //             //     // // let newTemp = 
+    //             //     // // temp += linkString;
+    //             //     // console.log(temp)
+
+    //             //     //temp += linkString;
+    //             //     //linkElem = temp;
+    //             // }
+
+    //             // if(count == 5) {
+    //             //     // console.log('5')
+    //             //     // let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
+    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
+    //             //     // let temp = linkElem.substr(0, match.index + originalLinkLength);
+    //             //     // temp += linkString;
+    //             //     // linkElem = temp;
+    //             //     // console.log(temp)
+    //             // }
+
+    //             // count++;
+    //         }
+            
+    //         if(linkElem.length > 0) {
+                
+    //             //linkElem = `<div class="linkContainer">` + linkElem + `</div>`;
+    //             return linkElem;
+    //         }
+
+    //         return text;
+    //     }
     }
   }
 }
@@ -140,6 +257,11 @@ export default {
     /deep/ .panelTextLink {
         color: #dddddd;
         margin: 5px;
+    }
+
+    /deep/ .linkContainer {
+        display: flex;
+        flex-direction: column;
     }
 }
 </style>
