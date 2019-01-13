@@ -1,22 +1,21 @@
 <template>
-  <div class="homeComponent">
+<div class="homeComponent">
     <div class="twitchWrapper">
-      <div class="streamContainer" v-for="stream in streams">
-        <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: stream.channel.name}}"></router-link>
-        <div class="streamImageContainer">
-          <img class="streamImage" v-bind:src="stream.preview.large">
+        <div class="streamContainer" v-for="stream in streams">
+            <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: stream.channel.name}}"></router-link>
+            <div class="streamImageContainer">
+                <img class="streamImage" v-bind:src="stream.preview.large">
+            </div>
+            <div class="streamTextContainer">
+                <div class="streamName streamItem">{{stream.channel.name}}</div>
+                <div class="streamGame streamItem">{{stream.channel.game}}</div>
+                <div class="streamStatus streamItem">{{stream.channel.status}}</div>
+                <div class="streamViewers streamItem">{{stream.viewers | addComma}}</div>
+            </div>
         </div>
-        <div class="streamTextContainer">
-          <div class="streamName streamItem">{{stream.channel.name}}</div>
-          <div class="streamGame streamItem">{{stream.channel.game}}</div>
-          <div class="streamStatus streamItem">{{stream.channel.status}}</div>
-          <div class="streamViewers streamItem">{{stream.viewers | addComma}}</div>
-        </div>
-      </div>
     </div>
     <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="offsetTop"/>
-
-  </div>
+</div>
 </template>
 
 <script>
@@ -25,46 +24,50 @@ import $ from 'jquery';
 import { devID, prodID } from '../clientID.js';
 
 export default {
-  name: 'Home',
-  data: function () {
-    return {
-      streams: [],
-      pageSize: null,
-      scrollbarAttachedElem: "twitchWrapper",
-      offsetTop: 75 // height of the top nav bar container
-    }
-  },
-  created () {
-    this.getPopularStreams();
-  },
-  filters: {
-    truncate: function (string, value) {
-      if(string.length > 20) {
-        return string.substring(0, value) + '...';
-      } else {
-        return string
-      }
+    name: 'Home',
+    data: function () {
+        return {
+            streams: [],
+            pageSize: null,
+            scrollbarAttachedElem: "twitchWrapper",
+            offsetTop: 75 // height of the top nav bar container
+        }
     },
-    addComma: function (string) {
-      return string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    created () {
+        this.getPopularStreams();
+    },
+
+    filters: {
+        truncate: function (string, value) {
+            if(string.length > 20) {
+                return string.substring(0, value) + '...';
+            } else {
+            return string
+            }
+        },
+
+        addComma: function (string) {
+            return string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+    },
+
+    methods: {
+        getPopularStreams() {
+            // send a request for the most poular live streams
+            console.log(devID)
+            axios({
+                method:'get',
+                url:'https://api.twitch.tv/kraken/streams/?limit=100&offset=0',
+                headers: {'Client-ID': devID}
+            })
+            .then(response => {
+                let streamData = response.data.streams;
+                this.streams = streamData;
+            });
+        }
     }
-  },
-  methods: {
-    getPopularStreams() {
-      // send a request for the most poular live streams
-      console.log(devID)
-      var self = this;
-      axios({
-        method:'get',
-        url:'https://api.twitch.tv/kraken/streams/?limit=100&offset=0',
-        headers: {'Client-ID': devID}
-      })
-      .then(function(response) {
-        let streamData = response.data.streams;
-        self.streams = streamData;
-      });
-    }
-  }
 }
 
 </script>
@@ -77,112 +80,110 @@ $streamHeight: 32%;
 $streamWidth: 18%;
 
 .homeComponent {
-  position: absoulte;
+    position: absoulte;
 }
 
 .twitchWrapper {
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  box-sizing: border-box;
-  margin: 0px;
-  margin-top: 75px;
-  padding-top: 30px;
-  margin-left: 250px;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  height: calc(100% - 75px);
-  width: calc(100% - (250px - 18px));
-  padding-right: 18px;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    margin: 0px;
+    margin-top: 75px;
+    padding-top: 30px;
+    margin-left: 250px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: calc(100% - 75px);
+    width: calc(100% - (250px - 18px));
+    padding-right: 18px;
 }
 
 .streamContainer {
-  height: $streamHeight;
-  width: $streamWidth;
-  background: $mainBackgroundColor;
-  color: #dddddd;
-  margin: 15px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0px 0px 10px 3px rgb(0, 0, 0);
-  transition: 0.5s;
-  position: relative;
+    height: $streamHeight;
+    width: $streamWidth;
+    background: $mainBackgroundColor;
+    color: #dddddd;
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 10px 3px rgb(0, 0, 0);
+    transition: 0.5s;
+    position: relative;
 }
 
 .streamContainer:hover {
-  box-shadow: 0px 0px 20px 3px rgb(0, 0, 0);
+    box-shadow: 0px 0px 20px 3px rgb(0, 0, 0);
 }
 
 .streamTextContainer {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .streamItem {
-  width: calc(100% - 6px);
-  height: 20px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  padding-left: 3px;
-  padding-right: 3px;
+    width: calc(100% - 6px);
+    height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
 .streamName {
- font-size: 15px;
+    font-size: 15px;
 }
 
 .streamGame, .streamViewers, .streamStatus {
-  color: rgba(221, 221, 221, 0.774);
-  font-size: 14px;
+    color: rgba(221, 221, 221, 0.774);
+    font-size: 14px;
 }
 
 .streamImage {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .clickZone {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  background: #222222;
-  opacity: 0;
-  transition: 0.5s;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: #222222;
+    opacity: 0;
+    transition: 0.5s;
 }
 
 .clickZone:hover {
-  opacity: 0.5;
+    opacity: 0.5;
 }
 
 @media only screen and (max-width: 1000px) {
+    .twitchWrapper {
+        margin-left: 125px;
+    }
+    .streamContainer {
+        height: 100px;
+        width: 100px;
+        margin: 5px;
+        font-size: 12px;
+        border: 1px solid #dddddd;
+    }
 
-  .twitchWrapper {
-    margin-left: 125px;
-  }
-  .streamContainer {
-    height: 100px;
-    width: 100px;
-    margin: 5px;
-    font-size: 12px;
-    border: 1px solid #dddddd;
-  }
+    .streamContainer:hover {
+        opacity: 0.5;
 
-  .streamContainer:hover {
-    opacity: 0.5;
-    
-  }
+    }
 
-  .streamGame, .streamStatus, .streamViewers {
-    display: none;
-  }
-
+    .streamGame, .streamStatus, .streamViewers {
+        display: none;
+    }
 }
 
 </style>

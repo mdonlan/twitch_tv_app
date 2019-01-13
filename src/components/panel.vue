@@ -66,137 +66,13 @@ export default {
         })
     },
 
-    format(str) {
-        let match = this.linkRegex.exec(str);
-        let count = 0;
-        if(match) {
-            console.log(count);
-            count++;
-            console.log(match)
-            let temp = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
-            return temp;
-        }
-        return str;
-    },
-
     checkForLinks(text) {
         let match;
         while ((match = this.linkRegex.exec(text)) !== null) {
-            let textMatch = `[${match[1]}](${match[2]})`;
-            console.log(match[0])
-            // console.log(textMatch)
             let link = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
             text = text.replace(match[0], link)
         }
         return text;
-
-        // console.log(text.replace(this.linkRegex, this.format(text)));
-        // return text;
-
-    //     if(text.includes("just")) {
-    //         let linkElem = text;
-    //         let match;
-    //         let addedToLength = 0;
-    //         let count = 0;
-    //         let indexOffset = 0;
-    //         linkElem.replace(this.linkRegex, "red");
-    //         console.log(linkElem)
-    //         while ((match = this.linkRegex.exec(text)) !== null) {
-    //             // console.log('COUNT: ' + count);
-
-    //             // let temp = linkElem.substr(0, match.index + addedToLength);
-    //             // let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
-    //             // temp += linkString;
-    //             // addedToLength += linkString.length;
-    //             // linkElem = temp;
-
-    //             // linkElem.replace(this.linkRegex, "red");
-    //             // console.log(linkElem)
-
-    //             // if(count == 0) {
-    //             //     console.log('0')
-    //             //     let temp = text.substr(0, match.index);
-    //             //     console.log(temp);
-    //             //     let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
-    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
-    //             //     // let temp = linkElem.substr(0, match.index);
-    //             //     temp += linkString;
-    //             //     // indexOffset = originalLinkLength - linkString;
-    //             //     linkElem = temp;
-    //             //     // console.log(temp)
-    //             // }
-
-    //             // if(count == 1) {
-    //             //      console.log('1')
-    //             //      let temp = text.substr(0, match.index);
-    //             //     console.log(temp);
-    //             //     // // console.log(linkElem)
-    //             //     // let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
-    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
-    //             //     // let temp = linkElem.substr(0, match.index + originalLinkLength);
-    //             //     // temp += linkString;
-    //             //     // linkElem = temp;
-    //             //     // console.log(temp)
-    //             // }
-
-    //             // if(count == 2) {
-    //             //     // console.log('2')
-    //             //     // let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
-    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
-    //             //     // let temp = linkElem.substr(0, match.index + originalLinkLength);
-    //             //     // temp += linkString;
-    //             //     // linkElem = temp;
-    //             //     // console.log(temp)
-    //             // }
-
-    //             // if(count == 3) {
-    //             //     // console.log('3')
-    //             //     // let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
-    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
-    //             //     // let temp = linkElem.substr(0, match.index + originalLinkLength);
-    //             //     // temp += linkString;
-    //             //     // linkElem = temp;
-    //             //     // console.log(temp)
-    //             // }
-
-    //             // if(count == 4) {                    
-    //             //     // console.log(text)
-    //             //     console.log('4')
-
-    //             //     let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
-    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
-    //             //     let temp = text.substr(0, match.index);
-
-    //             //     // console.log(temp.length, linkElem.length)
-    //             //     // // let newTemp = 
-    //             //     // // temp += linkString;
-    //             //     // console.log(temp)
-
-    //             //     //temp += linkString;
-    //             //     //linkElem = temp;
-    //             // }
-
-    //             // if(count == 5) {
-    //             //     // console.log('5')
-    //             //     // let linkString = `<a class="panelTextLink" href="${match[2]}">${match[1]}</a>`; 
-    //             //     // let originalLinkLength = match[2].length + match[1].length + 4; // + 4 for []()
-    //             //     // let temp = linkElem.substr(0, match.index + originalLinkLength);
-    //             //     // temp += linkString;
-    //             //     // linkElem = temp;
-    //             //     // console.log(temp)
-    //             // }
-
-    //             // count++;
-    //         }
-            
-    //         if(linkElem.length > 0) {
-                
-    //             //linkElem = `<div class="linkContainer">` + linkElem + `</div>`;
-    //             return linkElem;
-    //         }
-
-    //         return text;
-    //     }
     }
   }
 }
@@ -225,7 +101,7 @@ export default {
     // justify-content: center;
     // width: 75%;
 
-    column-count: 4;
+    column-count: 3;
     column-gap: 2em;
     width: 75%;
     margin-top: 10px;
@@ -242,21 +118,22 @@ export default {
     // align-items: center;
     // font-size: 14px;
 
-    // background-color: #eee;
     display: inline-block;
     margin: 0 0 1em 0em;
     width: 100%;
     padding: 10px;
-    // min-height: 100px;
 }
 
 .panelDesc {
     width: 100%;
+    display: flex;
+    flex-wrap: wrap;
 
     /* use deep selector to style v-html b/c its not in scope */
     /deep/ .panelTextLink {
         color: #dddddd;
         margin: 5px;
+        width: 100%;
     }
 
     /deep/ .linkContainer {
