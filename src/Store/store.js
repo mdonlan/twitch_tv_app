@@ -14,8 +14,10 @@ export default new Vuex.Store({
       accessToken: null,
     },
     clientID: null,
-    mousePos: null
+    mousePos: null,
+    breakpoint: null
   },
+
   mutations: {
     setOnVideoPage(state, payload) {
       state.onVideoPage = payload;
@@ -35,6 +37,10 @@ export default new Vuex.Store({
 
     setMousePos(state, payload) {
       state.mousePos = payload;
+    },
+
+    setBreakpoint(state, payload) {
+        state.breakpoint = payload;
     }
   },
 });

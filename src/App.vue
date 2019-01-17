@@ -19,15 +19,37 @@ export default {
     },
     
     mounted() {
+        window.addEventListener("resize", this.resizedWindow);
         this.checkIfUserIsLoggedIn();
         // get and update the users followed streams
         this.getFollowing();
         setInterval(() => {
             this.getFollowing();
         }, 60000); // 60 sec
+
+        this.getBreakpoint();
     },
 
     methods:  {
+        resizedWindow() {
+            console.log('the window has been resized!');
+            this.getBreakpoint();
+        },
+
+        getBreakpoint() {
+            let width = window.innerWidth;
+            let breakpoint;
+            if(width > 1024) {
+                breakpoint = 'desktop';
+            } else if(width < 1024 && width > 768) {
+                breakpoint = 'tablet'
+            } else if(width < 768) {
+                breakpoint = 'phone'
+            }
+
+            this.$store.commit("setBreakpoint", breakpoint);
+        },
+        
         checkIfUserIsLoggedIn() {
             // when first starting the app check if the user has a valid clientID + token
             let clientID = localStorage.getItem("id_token");

@@ -4,7 +4,7 @@
     <div id="twitch-embed"></div>
     <div class="closeSmallPlayerContainer" v-if="!this.$store.state.onVideoPage && this.$store.state.onChannel">
         <div class="closeSmallPlayerButton" v-on:click="closeSmallPlayer">CLOSE</div>
-        <router-link class="restoreFullPlayerButton" v-on:click="restoreFullPlayer" :to="{path: 'stream', query: { name: this.$store.state.onChannel}}">RESTORE</router-link>
+        <div class="restoreFullPlayerButton" v-on:click="restoreFullPlayer">RESTORE</div>
     </div>      
     <panel></panel>
 </div>
@@ -99,6 +99,8 @@ export default {
         },
 
         restoreFullPlayer() {
+            let to = {path: 'stream', query: { name: this.$store.state.onChannel}};
+            this.$router.push(to);
             this.$store.commit("setOnVideoPage", true)
         },
 
@@ -140,6 +142,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../global_styles.scss";
 
 .videoPlayerWrapper {
     position: absolute;
@@ -160,10 +163,12 @@ export default {
     z-index: 5;
     overflow: hidden;
     padding-right: 0px;
+    box-shadow: 0px 0px 15px 5px $lighterBackgroundColor;
 }
 
 .hideSmallVideoPlayer {
     z-index: 0;
+    box-shadow: none;
 }
 
 #twitch-embed {
@@ -178,17 +183,6 @@ export default {
 .embedSmall {
     height: 500px !important;
     width: 400px !important;
-}
-
-.mouseEventWatchLayerTop {
-    position: absolute;
-    height: 10%;
-    width: 40%;
-    left: 20%;
-    top: 0px;
-    overflow: hidden;
-    z-index: 3;
-    opacity: 0.5;
 }
 
 .mouseEventWatchLayerLeft {
@@ -212,24 +206,34 @@ export default {
 .closeSmallPlayerButton, .restoreFullPlayerButton {
     cursor: pointer;
     color: #dddddd;
-    border: 1px solid #dddddd;
-    padding: 3px;
-    margin: 3px;
-    transition: 0.6s;
+    //border: 1px solid #dddddd;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: 8px;
+    margin-right: 8px;
+    transition: 0.3s;
+    height: 75%;
+}
+
+.closeSmallPlayerButton:hover {
+    color: rgb(189, 15, 15);
+}
+
+.restoreFullPlayerButton:hover {
+    color: rgb(15, 189, 93);
 }
 
 .closeSmallPlayerButton:hover, .restoreFullPlayerButton:hover {
-    background: #dddddd;
-    color: #222222;
+    //background: #dddddd;
+    //color: #222222;
 }
 
 .videoPlayerWrapper:hover .closeSmallPlayerContainer {
     display: flex;
     width: 100%;
-    background: #222222;
+    background: #111111;
     justify-content: center;
     align-items: flex-start;
-    cursor: move;
 }
 
 #twitch-embed iframe {

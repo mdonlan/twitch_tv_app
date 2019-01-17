@@ -4,11 +4,11 @@
       <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Popular' }" @click.native="clickedButton" v-bind:to="{path: '/'}">Popular</router-link>
       <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Games' }" @click.native="clickedButton" v-bind:to="{path: 'games'}">Games</router-link>
       <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Followed' }" @click.native="clickedButton" v-bind:to="{path: 'followed'}">Followed</router-link>
-      <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Subscribed' }" @click.native="clickedButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link>
+      <!-- <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Subscribed' }" @click.native="clickedButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link> -->
       <router-link class="topNavBtn aboutButton" v-bind:to="{path: 'about'}">About</router-link>
+      <a v-if="needToLogin" class="twitchConnectBtn" href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=034f31qw57vu405ondtxpqwp104q5o&redirect_uri=http://localhost:8080&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671"> Connect Twitch Account </a>
+        <search></search>
     </div>
-    <a v-if="needToLogin" class="twitchConnectBtn" href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=034f31qw57vu405ondtxpqwp104q5o&redirect_uri=http://localhost:8080&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671"> Connect Twitch Account </a>
-    <search></search>
   </div>
 </template>
 
@@ -158,13 +158,15 @@ axios({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import "../global_styles.scss";
+@import "../responsive_mixin.scss";
 
 .topNavWrapper {
     position: fixed;
     margin-top: 0px;
     background: $mainBackgroundColor;
     height: 75px;
-    width: 100%;
+    margin-left: 100px;
+    width: calc(100% - 100px);
     top:0px;
     display: flex;
     align-items: center;
@@ -293,32 +295,31 @@ a {
   text-decoration: none;
 }
 
-@media only screen and (max-width: 1000px) {
-  .topNavBtn {
-    height: 25px;
-    width: 55px;
-    font-size: 10px;
-    
-    margin-right: 10px;
-    margin-left: 10px;
-    line-height: 25px;
-    color: #dddddd;
-    -webkit-user-select: none;  /* Chrome all / Safari all */
-    -moz-user-select: none;     /* Firefox all */
-    -ms-user-select: none;      /* IE 10+ */
-    user-select: none;          /* Likely future */ 
-    text-decoration: none;
-  }
+//
+// media queries
+//
 
-  .topNavWrapper {
-    align-items: center;
-    justify-content: flex-start;
-  }
+@include phone {
 
-  .aboutButton {
-    right: 1px;
-    top: 24px;
-  }
+    .topNavWrapper {
+        margin-left: 0px;
+        width: 100%;
+        height: 125px;
+    }
+
+    .topNavBtnContainer {
+        flex-wrap: wrap;
+    }
+
+    .topNavBtn {
+        width: 40%;
+    }
+
+    .aboutButton {
+        position: relative;
+        top: 0px;
+        right: 0px;
+    }
 }
 
 </style>

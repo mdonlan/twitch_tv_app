@@ -359,6 +359,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../global_styles.scss";
+@import "../responsive_mixin.scss";
 
 input {
   /* for search input element */
@@ -536,6 +537,16 @@ input {
   width: 100%;
   cursor: pointer;
   top: 0px;
+}
+
+//
+// media queries
+//
+
+@include phone {
+    .searchContainer {
+        width: 100%;
+    }
 }
 
 </style>

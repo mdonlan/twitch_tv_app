@@ -56,7 +56,6 @@ export default {
     methods: {
         getPopularStreams() {
             // send a request for the most poular live streams
-            console.log(devID)
             axios({
                 method:'get',
                 url:'https://api.twitch.tv/kraken/streams/?limit=100&offset=0',
@@ -75,6 +74,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import "../global_styles.scss";
+@import "../responsive_mixin.scss";
 
 $streamHeight: 32%;
 $streamWidth: 18%;
@@ -164,24 +164,25 @@ $streamWidth: 18%;
     opacity: 0.5;
 }
 
-@media only screen and (max-width: 1000px) {
+//
+// media queries
+//
+
+@include phone {
     .twitchWrapper {
-        margin-left: 125px;
+        width: 100%;
+        left: 0px;
+        margin-left: 0px;
+        padding-right: 0px;
     }
+
     .streamContainer {
-        height: 100px;
-        width: 100px;
-        margin: 5px;
-        font-size: 12px;
-        border: 1px solid #dddddd;
+        width: 45%;
+        height: 30%;
+        margin: 3px;
     }
 
-    .streamContainer:hover {
-        opacity: 0.5;
-
-    }
-
-    .streamGame, .streamStatus, .streamViewers {
+    .streamViewers, .streamStatus {
         display: none;
     }
 }
