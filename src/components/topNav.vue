@@ -14,6 +14,7 @@
 
 <script>
 import axios from 'axios'
+import { devID, prodID } from '../clientID.js'
 
 export default {
   name: 'topNav',
@@ -115,10 +116,7 @@ export default {
             metohd: 'GET',
             url: 'https://api.twitch.tv/kraken/streams/followed?limit=25',
             headers: {
-            'Client-ID': '034f31qw57vu405ondtxpqwp104q5o',
-            // client ids
-            // dev -- 034f31qw57vu405ondtxpqwp104q5o
-            //prod -- yb1fpw6w2ldfn50b0ynr50trdcxn99
+            'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
             'Authorization' : key
             },
             success: function(data) {
@@ -137,17 +135,6 @@ export default {
                 //console.log('An error has occured with the http request. Status: ' + status + ' - Message: ' + message);
             }
         });
-        /*
-axios({
-        method:'get',
-        url:'https://api.twitch.tv/kraken/streams/?limit=25&offset=0',
-        headers: {'Client-ID': 'yb1fpw6w2ldfn50b0ynr50trdcxn99'}
-      })
-        .then(function(response) {
-          var streamData = response.data.streams;
-          self.streams = streamData;
-      });
-        */
     }
   }
 }

@@ -65,7 +65,7 @@ export default {
                 method:'get',
                 url:'https://api.twitch.tv/kraken/streams/followed?limit=100',
                 headers: {
-                    'Client-ID': devID,
+                    'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
                     'Authorization': accessToken
                 }
             })
