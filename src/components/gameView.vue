@@ -104,7 +104,7 @@ $streamWidth: 18%;
 }
 
 .streamTextContainer {
-  height: 100%;
+  height: 50%;
   width: 100%;
   display: flex;
   flex-direction: column;

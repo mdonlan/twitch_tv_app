@@ -9,6 +9,7 @@ import gameView from '@/components/gameView'
 import about from '@/components/about'
 import loading from '@/components/loading'
 import notifications from '@/components/notifications'
+import multi from '@/components/multi'
 
 import store from "../Store/store"
 
@@ -56,22 +57,31 @@ const router = new Router({
       name: 'loading',
       component: loading
     },
+    {
+      path: '/multi/',
+      name: 'multi',
+      component: multi
+    },
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  //
-  // whenever we change routes set some data
-  // 
-
-  if(to.path == '/stream') {
-    document.title = to.query.name;
-    store.commit("setOnVideoPage", true);
-    store.commit("setOnChannel", to.query.name);
-  } else {
-    store.commit("setOnVideoPage", false);    
-  }
-  next();
+    // whenever we change routes set some data
+    
+    if(to.path == '/stream') {
+        document.title = to.query.name;
+        store.commit("setOnVideoPage", true);
+        store.commit("setOnChannel", to.query.name);
+    } 
+    else if(to.path == '/multi'){
+        document.title = "Multi";
+        store.commit("setOnVideoPage", true);
+        // store.commit("setOnChannel", null);
+    }
+    else {
+        store.commit("setOnVideoPage", false);    
+    }
+    next();
 })
 
 export default router

@@ -39,6 +39,9 @@ export default {
         getBreakpoint() {
             let width = window.innerWidth;
             let breakpoint;
+
+            // match these breakpoints w/ the ones in responsive_mixin.scss
+
             if(width > 1024) {
                 breakpoint = 'desktop';
             } else if(width < 1024 && width > 768) {

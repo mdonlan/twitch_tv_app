@@ -115,7 +115,7 @@ export default {
 
       let previewElemContainer = document.querySelector(".hoverPreviewImg");
       let previewElem = document.querySelector(".hoverPreview")
-      previewElemContainer.style.top = elemPos.top + "px";
+      previewElemContainer.style.top = elemPos.top - 20 + "px";
       previewElem.src = hoverSrc;
       let hoverTriangle = document.querySelector(".hoverPreviewTriangle");
       hoverTriangle.style.top = elemPos.top + "px";

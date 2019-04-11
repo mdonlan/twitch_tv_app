@@ -1,5 +1,6 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+
+// import components
+
 import Vue from 'vue'
 import App from './App'
 import router from './router'
@@ -15,6 +16,9 @@ import scrollbar from '@/components/scrollbar'
 import panel from '@/components/panel'
 import Vuex from "vuex"
 import store from "./Store/store"
+import multiPlayer from "./components/multiPlayer.vue"
+import multiChat from "./components/multiChat.vue"
+import multiSearch from "./components/multiSearch.vue"
 
 Vue.config.productionTip = false
 
@@ -27,7 +31,9 @@ Vue.component('search', search);
 Vue.component('loading', loading);
 Vue.component('scrollbar', scrollbar);
 Vue.component('panel', panel);
-
+Vue.component('multiPlayer', multiPlayer);
+Vue.component('multiChat', multiChat);
+Vue.component('multiSearch', multiSearch);
 
 /* eslint-disable no-new */
 new Vue({

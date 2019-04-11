@@ -25,6 +25,7 @@
             <div class="navButton" @click="clickedButton('games')">Games</div>
             <div class="navButton" @click="clickedButton('following')">Followed</div>
             <div class="navButton aboutButton" v-bind:to="{path: 'about'}" @click="clickedButton('about')">About</div>
+            <div class="navButton" @click="clickedButton('multi')">Multi</div>
         </div>
     </div>
 
@@ -46,18 +47,14 @@ export default {
     data: function () {
         return {
             following: [],
-            showingLeftNav: false,
-            showNavButtons: false,
-            loadingLeftNav: false,
-            listOrderNew: [],
-            listOrderOld: [],
             hideButtons: false,
             scrollbarAttachedElem: "leftNavContentContainer",
             scrollbarOffsetTop: 75, // size of left nav title container
-            hoveringChannelPreviewSrc: null,
             hoverPreviewTop: null,
             isHovering: false,
-            showingMobile: false
+            showingMobile: false,
+            leftNavElem: null,
+            leftNavShowing: false
         }
     },
 
@@ -66,44 +63,42 @@ export default {
     },
 
     mounted () {
-        let self = this;
         document.addEventListener("mousemove", this.mouseMoveHandler);
+        document.addEventListener("mouseover", this.mouseOverHandler);
+        this.leftNavElem = document.querySelector(".leftNavWrapper");
+
         this.updateLive();
-        this.$store.watch((state) => {return this.$store.state.onVideoPage}, (onVideoPage, oldValue) => {
-            if(onVideoPage == false) {
-                this.setLeftNavPos(false);
-            }
-        });
+
+        if(this.$route.path == '/multi') {
+            this.setLeftNavPos(true);
+        }
+
+        // this.$store.watch((state) => {return this.$store.state.onVideoPage}, (onVideoPage, oldValue) => {
+        //     console.log(onVideoPage)
+        //     if(onVideoPage == false) {
+        //         this.setLeftNavPos(false);
+        //     } else {
+        //         this.setLeftNavPos(true);
+        //     }
+        // });
     },
 
     filters: {
-        truncate: function (string, value) {
-            if(string.length > 15) {
-                return string.substring(0, value) + '...';
-            } else {
-            return string
-            }
-        },
-
         addComma: function (string) {
             return string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     },
 
     methods: {
-
         clickedButton(to) {
             this.$router.push(to);
         },
 
         setLeftNavPos(hide) {
-            // show or hide the left nav
-            let leftNavElem = document.querySelector(".leftNavWrapper");
-
             if(hide) {
-                leftNavElem.classList.add("leftNavWrapperHide");
+                this.leftNavElem.classList.add("leftNavWrapperHide");
             } else {
-                leftNavElem.classList.remove("leftNavWrapperHide");
+                this.leftNavElem.classList.remove("leftNavWrapperHide");
             }
         },    
 
@@ -112,34 +107,30 @@ export default {
             let to = {path: 'stream', query: {name: stream.channel.name}};
             this.$router.push(to);
             
+            // if we are on mobile auto hide the leftNav
             if(this.$store.state.breakpoint == 'phone') {
-            console.log(this.$store.state.breakpoint)
-
-                let leftNavElem = document.querySelector(".leftNavWrapper");
                 this.showingMobile = false;
-                leftNavElem.classList.remove('show_mobile')
+                this.leftNavElem.classList.remove('show_mobile')
             }
         },
 
         getFollowing() {
-            var self = this;
-            var accessToken = localStorage.getItem("access_token");
-            var key = "OAuth " + accessToken;
+            let accessToken = localStorage.getItem("access_token");
+            let key = "OAuth " + accessToken;
             axios({
-                method:'get',
+                method: 'get',
                 url:'https://api.twitch.tv/kraken/streams/followed?limit=100',
                 headers: {
                     'Client-ID': '034f31qw57vu405ondtxpqwp104q5o',
                     'Authorization' : key
-                    // client ids
                     // dev -- 034f31qw57vu405ondtxpqwp104q5o
                     //prod -- yb1fpw6w2ldfn50b0ynr50trdcxn99
                 }
             })
-            .then(function(response) {
-                var leftNavData = response.data.streams;
-                self.following = leftNavData;
-                localStorage.setItem("following", JSON.stringify(self.following));
+            .then((response) => {
+                let leftNavData = response.data.streams;
+                this.following = leftNavData;
+                localStorage.setItem("following", JSON.stringify(this.following));
             })
         },
 
@@ -149,15 +140,54 @@ export default {
             setInterval(this.getFollowing, 60000); // runs every 60 seconds to check for changes
         },
 
+        mouseOverHandler (event) {
+
+            // this is for firefox since it doesn't get the iframe element as target
+            // we also need to user mouseover since relatedTarget is only on that event
+            // and not on mousemove
+
+            let relatedTarget = event.relatedTarget;
+            if(relatedTarget == null) {
+                if(this.$store.state.onVideoPage) {
+                    this.setLeftNavPos(true);
+                }
+            }
+        },
+
         mouseMoveHandler(event) {
             // watches the mouse movement and checks whether we are over an IFRAME or not
             // if we are over an Iframe it means we are over the video player / chat
             // and that we should hide the leftNav
             // otherwise show the leftNav
-
-            let toElem = event.toElement;
+            let toElem = event.target;
             let tag = toElem.tagName;
             let className = toElem.className;
+            let id = toElem.id;
+
+            // console.log(event);
+            // console.log(event.toElement)
+            // console.log(event.toElem)
+
+
+            
+            // chrome and firefox event.target is different
+            // firefox doesn't detect the iframe unless we check currentTarget.activeElement
+            // and then we need to check for body or iframe depending on whether we last clicked 
+            // on the iframe or the rest of the app
+
+
+            // let mouseWatcherElem = document.querySelector(".mouseEventWatchLayerLeft");
+            // let watcherRect = mouseWatcherElem.getBoundingClientRect();
+            // // console.log(mouseWatcherElem.getBoundingClientRect());
+            // // console.log(event.clientX)
+
+
+            // // if (event.currentTarget.activeElement.nodeName == "BODY" ||
+            // //     event.currentTarget.activeElement.nodeName == "IFRAME") {
+            // //     if(this.$store.state.onVideoPage) {
+            // //         this.setLeftNavPos(true);
+            // //     }
+            // // }
 
             if(tag == "IFRAME") {
                 if(this.$store.state.onVideoPage) {
@@ -170,6 +200,7 @@ export default {
                     this.setLeftNavPos(false);
                 }
             }
+
             this.checkHoveringOverStream(toElem);
 
             let mousePos = {x: event.clientX, y: event.clientY};
@@ -178,11 +209,10 @@ export default {
 
         setLeftNavPos(hide) {
             // show or hide the left nav
-            let leftNavElem = document.querySelector(".leftNavWrapper")
             if(hide) {
-                leftNavElem.classList.add("leftNavWrapperHide");
+                this.leftNavElem.classList.add("leftNavWrapperHide");
             } else {
-                leftNavElem.classList.remove("leftNavWrapperHide");
+                this.leftNavElem.classList.remove("leftNavWrapperHide");
             }
         },
 
@@ -208,9 +238,9 @@ export default {
                 let elemPos = toElem.getBoundingClientRect();
                 let hoverElemContainer = document.querySelector(".hoverPreviewImg");
                 let hoverElemImg = document.querySelector(".hoverPreview");
-                // :style="{top: hoverPreviewTop + 'px'}"
+
                 if(hoverElemContainer) {
-                    let top = hoverElemContainer.style.top = elemPos.top + "px";
+                    let top = hoverElemContainer.style.top = elemPos.top - 20 + "px";
                     hoverElemImg.src = hoverSrc;
                 }
 
@@ -218,23 +248,21 @@ export default {
                 if(hoverTriangle) {
                     hoverTriangle.style.top = elemPos.top + "px";
                 }
-            } else {
+            } 
+            else {
                 this.isHovering = false;
             }
         },
 
         toggleLeftNavMobile(toggle) {
-
-            let leftNavElem = document.querySelector(".leftNavWrapper");
-
             if(toggle == 'show') {
                 this.showingMobile = true;
-                leftNavElem.classList.add("show_mobile");
+                this.leftNavElem.classList.add("show_mobile");
             }
 
             if(toggle == 'hide') {
                 this.showingMobile = false;
-                leftNavElem.classList.remove("show_mobile");
+                this.leftNavElem.classList.remove("show_mobile");
             }
         }
     }
@@ -279,7 +307,7 @@ export default {
     height: 65px;
     display: flex;
     align-items: center;
-    transition: background 0.5s linear;
+    transition: background 0.3s linear;
     font-size: 12px;
     user-select: none;
     position: relative;
@@ -287,6 +315,12 @@ export default {
 
 .followItemContainer:hover {
     background: $lighterBackgroundColor;
+    // height: 70px;
+    font-size: 12.5px;
+    color: white;
+    z-index: 10;
+    // padding-top: 3px;
+    // padding-bottom: 3px;
 }
 
 .clickZone {
@@ -322,7 +356,7 @@ a {
 
 .leftNavTitle {
     height: 75px;
-    width: 100%;
+    width: 250px;
     line-height: 75px;
     border-bottom: 0.5px solid $mainBorderColor;
     border-top: 0.5px solid $mainBorderColor;
@@ -371,7 +405,7 @@ a {
 .navButton {
     position: relative;
     height: 20%;
-    width: 150px;
+    width: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -417,10 +451,11 @@ a {
     position: absolute;
     height: 360px;
     width: 640px;
-    left: 250px;
+    left: 215px;
     z-index: 4;
     box-shadow: 0px 0px 15px 5px $lighterBackgroundColor;
     transition: 0.5s;
+    transform: perspective(500px) rotateY(-10deg);
 }
 
 .hoverPreview {
@@ -433,12 +468,13 @@ a {
     width: 640px;
     left: 250px;
     z-index: 5;
+    // transition: 0.5s;
 }
 
 .triangle {
     position: absolute;
     top: 0px;
-    left: -10px;
+    left: 0px;
     width: 0;
     height: 0;
     border-style: solid;
@@ -488,28 +524,13 @@ a {
         width: 0;
     }
 
+    .leftNavTitle {
+        width: 100%;
+    }
+
     .followItemContainer {
-        // height: 40px;
         margin-left: 25px;
     }
-
-    .followingGame, .followingViewers, .followingStatus {
-        // display: none;
-    }
-
-    .leftNavTextContainer {
-        // font-size: 10px;
-    }
-
-    .leftNavImageContainer {
-        // height: 25px;
-        // width: 25px;
-    }
-
-    .leftNavTitle {
-        // font-size: 3vw;
-    }
-
 }
 
 </style>

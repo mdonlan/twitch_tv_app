@@ -91,17 +91,13 @@ export default {
   flex-direction: column;
 }
 
-.gamesItemTextContainer {
-  display: flex;
-}
-
 .gameImage {
   height: 200px;
   width: 175px;  
 }
 
 .gamesItemTextContainer {
-  height: 100%;
+  height: 20%;
   width: 100%;
   display: flex;
   flex-direction: column;

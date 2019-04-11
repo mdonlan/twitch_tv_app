@@ -131,8 +131,14 @@ export default {
                     muted: false
                 }
 
-                let newPlayer = new window.Twitch.Embed("twitch-embed", embedOptions);
-                this.currentPlayerChannel = newPlayer.options.channel;  
+                let twitchPlayer = new window.Twitch.Embed("twitch-embed", embedOptions);
+                this.currentPlayerChannel = twitchPlayer.options.channel;  
+
+                twitchPlayer.addEventListener(Twitch.Embed.VIDEO_READY, () => {
+                    // this.twitchEmbedElem.style.pointerEvents = 'none';                
+                    // console.dir(this.twitchEmbedElem.children[0]);
+                    // this.twitchEmbedElem.children[0].style.pointerEvents = 'none';
+                });
             }
         }
     }
@@ -147,7 +153,7 @@ export default {
 .videoPlayerWrapper {
     position: absolute;
     height: 100%;
-    width: 100%;
+    width: calc(100% + 1px);
     left: 0px;
     top: 0px;
     z-index: 3;
