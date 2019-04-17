@@ -62,7 +62,10 @@ export default {
           var streamData = response.data.streams;
           //console.log('streamData', streamData)
           self.streams = streamData;
-      });
+      })
+      .catch((error) => {
+            console.log(error);
+        });
     }
   }
 }

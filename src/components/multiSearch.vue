@@ -1,9 +1,10 @@
 <template>
     <div class="multi_search_wrapper">
-        <input v-model="query" @input="searchChangeHandler($event)">
+        <input class="input" v-model="query" @input="searchChangeHandler($event)">
         <div class="results">
-            <div v-for="result in results">
-                {{ result.name }}
+            <div class="result" :key="result._id" v-for="result in results" v-on:click="setChannel(result)">
+                <div>{{ result.channel.name }}</div>
+                <div>{{ result.game }}</div>
             </div>
         </div>
     </div>
@@ -15,6 +16,7 @@ import { devID, prodID } from '../clientID.js';
 
 export default {
     name: 'multiSearch',
+    props: ['num'],
     data: function () {
         return {
             query: "",
@@ -26,6 +28,10 @@ export default {
     },
 
     methods: {
+ 
+        setChannel(result) {
+            this.$store.commit("setMulti", {channel: result.channel.name, num: this.num});
+        },
 
         searchChangeHandler(e) {
             this.search(e.target.value);
@@ -34,18 +40,24 @@ export default {
         search(searchQuery) {
             axios({
                 method:'get',
-                url:'https://api.twitch.tv/kraken/search/streams?query=' + searchQuery,
+                url:'https://api.twitch.tv/kraken/search/streams?query=' + searchQuery + '&limit=100',
                 headers: {
                     'Accept': 'application/vnd.twitchtv.v5+json',
                     'Client-ID': devID,
                 }
             })
             .then((response) => {
-                console.log(response);
-                console.log(this);
-                this.$set(this.results, response.data.streams);
+                let results = [];
+                response.data.streams.forEach((stream) => {
+                    let matches = stream.channel.name.includes(searchQuery);
+                    if(matches) {
+                        results.push(stream);
+                    }
+                })
+                results = results.slice(0, 10);
+                this.results = results;
             })
-            .catch(function (error) {
+            .catch((error) => {
                 console.log(error);
             });
         },
@@ -63,9 +75,34 @@ export default {
     background: darkblue;
     opacity: 0.5;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     color: #dddddd;
+}
+
+.input {
+    width: 50%;
+    height: 25px;
+    border: none;
+    outline: none;
+}
+
+.results {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    overflow-y: auto;
+}
+
+.result {
+    background: #222222;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.result:hover {
+    background: #333333;
 }
 
 </style>

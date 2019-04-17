@@ -15,7 +15,8 @@ export default new Vuex.Store({
     },
     clientID: null,
     mousePos: null,
-    breakpoint: null
+    breakpoint: null,
+    multi: [null, null, null, null] // channels for the multi component
   },
 
   mutations: {
@@ -41,6 +42,10 @@ export default new Vuex.Store({
 
     setBreakpoint(state, payload) {
         state.breakpoint = payload;
+    },
+
+    setMulti(state, payload) {
+        state.multi.splice(payload.num - 1, 1, payload.channel);
     }
   },
 });

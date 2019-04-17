@@ -76,6 +76,9 @@ export default {
                 console.log(userID)
                 self.getAllFollowing(userID);
             })
+            .catch((error) => {
+                console.log(error);
+            });
         },
 
         getAllFollowing(userID) {
@@ -96,6 +99,9 @@ export default {
             .then(function(response) {
                 self.following = response.data.follows;
             })
+            .catch((error) => {
+                console.log(error);
+            });
         }
     }
 }

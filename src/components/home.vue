@@ -12,6 +12,10 @@
                 <div class="streamStatus streamItem">{{stream.channel.status}}</div>
                 <div class="streamViewers streamItem">{{stream.viewers | addComma}}</div>
             </div>
+            <div class="border borderTop"></div>
+            <div class="border borderRight"></div>
+            <div class="border borderBottom"></div>
+            <div class="border borderLeft"></div>
         </div>
     </div>
     <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="offsetTop"/>
@@ -64,6 +68,9 @@ export default {
             .then(response => {
                 let streamData = response.data.streams;
                 this.streams = streamData;
+            })
+            .catch((error) => {
+                console.log(error);
             });
         }
     }
@@ -104,27 +111,132 @@ $streamWidth: 18%;
 .streamContainer {
     height: $streamHeight;
     width: $streamWidth;
-    background: $mainBackgroundColor;
+    /* background: $mainBackgroundColor; */
     color: #dddddd;
     margin: 15px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0px 0px 10px 3px rgb(0, 0, 0);
+    /* box-shadow: 0px 0px 10px 3px rgb(0, 0, 0); */
     transition: 0.5s;
     position: relative;
 }
 
-.streamContainer:hover {
+/* streamcontainer hover effects */
+
+/* .streamContainer:hover {
     box-shadow: 0px 0px 15px 5px $lighterBackgroundColor;
+} */
+
+$animTime: 0.2s;
+
+
+.streamContainer:hover > .borderTop {
+    animation: 
+        expandRight $animTime forwards, 
+        addShadow $animTime forwards;
+}
+
+.streamContainer:hover > .borderRight {
+    animation: 
+        expandDown $animTime $animTime forwards, 
+        addShadow $animTime $animTime forwards;
+}
+
+.streamContainer:hover > .borderBottom {
+    animation: 
+        expandLeft $animTime $animTime * 2 forwards, 
+        addShadow $animTime $animTime * 2 forwards;
+}
+
+.streamContainer:hover > .borderLeft {
+    animation: 
+        expandUp $animTime $animTime * 3 forwards, 
+        addShadow $animTime $animTime * 3 forwards;
+}
+
+.border {
+    position: absolute;
+}
+
+.borderRight {
+    left: 100%;
+}
+
+.borderBottom {
+    top: 100%;
+}
+
+/* animations */
+
+@keyframes addShadow {
+    from {
+        box-shadow: 0px 0px 15px 10px $lighterBackgroundColor;
+    }
+
+    to {
+        box-shadow: 0px 0px 15px 10px $lighterBackgroundColor;
+    }
+}
+
+@keyframes expandRight {
+    from {
+        width: 0%;
+    }
+  
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes expandDown {
+    from {
+        height: 0%;
+    }
+  
+    to {
+        height: 100%;
+    }
+}
+
+@keyframes expandLeft {
+    from {
+        width: 0%;
+        left: 100%;
+    }
+  
+    to {
+        width: 100%;
+        left: 0%;
+    }
+}
+
+@keyframes expandUp {
+    from {
+        height: 0%;
+        top: 100%;
+    }
+  
+    to {
+        height: 100%;
+        top: 0%;
+    }
+}
+
+/* end hover effects */
+
+.streamImageContainer {
+    z-index: 1;
 }
 
 .streamTextContainer {
-    height: 50%;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 1;
+    background: $mainBackgroundColor;
+    flex: 1;
 }
 
 .streamItem {
@@ -158,6 +270,7 @@ $streamWidth: 18%;
     background: #222222;
     opacity: 0;
     transition: 0.5s;
+    z-index: 2;
 }
 
 .clickZone:hover {

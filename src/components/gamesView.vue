@@ -54,7 +54,10 @@ export default {
           var gamesData = response.data.top;
           self.games = gamesData;
           
-      });
+      })
+      .catch((error) => {
+            console.log(error);
+        });
     }
   }
 }

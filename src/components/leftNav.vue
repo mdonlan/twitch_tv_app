@@ -132,6 +132,9 @@ export default {
                 this.following = leftNavData;
                 localStorage.setItem("following", JSON.stringify(this.following));
             })
+            .catch((error) => {
+                console.log(error);
+            });
         },
 
         updateLive() {

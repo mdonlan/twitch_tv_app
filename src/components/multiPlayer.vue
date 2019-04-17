@@ -1,6 +1,6 @@
 <template>
         <div :id="['multi_player_' + num]" class="multi_player">
-            <multiSearch />
+            <multiSearch :num="num"/>
         </div>
 </template>
 
@@ -8,9 +8,10 @@
 
 export default {
     name: 'multiPlayer',
-    props: ['channel', 'numStreams', 'num'],
+    props: ['numStreams', 'num'],
     data: function() {
-        return {}
+        return {
+        }
     },
 
     mounted () {
@@ -28,15 +29,24 @@ export default {
         }
 
         this.setPlayerPos();
+
+        // watch if the channel for this player has been updated
+        // if so load the player with that channel
+        this.$store.watch((state) => {
+            console.log(this.num);
+            return state.multi[this.num - 1];
+        }, (channel) => {
+            this.loadPlayer(channel)
+        });
     },
 
     methods: {
 
-        loadPlayer() {
+        loadPlayer(channel) {
             let embedOptions = {
                 width: "100%",
                 height: "100%",
-                channel: this.channel,
+                channel: channel,
                 layout: "video",
                 theme: "dark",
                 autoplay: "default",
@@ -112,6 +122,7 @@ export default {
 
 .multi_player {
     position: absolute;
+    box-shadow: 0px 0px 1px 0px #111111;
 }
 
 </style>
