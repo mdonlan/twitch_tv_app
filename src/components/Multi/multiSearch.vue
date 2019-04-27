@@ -1,5 +1,5 @@
 <template>
-    <div class="multi_search_wrapper">
+    <div v-if="!$store.state.multi[num - 1]" class="multi_search_wrapper">
         <input class="input" v-model="query" @input="searchChangeHandler($event)">
         <div class="results">
             <div class="result" :key="result._id" v-for="result in results" v-on:click="setChannel(result)">
@@ -12,7 +12,7 @@
 
 <script>
 import axios from 'axios';
-import { devID, prodID } from '../clientID.js';
+import { devID, prodID } from '../../clientID.js';
 
 export default {
     name: 'multiSearch',
@@ -70,10 +70,10 @@ export default {
 
 .multi_search_wrapper {
     position: absolute;
-    height: 100%;
-    width: 100%;
-    background: darkblue;
-    opacity: 0.5;
+    /* height: 100%;
+    width: 100%; */
+    /* background: darkblue; */
+    /* opacity: 0.5; */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -86,6 +86,8 @@ export default {
     height: 25px;
     border: none;
     outline: none;
+    padding: 5px;
+    max-width: 300px;
 }
 
 .results {

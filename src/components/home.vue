@@ -127,8 +127,7 @@ $streamWidth: 18%;
     box-shadow: 0px 0px 15px 5px $lighterBackgroundColor;
 } */
 
-$animTime: 0.2s;
-
+$animTime: 0.15s;
 
 .streamContainer:hover > .borderTop {
     animation: 

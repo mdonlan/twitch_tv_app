@@ -1,12 +1,17 @@
 <template>
     <div class="multi_wrapper">
-        <div class="players">
-            <multiPlayer :num="1" :numStreams=numStreams></multiPlayer>
-            <multiPlayer :num="2" :numStreams=numStreams></multiPlayer>
-            <multiPlayer :num="3" :numStreams=numStreams></multiPlayer>
-            <multiPlayer :num="4" :numStreams=numStreams></multiPlayer>
+        <div :class="{ players_full_width: !$store.state.multi[0] }" class="players" >
+            <multiPlayer :num="1" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
+            <multiPlayer :num="2" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
+            <multiPlayer :num="3" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
+            <multiPlayer :num="4" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
         </div>
-        <div class="chat">
+        <div :class="{ showChat: $store.state.multi[0] }" class="chat">
+            <div class="manage_multi">
+                <div>num players</div>     
+                <div @click="setNumStreams(2)">2</div>     
+                <div @click="setNumStreams(4)">4</div>     
+            </div>
             <div class="change_chat_room">
                 <div class="chatRoomTitle" @click="updateActiveChat(1)">{{this.$store.state.multi[0]}}</div>
                 <div class="chatRoomTitle" @click="updateActiveChat(2)">{{this.$store.state.multi[1]}}</div>
@@ -29,18 +34,30 @@ export default {
     name: 'multi',
     data: function () {
         return {
-            numStreams: 4,
-            activeChatNum: 1
+            numStreams: 2,
+            activeChatNum: 1,
+            divideDir: "horz"
         }
     },
 
     mounted() {
-        this.$store.commit("setOnVideoPage", true);
+        console.log('mounted multi')
+        // this.$store.commit("setOnVideoPage", true);
+    },
+
+    unmounted() {
+        console.log('unmounted multi')
+        // this.$store.commit("setOnVideoPage", false);
     },
 
     methods: {
         updateActiveChat(num) {
             this.activeChatNum = num;
+            
+        },
+
+        setNumStreams(num) {
+            this.numStreams = num;
         }
     }
 }
@@ -64,6 +81,10 @@ export default {
     position: relative;
 }
 
+.players_full_width {
+    width: 100%;
+}
+
 .chats {
     position: relative;
     height: 100%;
@@ -71,14 +92,18 @@ export default {
 }
 
 .chat {
-    width: 20%;
+    width: 0%;
     height: 100%;
     position: relative;
 }
 
-#multi_player {
+.showChat {
+    width: 20%;
+}
+
+/* #multi_player {
     height: 100%;
     width: 100%;
-}
+} */
 
 </style>

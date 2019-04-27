@@ -16,9 +16,9 @@ import scrollbar from '@/components/scrollbar'
 import panel from '@/components/panel'
 import Vuex from "vuex"
 import store from "./Store/store"
-import multiPlayer from "./components/multiPlayer.vue"
-import multiChat from "./components/multiChat.vue"
-import multiSearch from "./components/multiSearch.vue"
+import multiPlayer from "./components/Multi/multiPlayer.vue"
+import multiChat from "./components/Multi/multiChat.vue"
+import multiSearch from "./components/Multi/multiSearch.vue"
 
 Vue.config.productionTip = false
 

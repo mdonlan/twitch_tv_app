@@ -9,7 +9,7 @@ import gameView from '@/components/gameView'
 import about from '@/components/about'
 import loading from '@/components/loading'
 import notifications from '@/components/notifications'
-import multi from '@/components/multi'
+import multi from '@/components/Multi/multi'
 
 import store from "../Store/store"
 

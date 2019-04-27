@@ -1,12 +1,13 @@
 <template>
 <div class="leftNavComponent">
+    <!-- <div class="mouseEventWatchLayerLeft"></div> -->
     <div class="showLeftNavButton" v-if="!showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('show')"><i class="fas fa-circle"></i></div>
     <div class="hideLeftNavButton" v-if="showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('hide')"><i class="fas fa-times-circle"></i></div>
     <div class="leftNavWrapper" id="leftNavWrapper">
         <div class="leftNavTitle">LIVE FOLLOWING</div>
         <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="scrollbarOffsetTop" />
         <div class="leftNavContentContainer">
-            <div class="followItemContainer" :ref="follow._id" v-bind:key="follow._id" v-for="follow in following">
+            <div class="followItemContainer" :ref="follow._id" v-bind:key="follow._id" v-for="follow in this.$store.state.following">
                 <div class="clickZone" @click="clickedVideoLink(follow)" :data-channel="follow.channel.name" ></div>
                 <div class="leftNavImageContainer">
                     <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo">
@@ -44,9 +45,9 @@ import axios from 'axios';
 
 export default {
     name: 'leftNav',
+    // props: ['onVideoPage'],
     data: function () {
         return {
-            following: [],
             hideButtons: false,
             scrollbarAttachedElem: "leftNavContentContainer",
             scrollbarOffsetTop: 75, // size of left nav title container
@@ -69,18 +70,14 @@ export default {
 
         this.updateLive();
 
-        if(this.$route.path == '/multi') {
-            this.setLeftNavPos(true);
-        }
-
-        // this.$store.watch((state) => {return this.$store.state.onVideoPage}, (onVideoPage, oldValue) => {
-        //     console.log(onVideoPage)
-        //     if(onVideoPage == false) {
-        //         this.setLeftNavPos(false);
-        //     } else {
-        //         this.setLeftNavPos(true);
-        //     }
-        // });
+        // watch for changes in onVideoPage state var
+        this.$store.watch((state) => {return this.$store.state.onVideoPage}, (onVideoPage, oldValue) => {
+            if(onVideoPage == false) {
+                this.setLeftNavPos(false);
+            } else {
+                this.setLeftNavPos(true);
+            }
+        });
     },
 
     filters: {
@@ -128,9 +125,7 @@ export default {
                 }
             })
             .then((response) => {
-                let leftNavData = response.data.streams;
-                this.following = leftNavData;
-                localStorage.setItem("following", JSON.stringify(this.following));
+                this.$store.commit("following", response.data.streams);
             })
             .catch((error) => {
                 console.log(error);
@@ -167,7 +162,6 @@ export default {
             let className = toElem.className;
             let id = toElem.id;
 
-            // console.log(event);
             // console.log(event.toElement)
             // console.log(event.toElem)
 
@@ -192,7 +186,7 @@ export default {
             // //     }
             // // }
 
-            if(tag == "IFRAME") {
+            if(tag == "IFRAME" /*|| className.includes("multi_search_wrapper")*/) {
                 if(this.$store.state.onVideoPage) {
                     this.setLeftNavPos(true);
                 }
@@ -231,7 +225,7 @@ export default {
                 let hoverSrc = null;
 
                 // find which stream we are hovering over
-                this.following.forEach((stream) => {
+                this.$store.state.following.forEach((stream) => {
                     if(stream.channel.name == hoverElemChannel) {
                         hoverSrc = stream.preview.large;
                     }
@@ -276,6 +270,17 @@ export default {
 <style lang="scss" scoped>
 @import "../global_styles.scss";
 @import "../responsive_mixin.scss";
+
+.mouseEventWatchLayerLeft {
+    position: absolute;
+    height: 40%;
+    width: 10%;
+    left: 0px;
+    top: calc(25%);
+    overflow: hidden;
+    z-index: 5;
+    opacity: 0.5;
+}
 
 .leftNavWrapper {
     position: fixed;

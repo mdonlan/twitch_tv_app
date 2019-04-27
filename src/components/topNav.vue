@@ -6,7 +6,7 @@
       <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Followed' }" @click.native="clickedButton" v-bind:to="{path: 'followed'}">Followed</router-link>
       <!-- <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Subscribed' }" @click.native="clickedButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link> -->
       <router-link class="topNavBtn aboutButton" v-bind:to="{path: 'about'}">About</router-link>
-      <a v-if="needToLogin" class="twitchConnectBtn" href="https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=yb1fpw6w2ldfn50b0ynr50trdcxn99&redirect_uri=https://mdonlan.github.io/twitch_tv_app&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671"> Connect Twitch Account </a>
+      <a v-if="needToLogin" class="twitchConnectBtn" :href="twitchURL"> Connect Twitch Account </a>
         <search></search>
     </div>
   </div>
@@ -22,11 +22,19 @@ export default {
     return {
       needToLogin: true,
       activeButton: null,
+      twitchURL: null
     }
   },
   created () {
     this.checkLoggedIn();
     this.redirectFromTwitch();
+
+    // set the url based on whether we are testing on dev build or not
+    if (window.location.href.includes("localhost")) {
+        this.twitchURL = 'https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=' + devID +'&redirect_uri=http://localhost:8080&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671';
+    } else {
+        this.twitchURL = 'https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=' + prodID + '&redirect_uri=https://mdonlan.github.io/twitch_tv_app&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671';
+    }
   },
   mounted() {
     setInterval(() => {
@@ -86,13 +94,21 @@ export default {
             // after getting access token and id saved
             // redirect to home page so vue knows what to display
             // this simply removes the extra data on the address when twitch does their redirect
+
+            if (window.location.href.includes("localhost")) {
+                window.location.href = 'http://localhost:8080/#/';
+            } else {
+                 window.location.href = 'https://mdonlan.github.io/twitch_tv_app';
+            }
+
+            // window.location.href = window.location.href.includes("localhost") ? devID : prodID,
             
             // prod redirect
             //window.location.href = 'http://localhost:8080';
             // local redirect
             //window.location.href = 'http://localhost:8080/#/';
             // prod redirect
-            window.location.href = 'https://mdonlan.github.io/twitch_tv_app';
+            // window.location.href = 'https://mdonlan.github.io/twitch_tv_app';
 
             /*
               when connecting twitch account we need to give twitch a redirect link
@@ -106,35 +122,6 @@ export default {
               yb1fpw6w2ldfn50b0ynr50trdcxn99 - live/prod twitch api account id
             */
         }
-    },
-    getFollowedStreams() {
-        var idToken = localStorage.getItem("id");
-        var key = "OAuth " + idToken;
-        // clear old streams
-        clearAllStreams();
-        axios({
-            metohd: 'GET',
-            url: 'https://api.twitch.tv/kraken/streams/followed?limit=25',
-            headers: {
-            'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
-            'Authorization' : key
-            },
-            success: function(data) {
-                var data = data.streams;
-                var type = "channel";
-                if(isLeftNav == true) {
-                    //console.log('is left nav == true')
-                    displayLeftNavData(data);
-                } else {
-                    //console.log('is left nav == false')
-                    createDivForEach(data, type);
-                }
-                isLeftNav = false;
-            },
-            error: function(jq,status,message) {
-                //console.log('An error has occured with the http request. Status: ' + status + ' - Message: ' + message);
-            }
-        });
     }
   }
 }

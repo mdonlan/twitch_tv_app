@@ -1,5 +1,5 @@
 <template>
-    <div class="multi_chat" v-if="activeChatNum == num">
+    <div class="multi_chat" :class="{active: activeChatNum == num}" v-if="$store.state.multi[num - 1]">
         <iframe 
             ref="chatElem"
             frameborder="0"
@@ -18,8 +18,26 @@ export default {
     name: 'multiChat',
     props: ['num', 'numStreams', 'activeChatNum'],
     data: function () {
-        return {}
+        return {
+            active: false
+        }
     },
+
+    // watch: {
+    //     activeChatNum: {
+    //         // the callback will be called immediately after the start of the observation
+    //         immediate: true, 
+    //         handler (val, oldVal) {
+    //             // do your stuff
+    //             if(val == this.num) {
+    //                 this.active = true;
+    //             }
+    //             else {
+    //                 this.active = false;
+    //             }
+    //         }
+    //     }
+    // },
 
     mounted() {
         // watch if the channel for this player has been updated
@@ -28,7 +46,9 @@ export default {
         //     return state.multi[this.num - 1];
         // }, (channel) => {
         //     if(this.activeChatNum == this.num) {
-        //         this.$refs.chatElem.src = `https://www.twitch.tv/embed/${channel}/chat?darkpopout`;
+        //         this.active = true;
+        //     } else {
+        //         this.active = false;
         //     }
         // });
     },
@@ -46,6 +66,11 @@ export default {
     width: 100%;
     position: absolute;
     top: 0px;
+    display: none;
+}
+
+.active {
+    display: block;
 }
 
 </style>
