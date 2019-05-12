@@ -69,10 +69,11 @@ export default {
       // this is for displaying a notification to let the user know someone they 
       // follow has gone live
 
-      let followingNewJSON = localStorage.getItem("following");
-      let followingNew = JSON.parse(followingNewJSON);
+    //   let followingNewJSON = localStorage.getItem("following");
+    //   let followingNew = JSON.parse(followingNewJSON);
       // if self.following is null the page has just loaded and no data has been set
       // set the data but don't show notifications
+      let followingNew = this.$store.state.following;
 
       if(self.following == null) {
         // set initial following data

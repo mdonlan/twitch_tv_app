@@ -1,6 +1,9 @@
 <template>
     <div v-if="!$store.state.multi[num - 1]" class="multi_search_wrapper">
-        <input class="input" v-model="query" @input="searchChangeHandler($event)">
+        <div class="input_wrapper">
+            <input class="input" v-model="query" @input="searchChangeHandler($event)" placeholder="Search for channels...">
+            <div class="clear_input" @click="clearInput">X</div>
+        </div>
         <div class="results">
             <div class="result" :key="result._id" v-for="result in results" v-on:click="setChannel(result)">
                 <div>{{ result.channel.name }}</div>
@@ -28,6 +31,11 @@ export default {
     },
 
     methods: {
+
+        clearInput() {
+            this.query = "";
+            this.results = [];
+        },
  
         setChannel(result) {
             this.$store.commit("setMulti", {channel: result.channel.name, num: this.num});
@@ -66,39 +74,70 @@ export default {
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "../../global_styles.scss";
 
 .multi_search_wrapper {
     position: absolute;
     /* height: 100%;
-    width: 100%; */
     /* background: darkblue; */
     /* opacity: 0.5; */
+    top: 30px;
+    /* height: 50px; */
+    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     color: #dddddd;
+    max-height: calc(100% - 30px);
+}
+
+.input_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 30px;
 }
 
 .input {
     width: 50%;
-    height: 25px;
     border: none;
     outline: none;
     padding: 5px;
     max-width: 300px;
+    text-align: center;
+    height: calc(100% - 10px);
+}
+
+.clear_input {
+    height: 100%;
+    width: 25px;
+    padding-left: 5px;
+    padding-right: 5px;
+    transition: 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.clear_input:hover {
+    background: rgb(185, 85, 85);
 }
 
 .results {
     display: flex;
     flex-direction: column;
-    width: 50%;
     overflow-y: auto;
+    max-height: 80%;
+    background: #111111;
+    width: 400px;
 }
 
 .result {
-    background: #222222;
+    background: $lighterBackgroundColor;
     margin-top: 5px;
     cursor: pointer;
 }

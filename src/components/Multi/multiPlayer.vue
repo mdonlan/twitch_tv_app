@@ -1,15 +1,16 @@
 <template>
-        <div :id="['multi_player_' + num]" class="multi_player">
+        <div :id="['multi_player_' + num]" class="multi_player" v-on:mousemove="mouseMoveHandler" v-on:mouseenter="mouseEnter" v-on:mouseleave="mouseExit">
+            <div :id="['embed_player_' + num]" class="embed_player" v-if="$store.state.multi[num - 1]"></div>
             <multiSearch :num="num"/>
-            <div class="following" v-if="this.$store.state.following">
-                <div>Live Following</div>
+            <div class="following" v-if="this.$store.state.following && !$store.state.multi[num - 1]">
+                <div class="title">Live Following</div>
                 <div class="following_channels">
-                    <div class="channel_container" v-for="channel in this.$store.state.following">
-                        <router-link v-bind:to="{path: 'stream', query: { name: channel.channel.name}}">{{channel.channel.name}}</router-link>
+                    <div class="channel_container" v-for="channel in this.$store.state.following" :key="channel.channel.name">
+                        <div class="channel" @click="clickedChannel(channel.channel.name)">{{channel.channel.name}}</div>
                     </div>
                 </div>
             </div>
-            <!-- <div :class="{ divider_horz: numStreams == 2 && num == 1 }" @mousedown="mousedownHandler" @mouseup="mouseupHandler"></div> -->
+            <div class="mouseWatcher" v-if="$store.state.multi[num - 1]"></div>            
         </div>
 </template>
 
@@ -20,13 +21,15 @@ export default {
     props: ['numStreams', 'num', 'divideDir'],
     data: function() {
         return {
+            showCloseBtn: false,
+            lastMouseMove: null,
         }
     },
 
     watch: { 
       	numStreams: function(newVal, oldVal) {
               this.setPlayerPos(newVal)
-        }
+        },
     },
 
     mounted () {
@@ -48,15 +51,14 @@ export default {
         // watch if the channel for this player has been updated
         // if so load the player with that channel
         this.$store.watch((state) => {
-            console.log(this.num);
             return state.multi[this.num - 1];
         }, (channel) => {
             this.loadPlayer(channel)
         });
+
     },
 
     methods: {
-
         loadPlayer(channel) {
             let embedOptions = {
                 width: "100%",
@@ -68,7 +70,11 @@ export default {
                 muted: false
             }
 
-            new window.Twitch.Embed("multi_player_" + this.num, embedOptions);
+            new window.Twitch.Embed("embed_player_" + this.num, embedOptions);
+        },
+
+        clickedChannel (name) {
+            this.$store.commit("setMulti", {channel: name, num: this.num});
         },
 
         setPlayerPos(numStreams) {
@@ -118,6 +124,7 @@ export default {
                     playerElem.style.left = '0px';
                     playerElem.style.width = '50%';
                     playerElem.style.height = '50%';
+                    playerElem.style.display = 'block';
                 }
 
                 if (this.num == 4) {
@@ -125,6 +132,7 @@ export default {
                     playerElem.style.left = '50%';
                     playerElem.style.width = '50%';
                     playerElem.style.height = '50%';
+                    playerElem.style.display = 'block';
                 }
             }
         }
@@ -142,15 +150,22 @@ export default {
     box-shadow: 0px 0px 1px 0px #111111;
 }
 
+.embed_player {
+    height: 100%;
+};
+
 .following {
     /* background: red; */
-    margin-top: 50px;
+    padding: 5px;
+    margin-top: 75px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow-y: scroll;
-    max-height: 50%;
+    /* overflow-y: scroll; */
+    max-height: 75%;
+    padding-right: 17px;
+    width: 100%;
 }
 
 .following_channels {
@@ -159,6 +174,8 @@ export default {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    max-height: 100%;
+    overflow-y: auto;
 }
 
 .channel_container {
@@ -166,18 +183,68 @@ export default {
     width: 200px;
     background: $mainBackgroundColor;
     margin: 3px;
-}
-
-a {
-    text-decoration: none;
-    outline: none;
     color: #dddddd;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.channel_container:hover {
+    background: $lighterBackgroundColor;
+}
+
+.channel {
     height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.title {
+    color: #dddddd;
+    font-size: 18px;
+}
+
+.closeBtn {
+    height: 20px;
+    width: 20px;
+    background: red;
+    position: absolute;
+    top: 0px;
+    left: calc(100% - 20px);
+}
+
+.mouseWatcher {
+    height: calc(100% - 100px);
+    top: 50px;
+    width: 200px;
+    left: calc(50% - 100px);
+    position: absolute;
+    /* background: rgba(0, 0, 255, 0.192); */
+    z-index: 0;
+}
+
+.mouseWatcher:before {
+    content: "";
+    width: 150px;
+    height: 100%;
+    /* background: red; */
+    /* display: block; */
+    position: absolute;
+    left: -200px;
+}
+
+.mouseWatcher:after {
+    content: "";
+    width: 150px;
+    height: 100%;
+    /* background: red; */
+    /* display: block; */
+    position: absolute;
+    left: 250px;
 }
 
 </style>

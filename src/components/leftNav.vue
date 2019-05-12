@@ -125,7 +125,7 @@ export default {
                 }
             })
             .then((response) => {
-                this.$store.commit("following", response.data.streams);
+                this.$store.commit("setFollowing", response.data.streams);
             })
             .catch((error) => {
                 console.log(error);

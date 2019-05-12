@@ -21,39 +21,6 @@ export default {
         return {
             active: false
         }
-    },
-
-    // watch: {
-    //     activeChatNum: {
-    //         // the callback will be called immediately after the start of the observation
-    //         immediate: true, 
-    //         handler (val, oldVal) {
-    //             // do your stuff
-    //             if(val == this.num) {
-    //                 this.active = true;
-    //             }
-    //             else {
-    //                 this.active = false;
-    //             }
-    //         }
-    //     }
-    // },
-
-    mounted() {
-        // watch if the channel for this player has been updated
-        // if so load the player with that channel
-        // this.$store.watch((state) => {
-        //     return state.multi[this.num - 1];
-        // }, (channel) => {
-        //     if(this.activeChatNum == this.num) {
-        //         this.active = true;
-        //     } else {
-        //         this.active = false;
-        //     }
-        // });
-    },
-
-    methods: {
     }
 }
 

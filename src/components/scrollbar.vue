@@ -18,7 +18,8 @@ export default {
   },
   data: function() {
     return {
-      
+      draggingScrollbar: false,
+      dragOffset: null,
     }
   },
   created () {
@@ -28,8 +29,42 @@ export default {
     this.setIntialPosAndSize();
     this.setParentScrollListener();
     this.setMutationObserver();
+
+    let scrollbarElem = document.querySelector("." + this.attachedElem + "Scrollbar");
+    console.log(scrollbarElem);
+    scrollbarElem.addEventListener("mousedown", this.mousedown);
+    scrollbarElem.addEventListener("mouseup", this.mouseup);
+    scrollbarElem.addEventListener("mousemove", this.mousemove);
   },
   methods: {
+
+      mousedown(e) {
+          console.log('mousedown');
+          this.draggingScrollbar = true;
+            let scrollElem = document.querySelector("." + this.attachedElem + 'Scrollbar');
+            this.dragOffset = scrollElem.getBoundingClientRect().y - e.clientY;
+            console.log(this.dragOffset);
+      },
+
+      mouseup() {
+          console.log('mouseup');
+          this.draggingScrollbar = false;
+      },
+
+      mousemove(e) {
+          if (this.draggingScrollbar) {
+            console.log('dragging scrollbar');
+            let containerElem = document.querySelector("." + this.attachedElem);
+            let scrollElem = document.querySelector("." + this.attachedElem + 'Scrollbar');
+            // let parentScrollTop = containerElem.scrollTop;      
+            // let pos = parentScrollTop * (containerElem.clientHeight / containerElem.scrollHeight);
+            // let posWithOffset = pos + this.offsetTop;
+
+            // scrollElem.style.top = posWithOffset + "px";
+            scrollElem.style.top = e.clientY + this.dragOffset + "px";
+          }
+      },
+
     setParentScrollListener() {
       // set the scroll listener on the parent element for this scrollbar
       let attachedElem = document.querySelector("." + this.attachedElem);
@@ -160,7 +195,7 @@ export default {
   width: 10px;
   position: absolute;
   left: calc(100% - 10px);
-  z-index: 10;
+  z-index: 20;
 }
 
 </style>
