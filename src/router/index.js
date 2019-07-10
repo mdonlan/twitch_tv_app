@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/home'
-import videoPlayer from '@/components/videoPlayer.vue'
 import gamesView from '@/components/gamesView'
 import followedView from '@/components/followedView'
 import subscribedView from '@/components/subscribedView'
 import gameView from '@/components/gameView'
 import about from '@/components/about'
 import loading from '@/components/loading'
-import notifications from '@/components/notifications'
 import multi from '@/components/Multi/multi'
 
 import store from "../Store/store"
@@ -66,7 +64,13 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    // whenever we change routes set some data
+    // runs whenever route changes
+
+    if (from.name == 'multi') {
+        for (let i = 0; i < 4; i++) {
+            store.commit("setMulti", {channel: null, num: i + 1});
+        }
+    }
     
     if(to.path == '/stream') {
         document.title = to.query.name;
@@ -84,4 +88,4 @@ router.beforeEach((to, from, next) => {
     next();
 })
 
-export default router
+export default router;

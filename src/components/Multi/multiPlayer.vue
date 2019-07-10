@@ -1,16 +1,18 @@
 <template>
-        <div :id="['multi_player_' + num]" class="multi_player" v-on:mousemove="mouseMoveHandler" v-on:mouseenter="mouseEnter" v-on:mouseleave="mouseExit">
+        <div :id="['multi_player_' + num]" class="multi_player">
             <div :id="['embed_player_' + num]" class="embed_player" v-if="$store.state.multi[num - 1]"></div>
             <multiSearch :num="num"/>
             <div class="following" v-if="this.$store.state.following && !$store.state.multi[num - 1]">
                 <div class="title">Live Following</div>
                 <div class="following_channels">
-                    <div class="channel_container" v-for="channel in this.$store.state.following" :key="channel.channel.name">
-                        <div class="channel" @click="clickedChannel(channel.channel.name)">{{channel.channel.name}}</div>
+                    <div class="channel_container"  @click="clickedChannel(channel.channel.name)" v-for="channel in this.$store.state.following" :key="channel.channel.name">
+                        <div class="channel_item">{{channel.channel.name}}</div>
+                        <div class="channel_item" >{{channel.channel.status}}</div>
+                        <div class="channel_item" >{{channel.game}}</div>
+                        <div class="channel_item" >{{channel.viewers}}</div>
                     </div>
                 </div>
             </div>
-            <div class="mouseWatcher" v-if="$store.state.multi[num - 1]"></div>            
         </div>
 </template>
 
@@ -59,6 +61,7 @@ export default {
     },
 
     methods: {
+
         loadPlayer(channel) {
             let embedOptions = {
                 width: "100%",
@@ -155,37 +158,33 @@ export default {
 };
 
 .following {
-    /* background: red; */
-    padding: 5px;
-    margin-top: 75px;
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* overflow-y: scroll; */
-    max-height: 75%;
-    padding-right: 17px;
+    max-height: calc(100% - 50px);
     width: 100%;
 }
 
 .following_channels {
-    /* background: red; */
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     max-height: 100%;
     overflow-y: auto;
+    width: 100%;
 }
 
 .channel_container {
-    height: 50px;
-    width: 200px;
+    height: 100px;
+    width: 33.3%;
     background: $mainBackgroundColor;
-    margin: 3px;
     color: #dddddd;
     cursor: pointer;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     transition: 0.3s;
@@ -195,12 +194,12 @@ export default {
     background: $lighterBackgroundColor;
 }
 
-.channel {
-    height: 100%;
+.channel_item {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .title {

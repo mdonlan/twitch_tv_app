@@ -82,7 +82,7 @@ export default {
     /* height: 100%;
     /* background: darkblue; */
     /* opacity: 0.5; */
-    top: 30px;
+    /* top: 30px; */
     /* height: 50px; */
     width: 100%;
     display: flex;
@@ -121,6 +121,7 @@ export default {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    background: rgb(94, 40, 40);
 }
 
 .clear_input:hover {

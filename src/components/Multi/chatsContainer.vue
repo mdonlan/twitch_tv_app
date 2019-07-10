@@ -1,12 +1,36 @@
+
 <template>
-    <div class="multi_wrapper">
-        <div :class="{ players_full_width: !$store.state.multi[0] }" class="players" >
-            <multiPlayer :num="1" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
-            <multiPlayer :num="2" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
-            <multiPlayer :num="3" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
-            <multiPlayer :num="4" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
+    <div class="chat" :class="{ showChat: $store.state.multi[0] }">
+        <div class="sectionTitle">Num Streams</div>     
+        <div class="manage_multi">
+            <div class="num_streams" @click="setNumStreams(2)">2</div>     
+            <div class="num_streams" @click="setNumStreams(4)">4</div>     
         </div>
-        <chatsContainer></chatsContainer>
+        <div class="sectionTitle">Rooms</div>
+        <div class="change_chat_room">
+            <div class="room" v-if="this.$store.state.multi[0]" >
+                <div class="chatRoomTitle" @click="updateActiveChat(1)">{{this.$store.state.multi[0]}}</div>
+                <div class="closeRoomBtn" @click="closePlayer(1)">X</div>
+            </div>
+            <div class="room" v-if="this.$store.state.multi[1]" >
+                <div class="chatRoomTitle" @click="updateActiveChat(2)">{{this.$store.state.multi[1]}}</div>
+                <div class="closeRoomBtn" @click="closePlayer(2)">X</div>
+            </div>
+            <div class="room" v-if="this.$store.state.multi[2]" >
+                <div class="chatRoomTitle" @click="updateActiveChat(3)">{{this.$store.state.multi[2]}}</div>
+                <div class="closeRoomBtn" @click="closePlayer(3)">X</div>
+            </div>
+            <div class="room" v-if="this.$store.state.multi[3]" >
+                <div class="chatRoomTitle" @click="updateActiveChat(4)">{{this.$store.state.multi[3]}}</div>
+                <div class="closeRoomBtn" @click="closePlayer(4)">X</div>
+            </div>
+        </div>
+        <div class="chats">
+            <multiChat :num="1" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
+            <multiChat :num="2" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
+            <multiChat :num="3" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
+            <multiChat :num="4" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
+        </div>
     </div>
 </template>
 

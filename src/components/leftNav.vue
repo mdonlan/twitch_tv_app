@@ -404,6 +404,7 @@ a {
     height: 225px;
     position: absolute;
     bottom: 0px;
+    user-select: none;
 }
 
 .navButtonsHide {

@@ -1,11 +1,6 @@
-
-// import components
-
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import topNav from '@/components/topNav'
 import leftNav from '@/components/leftNav'
 import videoPlayer from '@/components/videoPlayer'
@@ -14,11 +9,11 @@ import search from '@/components/search'
 import loading from '@/components/loading'
 import scrollbar from '@/components/scrollbar'
 import panel from '@/components/panel'
-import Vuex from "vuex"
 import store from "./Store/store"
 import multiPlayer from "./components/Multi/multiPlayer.vue"
 import multiChat from "./components/Multi/multiChat.vue"
 import multiSearch from "./components/Multi/multiSearch.vue"
+import chatsContainer from "./components/Multi/chatsContainer.vue"
 
 Vue.config.productionTip = false
 
@@ -34,12 +29,12 @@ Vue.component('panel', panel);
 Vue.component('multiPlayer', multiPlayer);
 Vue.component('multiChat', multiChat);
 Vue.component('multiSearch', multiSearch);
+Vue.component('chatsContainer', chatsContainer);
 
-/* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  template: '<App/>',
-  components: { App },
-  store // load vuex store
+    el: '#app',
+    router,
+    template: '<App/>',
+    components: { App },
+    store
 });
