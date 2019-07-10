@@ -1,6 +1,6 @@
 
 <template>
-    <div class="chat" :class="{ showChat: $store.state.multi[0] }">
+    <div class="chat" :class="{ showChat: $store.state.multi[0] || $store.state.multi[1] || $store.state.multi[2] || $store.state.multi[3] }">
         <div class="sectionTitle">Num Streams</div>     
         <div class="manage_multi">
             <div class="num_streams" @click="setNumStreams(2)">2</div>     
@@ -9,19 +9,19 @@
         <div class="sectionTitle">Rooms</div>
         <div class="change_chat_room">
             <div class="room" v-if="this.$store.state.multi[0]" >
-                <div class="chatRoomTitle" @click="updateActiveChat(1)">{{this.$store.state.multi[0]}}</div>
+                <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 1}" @click="updateActiveChat(1)">{{this.$store.state.multi[0]}}</div>
                 <div class="closeRoomBtn" @click="closePlayer(1)">X</div>
             </div>
             <div class="room" v-if="this.$store.state.multi[1]" >
-                <div class="chatRoomTitle" @click="updateActiveChat(2)">{{this.$store.state.multi[1]}}</div>
+                <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 2}" @click="updateActiveChat(2)">{{this.$store.state.multi[1]}}</div>
                 <div class="closeRoomBtn" @click="closePlayer(2)">X</div>
             </div>
             <div class="room" v-if="this.$store.state.multi[2]" >
-                <div class="chatRoomTitle" @click="updateActiveChat(3)">{{this.$store.state.multi[2]}}</div>
+                <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 3}" @click="updateActiveChat(3)">{{this.$store.state.multi[2]}}</div>
                 <div class="closeRoomBtn" @click="closePlayer(3)">X</div>
             </div>
             <div class="room" v-if="this.$store.state.multi[3]" >
-                <div class="chatRoomTitle" @click="updateActiveChat(4)">{{this.$store.state.multi[3]}}</div>
+                <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 4}" @click="updateActiveChat(4)">{{this.$store.state.multi[3]}}</div>
                 <div class="closeRoomBtn" @click="closePlayer(4)">X</div>
             </div>
         </div>
@@ -37,19 +37,12 @@
 <script>
 
 export default {
-    name: 'multi',
+    name: 'chatsContainer',
     data: function () {
         return {
             numStreams: 2,
             activeChatNum: 1,
             divideDir: "horz"
-        }
-    },
-
-    mounted: function () {
-        if (this.$store.state.onChannel) {
-            this.$store.commit("setMulti", {channel: this.$store.state.onChannel, num: 1});
-            this.$store.commit("setOnChannel", null);
         }
     },
 
@@ -164,6 +157,10 @@ export default {
 }
 
 .chatRoomTitle:hover {
+    background: $lighterBackgroundColor;
+}
+
+.activeTitle {
     background: $lighterBackgroundColor;
 }
 

@@ -28,24 +28,6 @@ export default {
             this.$store.commit("setOnChannel", null);
         }
     },
-
-    methods: {
-
-        updateActiveChat(num) {
-            this.activeChatNum = num;
-            
-        },
-
-        setNumStreams(num) {
-            this.numStreams = num;
-        },
-
-        closePlayer(num) {
-            this.$store.commit("setMulti", {channel: null, num: num});
-            let embed = document.querySelector("#embed_player_" + num);
-            embed.innerHTML = "";
-        },
-    }
 }
 
 </script>
