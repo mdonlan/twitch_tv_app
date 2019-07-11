@@ -2,7 +2,7 @@
 
 <div id="app">
     <topNav />
-    <leftNav />
+    <LeftNav />
     <notifications />
     <videoPlayer />
     <router-view :key="$route.fullPath"/>

@@ -15,16 +15,18 @@ export function initTwitchAPI () {
 }
 
 export function getFollowing () {
-    console.log(store.state.user.accessToken)
     axios({
         url:'https://api.twitch.tv/kraken/streams/followed?limit=100',
+        // add accept header b/c sometimes the api tries to access a 
+        // different api version and causes errors
         headers: {
+            'Accept': 'application/vnd.twitchtv.v5+json',
             'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
-            'Authorization': store.state.user.accessToken
+            'Authorization': `OAuth ${store.state.user.accessToken}`
         }
     })
     .then(response => {
-        this.$store.commit("setFollowing", response.data.streams);
+        store.commit("setFollowing", response.data.streams);
     })
     .catch(error => {
         console.log(error);

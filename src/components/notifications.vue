@@ -24,22 +24,7 @@ export default {
     data: function () {
         return {
             following: null,   
-            queue: [ /*
-                TEST QUEUE DATA
-                {
-                data: { startTime: null, finished: false },
-                stream: {channel: {name: 'test1'}},
-                },
-                {
-                data: { startTime: null, finished: false  },
-                stream: {channel: {name: 'test2'}},
-                },
-                {
-                data: { startTime:null, finished: false  },
-                stream: {channel: {name: 'test3'}},
-                },
-                */
-            ],     
+            queue: [],     
             transitionTime: 1000,
             showTime: 8000,
             sound: null,
@@ -114,71 +99,39 @@ export default {
         queueUpdate() {
             let container = document.querySelector(".notificationsContainer");
 
-            // check what component we are on
-            const url = window.location.href;
-            if(url.includes('stream')) container.style.left = "calc(40% - 150px)";
-            else container.style.left = "calc(50% - 150px)";
+            if (this.queue.length > 0) {
+                // check what component we are on
+                const url = window.location.href;
+                if(url.includes('stream')) container.style.left = "calc(40% - 150px)";
+                else container.style.left = "calc(50% - 150px)";
 
-            if(this.queue[0]) {
                 if(!this.queue[0].data.startTime) {
-                // if first in queue has no start time it means it has not been started
-                // yet and startTime needs to be set and the element needs to fade in
-                first.data.startTime = Date.now();
-                // transition element into view
-                container.style.top = '75px';
-                // play audio to signal a broadcaster started steaming
-                setTimeout(() => {
-                    this.sound.play();
-                }, 750)
+                    // if first in queue has no start time it means it has not been started
+                    // yet and startTime needs to be set and the element needs to fade in
+                    this.queue[0].data.startTime = Date.now();
+                    // transition element into view
+                    container.style.top = '75px';
+                    // play audio to signal a broadcaster started steaming
+                    setTimeout(() => {
+                        this.sound.play();
+                    }, 750);
+                } else {
+                    // if the first queue object has already had its startTime set
+                    // check if it has finished is display animation
+                    // check to make sure container is in its starting position and that
+                    // the animation is marked finished
 
-            } else {
-                // if the first queue object has already had its startTime set
-                // check if it has finished is display animation
-                // check to make sure container is in its starting position and that
-                // the animation is marked finished
-
-                if(container.style.top == '-500px' && this.queue[0].data.finished == true) {
-                    // remove from queue
-                    this.queue.splice(0, 1);
-                } 
-
-                if(this.queue[0].data.startTime + this.showTime < Date.now()) {
-                    // display time has been 5s, now return it to starting position offscreen
-                    container.style.top = '-500px';
+                    if (this.queue[0].data.startTime + this.showTime + this.transitionTime < Date.now()) {
+                        // display time has been 6s this means the animation (dur: 1s)
+                        // has finished going back to position and queue item can be marked finished
+                        this.queue[0].data.finished = true;
+                        // remove from queue
+                        this.queue.splice(0, 1);
+                    } else if (this.queue[0].data.startTime + this.showTime < Date.now()) {
+                        // display time has been 5s, now return it to starting position offscreen
+                        container.style.top = '-500px';
+                    }
                 }
-
-                if(this.queue[0].data.startTime + this.showTime + this.transitionTime < Date.now()) {
-                    // display time has been 6s this means the animation (dur: 1s)
-                    // has finished going back to position and queue item can be marked finished
-                    this.queue[0].data.finished = true;
-                }
-            }
-
-            // to push a test item to queue
-            // go to vue dev tools in chrome
-            // click on the component you want to select
-            // then in console write
-            /*
-            // uses following[0] as test data
-            $vm.queue.push({
-            stream: $vm.following[0],
-            data: {startTime: null, finished: false}
-            })
-            */
-
-            // how do queues work
-            // always be checking queue[0]
-            // if queue[0] has no startTime set is as now
-            // then set element to drop in from top w/ transition time
-
-            // if queue[0] has a start time check against current time
-            // if diff is greater than 5s then push element back off top of view
-            // and remove from queue
-            // and go on to next one
-
-            // need to time animations so that it has time to fade out
-            // maybe I could check if the anim is running? or if its 
-            // css has been reset
             }
         },
 

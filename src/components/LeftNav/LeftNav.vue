@@ -7,18 +7,7 @@
         <div class="leftNavTitle">LIVE FOLLOWING</div>
         <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="scrollbarOffsetTop" />
         <div class="leftNavContentContainer">
-                <div class="followItemContainer" :ref="follow._id" v-bind:key="follow._id" v-for="follow in this.$store.state.following">
-                <div class="clickZone" @click="clickedVideoLink(follow)" :data-channel="follow.channel.name" ></div>
-                <div class="leftNavImageContainer">
-                    <img class="followingLogo leftNavItem" v-bind:src="follow.channel.logo">
-                </div>
-                <div class="leftNavTextContainer">
-                    <div class="followingName leftNavItem">{{follow.channel.name}}</div>
-                    <div class="followingGame leftNavItem">{{follow.channel.game}}</div>
-                    <div class="followingStatus leftNavItem">{{follow.channel.status}}</div>
-                    <div class="followingViewers leftNavItem">{{follow.viewers | addComma}}</div>
-                </div>
-            </div>
+            <LeftNavChannel :ref="follow._id" v-bind:key="follow._id" v-for="follow in this.$store.state.following" :stream="follow"/>
         </div>
 
         <div class="navButtonsContainer" :class="[{navButtonsHide: hideButtons}]">
@@ -41,26 +30,24 @@
 </template>
 
 <script>
+
 import axios from 'axios';
+import LeftNavChannel from './LeftNavChannel';
 
 export default {
-    name: 'leftNav',
-    // props: ['onVideoPage'],
+    name: 'LeftNav',
+    components: {
+        LeftNavChannel
+    },
     data: function () {
         return {
             hideButtons: false,
             scrollbarAttachedElem: "leftNavContentContainer",
             scrollbarOffsetTop: 75, // size of left nav title container
-            hoverPreviewTop: null,
             isHovering: false,
             showingMobile: false,
             leftNavElem: null,
-            leftNavShowing: false
         }
-    },
-
-    created () {
-        this.getFollowing();
     },
 
     mounted () {
@@ -109,27 +96,6 @@ export default {
                 this.showingMobile = false;
                 this.leftNavElem.classList.remove('show_mobile')
             }
-        },
-
-        getFollowing() {
-            let accessToken = localStorage.getItem("access_token");
-            let key = "OAuth " + accessToken;
-            axios({
-                method: 'get',
-                url:'https://api.twitch.tv/kraken/streams/followed?limit=100',
-                headers: {
-                    'Client-ID': '034f31qw57vu405ondtxpqwp104q5o',
-                    'Authorization' : key
-                    // dev -- 034f31qw57vu405ondtxpqwp104q5o
-                    //prod -- yb1fpw6w2ldfn50b0ynr50trdcxn99
-                }
-            })
-            .then((response) => {
-                this.$store.commit("setFollowing", response.data.streams);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
         },
 
         updateLive() {
@@ -268,8 +234,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import "../global_styles.scss";
-@import "../responsive_mixin.scss";
+@import "../../global_styles.scss";
+@import "../../responsive_mixin.scss";
 
 .mouseEventWatchLayerLeft {
     position: absolute;
@@ -310,56 +276,9 @@ export default {
     /* padding-right: 18px; */
 }
 
-.followItemContainer {
-    width: 250px;
-    height: 65px;
-    display: flex;
-    align-items: center;
-    transition: background 0.3s linear;
-    font-size: 12px;
-    user-select: none;
-    position: relative;
-}
-
-.followItemContainer:hover {
-    background: $lighterBackgroundColor;
-    // height: 70px;
-    font-size: 12.5px;
-    color: white;
-    z-index: 10;
-    // padding-top: 3px;
-    // padding-bottom: 3px;
-}
-
-.clickZone {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    cursor: pointer;
-    top: 0px;
-}
-
-.leftNavImageContainer {
-    height: 50px;
-    width: 50px;
-    display: flex;
-    align-items: center;
-    margin-left: 2px;
-    margin-right: 2px;
-}
-
 a {
     text-decoration: none;
     outline: none;
-}
-
-.leftNavTextContainer {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
 }
 
 .leftNavTitle {
@@ -369,27 +288,6 @@ a {
     border-bottom: 0.5px solid $mainBorderColor;
     border-top: 0.5px solid $mainBorderColor;
     background: $darkerBackgroundColor;
-}
-
-.followingGame, .followingName, .followingStatus {
-    width: 190px;
-    overflow: hidden;
-    text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.followingLogo { /* the image in each left nav stream */
-    height: 100%;
-    border-radius: 5px;
-}
-
-.followingName {
-    font-size: 12.5px;
-}
-
-.followingGame, .followingStatus, .followingViewers {
-    color: #ddddddaf;
 }
 
 .navButtonsContainer {
@@ -535,10 +433,6 @@ a {
 
     .leftNavTitle {
         width: 100%;
-    }
-
-    .followItemContainer {
-        margin-left: 25px;
     }
 }
 
