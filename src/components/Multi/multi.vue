@@ -1,6 +1,6 @@
 <template>
     <div class="multi_wrapper">
-        <div :class="{ players_full_width: !$store.state.multi[0] }" class="players" >
+        <div :class="{ players_full_width: !$store.state.multi[0] && !$store.state.multi[1] && !$store.state.multi[2] && !$store.state.multi[3] }" class="players" >
             <multiPlayer :num="1" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
             <multiPlayer :num="2" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
             <multiPlayer :num="3" :numStreams=numStreams :divideDir=divideDir></multiPlayer>
@@ -27,7 +27,7 @@ export default {
             this.$store.commit("setMulti", {channel: this.$store.state.onChannel, num: 1});
             this.$store.commit("setOnChannel", null);
         }
-    },
+    }
 }
 
 </script>
@@ -113,12 +113,10 @@ export default {
 }
 
 .chatRoomTitle {
-    /* text-align: center; */
     cursor: pointer;
     width: calc(75% - 10px);
     padding: 5px;
     font-size: 14px;
-    /* transition: 0.3s; */
 }
 
 .chatRoomTitle:hover {

@@ -14,6 +14,8 @@ import multiPlayer from "./components/Multi/multiPlayer.vue"
 import multiChat from "./components/Multi/multiChat.vue"
 import multiSearch from "./components/Multi/multiSearch.vue"
 import chatsContainer from "./components/Multi/chatsContainer.vue"
+// import Vuebar from 'vuebar';
+// Vue.use(Vuebar);
 
 Vue.config.productionTip = false
 

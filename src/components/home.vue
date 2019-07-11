@@ -169,11 +169,11 @@ $animTime: 0.15s;
 
 @keyframes addShadow {
     from {
-        box-shadow: 0px 0px 15px 10px $lighterBackgroundColor;
+        box-shadow: 0px 0px 10px 5px $lighterBackgroundColor;
     }
 
     to {
-        box-shadow: 0px 0px 15px 10px $lighterBackgroundColor;
+        box-shadow: 0px 0px 10px 5px $lighterBackgroundColor;
     }
 }
 

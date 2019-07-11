@@ -5,7 +5,7 @@
     <div class="hideLeftNavButton" v-if="showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('hide')"><i class="fas fa-times-circle"></i></div>
     <div class="leftNavWrapper" id="leftNavWrapper">
         <div class="leftNavTitle">LIVE FOLLOWING</div>
-        <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="scrollbarOffsetTop" />
+        <!-- <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="scrollbarOffsetTop" /> -->
         <div class="leftNavContentContainer">
             <div class="followItemContainer" :ref="follow._id" v-bind:key="follow._id" v-for="follow in this.$store.state.following">
                 <div class="clickZone" @click="clickedVideoLink(follow)" :data-channel="follow.channel.name" ></div>

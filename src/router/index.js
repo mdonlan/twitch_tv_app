@@ -85,6 +85,7 @@ router.beforeEach((to, from, next) => {
     else {
         store.commit("setOnVideoPage", false);    
     }
+
     next();
 })
 

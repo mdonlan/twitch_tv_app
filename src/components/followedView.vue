@@ -1,6 +1,6 @@
 <template>
     <div class="followedViewWrapper">   
-        <div class="streamContainer" v-for="follow in following">
+        <div class="streamContainer" :key="follow.channel.name" v-for="follow in following">
         <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: follow.channel.name}}"></router-link>
         <div class="streamImageContainer">
             <img class="streamImage" v-bind:src="follow.channel.logo">
