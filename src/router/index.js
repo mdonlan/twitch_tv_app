@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/home'
+import Home from '@/components/Home/Home'
 import gamesView from '@/components/gamesView'
 import followedView from '@/components/followedView'
 import gameView from '@/components/gameView'

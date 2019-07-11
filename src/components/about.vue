@@ -1,12 +1,14 @@
 <template>
-    <div class="aboutWrapper">
-        <div class="title">About</div>
-        <div class="aboutText">      
-            <div class="text">This website was made using <a href="https://vuejs.org/">Vue.js</a>.</div>
-            <div class="text">All data on the site is from <a href="https://dev.twitch.tv/docs/v5">Twitch's API</a>.</div>
-            <div class="text">Made by <a href="http://michaeldonlan.com">Michael Donlan</a></div>
-        </div>
+
+<div class="aboutWrapper">
+    <div class="title">About</div>
+    <div class="aboutText">      
+        <div class="text">This website was made using <a href="https://vuejs.org/">Vue.js</a>.</div>
+        <div class="text">All data on the site is from <a href="https://dev.twitch.tv/docs/v5">Twitch's API</a>.</div>
+        <div class="text">Made by <a href="http://michaeldonlan.com">Michael Donlan</a></div>
     </div>
+</div>
+
 </template>
 
 <script>
@@ -18,6 +20,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 @import "../global_styles.scss";
 
 a {
@@ -32,10 +35,8 @@ a:hover {
 .aboutWrapper {
     height: calc(100% - 75px);
     width: calc(100% - 225px);
-
     margin-top: 100px;
     margin-left: 225px;
-
     display: flex;
     justify-content: center;
     align-items: center;

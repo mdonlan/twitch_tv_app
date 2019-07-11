@@ -1,17 +1,19 @@
 <template>
-    <div class="followedViewWrapper">   
-        <div class="streamContainer" :key="follow.channel.name" v-for="follow in following">
-        <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: follow.channel.name}}"></router-link>
-        <div class="streamImageContainer">
-            <img class="streamImage" v-bind:src="follow.channel.logo">
-        </div>
-        <div class="streamTextContainer">
-            <div class="name">{{follow.channel.name}}</div>
-            <div class="followers">Followers: {{follow.channel.followers | addComma}}</div>
-            <div class="views">Total Views: {{follow.channel.views | addComma}}</div>
-        </div>
-        </div>
+
+<div class="followedViewWrapper">   
+    <div class="streamContainer" :key="follow.channel.name" v-for="follow in following">
+    <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: follow.channel.name}}"></router-link>
+    <div class="streamImageContainer">
+        <img class="streamImage" v-bind:src="follow.channel.logo">
     </div>
+    <div class="streamTextContainer">
+        <div class="name">{{follow.channel.name}}</div>
+        <div class="followers">Followers: {{follow.channel.followers | addComma}}</div>
+        <div class="views">Total Views: {{follow.channel.views | addComma}}</div>
+    </div>
+    </div>
+</div>
+
 </template>
 
 <script>
