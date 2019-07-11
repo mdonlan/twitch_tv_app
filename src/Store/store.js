@@ -48,6 +48,10 @@ export default new Vuex.Store({
         state.multi.splice(payload.num - 1, 1, payload.channel);
     },
 
+    setAccessToken(state, payload) {
+        state.user.accessToken = payload;
+    },
+
   },
 });
 

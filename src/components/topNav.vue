@@ -4,7 +4,6 @@
     <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Popular' }" @click.native="clickedButton" v-bind:to="{path: '/'}">Popular</router-link>
     <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Games' }" @click.native="clickedButton" v-bind:to="{path: 'games'}">Games</router-link>
     <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Followed' }" @click.native="clickedButton" v-bind:to="{path: 'followed'}">Followed</router-link>
-    <!-- <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Subscribed' }" @click.native="clickedButton" v-bind:to="{path: 'subscribed'}">Subscribed</router-link> -->
     <router-link class="topNavBtn aboutButton" v-bind:to="{path: 'about'}">About</router-link>
     <a v-if="needToLogin" class="twitchConnectBtn" :href="twitchURL"> Connect Twitch Account </a>
     <search></search>
@@ -45,7 +44,6 @@ export default {
             const url = window.location.href;
             if (url.includes("games")) this.activeButton = 'Games';
             else if (url.includes("followed")) this.activeButton = 'Followed';
-            else if (url.includes("subscribed")) this.activeButton = 'Subscribed';
             else this.activeButton = 'Popular'
         },
 
@@ -98,7 +96,6 @@ export default {
     height: 75px;
     margin-left: 100px;
     width: calc(100% - 100px);
-    top:0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -125,7 +122,7 @@ export default {
     height: 1px;
     position: absolute;
     top: calc(100% - 3px);
-    transition: 0.5s;
+    transition: 0.3s;
     left: 50%;
 }
 
@@ -143,7 +140,7 @@ export default {
     height: 1px;
     position: absolute;
     top: calc(100% - 3px);
-    transition: 0.5s;
+    transition: 0.3s;
 }
 
 .topNavBtn:hover::after {
@@ -166,17 +163,9 @@ export default {
     color: #dddddd;
     background: #5a087e;
     font-size: 14px;
-    -webkit-transition: 0.3s linear;
-    -moz-transition: 0.3s linear;
-    -o-transition: 0.3s linear;
     transition: 0.3s linear;
-    -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
-    -webkit-user-select: none;  /* Chrome all / Safari all */
-    -moz-user-select: none;     /* Firefox all */
-    -ms-user-select: none;      /* IE 10+ */
-    user-select: none;          /* Likely future */ 
+    user-select: none;
     text-decoration: none;
     border-radius: 3px;
 }

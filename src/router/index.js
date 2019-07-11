@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import Home from '@/components/home'
 import gamesView from '@/components/gamesView'
 import followedView from '@/components/followedView'
-import subscribedView from '@/components/subscribedView'
 import gameView from '@/components/gameView'
 import about from '@/components/about'
 import loading from '@/components/loading'
@@ -34,11 +33,6 @@ const router = new Router({
       path: '/followed/',
       name: 'followedView',
       component: followedView
-    },
-    {
-      path: '/subscribed/',
-      name: 'subscribedView',
-      component: subscribedView
     },
     {
       path: '/game/',

@@ -1,4 +1,5 @@
 <template>
+
 <div class="videoPlayerWrapper">
     <div class="mouseEventWatchLayerLeft"></div>
     <div id="twitch-embed"></div>
@@ -8,12 +9,14 @@
     </div>      
     <panel></panel>
 </div>
+
 </template>
 
 <script>
 
 export default {
     name: 'videoPlayer',
+
     data: function() {
         return {
             currentPlayerChannel: null,
@@ -58,7 +61,7 @@ export default {
         },
 
         setSmall() {
-            // set the video player to small
+            // set the video player to small 400x300
             this.videoContainerElem.classList.add("videoPlayerSmall");
             this.twitchEmbedElem.classList.add("embedSmall");
 
@@ -76,8 +79,7 @@ export default {
         setupStoreWatcher() {
             this.$store.watch((state) => {
                 return this.$store.state.onVideoPage; // what this value
-            },
-            (newValue, oldValue) => { // when value changes do this
+            }, (newValue, oldValue) => { // when value changes do this
                 if(newValue == true) {
                     this.setLarge();
                     this.loadPlayer(); // on video page, show player
@@ -99,9 +101,8 @@ export default {
         },
 
         restoreFullPlayer() {
-            let to = {path: 'stream', query: { name: this.$store.state.onChannel}};
-            this.$router.push(to);
-            this.$store.commit("setOnVideoPage", true)
+            this.$router.push({path: 'stream', query: { name: this.$store.state.onChannel}});
+            this.$store.commit("setOnVideoPage", true);
         },
 
         clearOldPlayers() {
@@ -116,11 +117,11 @@ export default {
             // only load a new player if not a match
             if(this.$store.state.onChannel == null) {
                 this.clearOldPlayers();
-                return;
             }
 
             if(this.$store.state.onChannel != this.currentPlayerChannel) {
                 this.clearOldPlayers();
+
                 let embedOptions = {
                     width: "100%",
                     height: "100%",
@@ -129,16 +130,10 @@ export default {
                     theme: "dark",
                     autoplay: "default",
                     muted: false
-                }
+                };
 
-                let twitchPlayer = new window.Twitch.Embed("twitch-embed", embedOptions);
+                const twitchPlayer = new window.Twitch.Embed("twitch-embed", embedOptions);
                 this.currentPlayerChannel = twitchPlayer.options.channel;  
-
-                twitchPlayer.addEventListener(Twitch.Embed.VIDEO_READY, () => {
-                    // this.twitchEmbedElem.style.pointerEvents = 'none';                
-                    // console.dir(this.twitchEmbedElem.children[0]);
-                    // this.twitchEmbedElem.children[0].style.pointerEvents = 'none';
-                });
             }
         }
     }
@@ -146,8 +141,8 @@ export default {
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+
 @import "../global_styles.scss";
 
 .videoPlayerWrapper {
@@ -159,7 +154,6 @@ export default {
     z-index: 3;
     overflow-y: auto;
     padding-right: 17px; /* hide scrollbar */
-    /*transition: height 0.3s, width 0.5s, top 0.5s;*/
 }
 
 .videoPlayerSmall {
@@ -212,7 +206,6 @@ export default {
 .closeSmallPlayerButton, .restoreFullPlayerButton {
     cursor: pointer;
     color: #dddddd;
-    //border: 1px solid #dddddd;
     padding-top: 8px;
     padding-bottom: 8px;
     margin-left: 8px;
@@ -229,22 +222,12 @@ export default {
     color: rgb(15, 189, 93);
 }
 
-.closeSmallPlayerButton:hover, .restoreFullPlayerButton:hover {
-    //background: #dddddd;
-    //color: #222222;
-}
-
 .videoPlayerWrapper:hover .closeSmallPlayerContainer {
     display: flex;
     width: 100%;
     background: #111111;
     justify-content: center;
     align-items: flex-start;
-}
-
-#twitch-embed iframe {
-    width:100%;
-    height:100%;
 }
 
 </style>
