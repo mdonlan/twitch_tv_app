@@ -1,22 +1,16 @@
 <template>
+
 <div class="leftNavComponent">
-    <!-- <div class="mouseEventWatchLayerLeft"></div> -->
     <div class="showLeftNavButton" v-if="!showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('show')"><i class="fas fa-circle"></i></div>
     <div class="hideLeftNavButton" v-if="showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('hide')"><i class="fas fa-times-circle"></i></div>
+
     <div class="leftNavWrapper" id="leftNavWrapper">
         <div class="leftNavTitle">LIVE FOLLOWING</div>
-        <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="scrollbarOffsetTop" />
+        <scrollbar attachedElem="leftNavContentContainer" :offsetTop="75" />
         <div class="leftNavContentContainer">
             <LeftNavChannel :ref="follow._id" v-bind:key="follow._id" v-for="follow in this.$store.state.following" :stream="follow"/>
         </div>
-
-        <div class="navButtonsContainer" :class="[{navButtonsHide: hideButtons}]">
-            <div class="navButton" @click="clickedButton('/')">Popular</div>
-            <div class="navButton" @click="clickedButton('games')">Games</div>
-            <div class="navButton" @click="clickedButton('following')">Followed</div>
-            <div class="navButton aboutButton" v-bind:to="{path: 'about'}" @click="clickedButton('about')">About</div>
-            <div class="navButton" @click="clickedButton('multi')">Multi</div>
-        </div>
+        <LeftNavButtons />
     </div>
 
     <div class="hoverPreviewImg" v-if="isHovering">
@@ -27,63 +21,67 @@
         <div class="triangle"></div>      
     </div>
 </div>
+
 </template>
 
 <script>
 
-import axios from 'axios';
 import LeftNavChannel from './LeftNavChannel';
+import LeftNavButtons from './LeftNavButtons';
 
 export default {
     name: 'LeftNav',
     components: {
-        LeftNavChannel
+        LeftNavChannel,
+        LeftNavButtons
     },
     data: function () {
         return {
-            hideButtons: false,
-            scrollbarAttachedElem: "leftNavContentContainer",
-            scrollbarOffsetTop: 75, // size of left nav title container
             isHovering: false,
             showingMobile: false,
             leftNavElem: null,
+            contentContainerElem: null
         }
     },
 
     mounted () {
         document.addEventListener("mousemove", this.mouseMoveHandler);
         document.addEventListener("mouseover", this.mouseOverHandler);
+        
         this.leftNavElem = document.querySelector(".leftNavWrapper");
+
+        this.contentContainerElem = document.querySelector(".leftNavContentContainer");
+        this.contentContainerElem.addEventListener("scroll", this.scrollHandler);
 
         this.updateLive();
 
         // watch for changes in onVideoPage state var
         this.$store.watch((state) => {return this.$store.state.onVideoPage}, (onVideoPage, oldValue) => {
-            if(onVideoPage == false) {
-                this.setLeftNavPos(false);
-            } else {
-                this.setLeftNavPos(true);
-            }
+            if(onVideoPage == false) this.setLeftNavPos(false);
+            else this.setLeftNavPos(true);
         });
     },
 
-    filters: {
-        addComma: function (string) {
-            return string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-    },
-
     methods: {
-        clickedButton(to) {
-            this.$router.push(to);
+        scrollHandler () {
+            // also check what leftNav stream we are hovering over
+            let mousePos = this.$store.state.mousePos;
+            let leftNav = document.querySelector(".leftNavContentContainer");
+            let leftNavItems = Array.from(leftNav.children);
+
+            // find which stream we are over
+            // we have to do this here, because 
+            leftNavItems.forEach((item) => {
+                let rect = item.getBoundingClientRect();
+                if (rect.left < mousePos.x && rect.right > mousePos.x &&
+                    rect.top < mousePos.y && rect.bottom > mousePos.y)
+                    this.checkHoveringOverStream(item.children[0]);
+            });
         },
 
         setLeftNavPos(hide) {
-            if(hide) {
-                this.leftNavElem.classList.add("leftNavWrapperHide");
-            } else {
-                this.leftNavElem.classList.remove("leftNavWrapperHide");
-            }
+            if(hide) this.leftNavElem.classList.add("leftNavWrapperHide");
+            else this.leftNavElem.classList.remove("leftNavWrapperHide");
         },    
 
         clickedVideoLink(stream) {
@@ -105,17 +103,10 @@ export default {
         },
 
         mouseOverHandler (event) {
-
-            // this is for firefox since it doesn't get the iframe element as target
-            // we also need to user mouseover since relatedTarget is only on that event
-            // and not on mousemove
-
+            // this is for firefox since it doesn't get the iframe element as target we also need
+            // to user mouseover since relatedTarget is only on that event and not on mousemove
             let relatedTarget = event.relatedTarget;
-            if(relatedTarget == null) {
-                if(this.$store.state.onVideoPage) {
-                    this.setLeftNavPos(true);
-                }
-            }
+            if(relatedTarget == null && this.$store.state.onVideoPage) this.setLeftNavPos(true);
         },
 
         mouseMoveHandler(event) {
@@ -128,41 +119,13 @@ export default {
             let className = toElem.className;
             let id = toElem.id;
 
-            // console.log(event.toElement)
-            // console.log(event.toElem)
-
-
-            
             // chrome and firefox event.target is different
             // firefox doesn't detect the iframe unless we check currentTarget.activeElement
             // and then we need to check for body or iframe depending on whether we last clicked 
             // on the iframe or the rest of the app
 
-
-            // let mouseWatcherElem = document.querySelector(".mouseEventWatchLayerLeft");
-            // let watcherRect = mouseWatcherElem.getBoundingClientRect();
-            // // console.log(mouseWatcherElem.getBoundingClientRect());
-            // // console.log(event.clientX)
-
-
-            // // if (event.currentTarget.activeElement.nodeName == "BODY" ||
-            // //     event.currentTarget.activeElement.nodeName == "IFRAME") {
-            // //     if(this.$store.state.onVideoPage) {
-            // //         this.setLeftNavPos(true);
-            // //     }
-            // // }
-
-            if(tag == "IFRAME" /*|| className.includes("multi_search_wrapper")*/) {
-                if(this.$store.state.onVideoPage) {
-                    this.setLeftNavPos(true);
-                }
-            }
-
-            if(className == "mouseEventWatchLayerLeft") {
-                if(this.$store.state.onVideoPage) {
-                    this.setLeftNavPos(false);
-                }
-            }
+            if(tag == "IFRAME" && this.$store.state.onVideoPage) this.setLeftNavPos(true);
+            else if(className == "mouseEventWatchLayerLeft" && this.$store.state.onVideoPage) this.setLeftNavPos(false);
 
             this.checkHoveringOverStream(toElem);
 
@@ -172,11 +135,8 @@ export default {
 
         setLeftNavPos(hide) {
             // show or hide the left nav
-            if(hide) {
-                this.leftNavElem.classList.add("leftNavWrapperHide");
-            } else {
-                this.leftNavElem.classList.remove("leftNavWrapperHide");
-            }
+            if(hide) this.leftNavElem.classList.add("leftNavWrapperHide");
+            else this.leftNavElem.classList.remove("leftNavWrapperHide");
         },
 
         checkHoveringOverStream(toElem) {
@@ -192,9 +152,7 @@ export default {
 
                 // find which stream we are hovering over
                 this.$store.state.following.forEach((stream) => {
-                    if(stream.channel.name == hoverElemChannel) {
-                        hoverSrc = stream.preview.large;
-                    }
+                    if(stream.channel.name == hoverElemChannel) hoverSrc = stream.preview.large;
                 });
 
                 // set the hover preview elem pos and src
@@ -208,11 +166,8 @@ export default {
                 }
 
                 let hoverTriangle = document.querySelector(".hoverPreviewTriangle");
-                if(hoverTriangle) {
-                    hoverTriangle.style.top = elemPos.top + "px";
-                }
-            } 
-            else {
+                if(hoverTriangle) hoverTriangle.style.top = elemPos.top + "px";
+            } else {
                 this.isHovering = false;
             }
         },
@@ -232,21 +187,10 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+
 @import "../../global_styles.scss";
 @import "../../responsive_mixin.scss";
-
-.mouseEventWatchLayerLeft {
-    position: absolute;
-    height: 40%;
-    width: 10%;
-    left: 0px;
-    top: calc(25%);
-    overflow: hidden;
-    z-index: 5;
-    opacity: 0.5;
-}
 
 .leftNavWrapper {
     position: fixed;
@@ -272,8 +216,8 @@ export default {
     overflow-x: hidden;
     overflow-y: scroll;
     /* make width + padding overflow to hide native scrollbar */
-    /* width: 100%; */
-    /* padding-right: 18px; */
+    width: 100%;
+    padding-right: 18px;
 }
 
 a {
@@ -288,70 +232,6 @@ a {
     border-bottom: 0.5px solid $mainBorderColor;
     border-top: 0.5px solid $mainBorderColor;
     background: $darkerBackgroundColor;
-}
-
-.navButtonsContainer {
-    background: $darkerBackgroundColor;
-    border-top: 0.5px solid $mainBorderColor;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 225px;
-    position: absolute;
-    bottom: 0px;
-    user-select: none;
-}
-
-.navButtonsHide {
-    display: none;
-}
-
-.navButton {
-    position: relative;
-    height: 20%;
-    width: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #dddddd;
-    transition: 0.5s;
-    font-variant: small-caps;
-    cursor: pointer;
-}
-
-.navButton::before {
-    content: '';
-    width: 0px;
-    background: #dddddd;
-    height: 1px;
-    position: absolute;
-    top: calc(100% - 3px);
-    transition: 0.5s;
-    left: 50%;
-}
-
-.navButton:hover::before {
-    content: '';
-    width: 50%;
-    left: 0%;
-}
-
-.navButton::after {
-    content: '';
-    left: 50%;
-    width: 0%;
-    background: #dddddd;
-    height: 1px;
-    position: absolute;
-    top: calc(100% - 3px);
-    transition: 0.5s;
-}
-
-.navButton:hover::after {
-    width: 50%;
 }
 
 .hoverPreviewImg {

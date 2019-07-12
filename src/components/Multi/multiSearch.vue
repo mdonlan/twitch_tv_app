@@ -39,6 +39,7 @@ export default {
  
         setChannel(result) {
             this.$store.commit("setMulti", {channel: result.channel.name, num: this.num});
+            this.$store.commit("setNumMultiStreams", this.$store.state.numMultiStreams + 1);
         },
 
         searchChangeHandler(e) {
@@ -79,11 +80,6 @@ export default {
 
 .multi_search_wrapper {
     position: absolute;
-    /* height: 100%;
-    /* background: darkblue; */
-    /* opacity: 0.5; */
-    /* top: 30px; */
-    /* height: 50px; */
     width: 100%;
     display: flex;
     flex-direction: column;

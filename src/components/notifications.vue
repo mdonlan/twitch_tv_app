@@ -48,7 +48,7 @@ export default {
         // load sound file
         // do this at start b/c chrome doesn't allow you to load sounds
         // in active tabs, aka we couldn't hear notifications unless this was the active browser tab
-        this.sound = new Audio("./src/assets/positive.wav");
+        this.sound = new Audio("/src/assets/positive.wav");
         this.sound.volume = 0.5;
     },
 

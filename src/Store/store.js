@@ -19,6 +19,7 @@ export default new Vuex.Store({
     multi: [null, null, null, null], // channels for the multi component,
     games: [],
     streamsByGame: [], // the top streams for a specific game
+    numMultiStreams: 0
   },
 
   mutations: {
@@ -60,6 +61,10 @@ export default new Vuex.Store({
 
     setStreamsByGame(state, payload) {
         state.streamsByGame = payload;
+    },
+
+    setNumMultiStreams(state, payload) {
+        state.numMultiStreams = payload;
     },
 
   },

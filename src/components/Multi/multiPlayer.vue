@@ -1,54 +1,42 @@
 <template>
-        <div :id="['multi_player_' + num]" class="multi_player">
-            <div :id="['embed_player_' + num]" class="embed_player" v-if="$store.state.multi[num - 1]"></div>
-            <multiSearch :num="num"/>
-            <div class="following" v-if="this.$store.state.following && !$store.state.multi[num - 1]">
-                <div class="title">Live Following</div>
-                <div class="following_channels">
-                    <div class="channel_container"  @click="clickedChannel(channel.channel.name)" v-for="channel in this.$store.state.following" :key="channel.channel.name">
-                        <div class="channel_item">{{channel.channel.name}}</div>
-                        <div class="channel_item" >{{channel.channel.status}}</div>
-                        <div class="channel_item" >{{channel.game}}</div>
-                        <div class="channel_item" >{{channel.viewers}}</div>
-                    </div>
-                </div>
+
+<div :id="['multi_player_' + num]" class="multi_player">
+    <div :id="['embed_player_' + num]" class="embed_player" v-if="$store.state.multi[num - 1]"></div>
+    <!-- <multiSearch :num="num"/> -->
+        <!-- <div class="following" v-if="this.$store.state.following && !$store.state.multi[num - 1]">
+            <div class="title">Live Following</div>
+            <div class="following_channels">
+                <div class="channel_container"  @click="clickedChannel(channel.channel.name)" v-for="channel in this.$store.state.following" :key="channel.channel.name">
+                <div class="channel_item">{{channel.channel.name}}</div>
+                <div class="channel_item" >{{channel.channel.status}}</div>
+                <div class="channel_item" >{{channel.game}}</div>
+                <div class="channel_item" >{{channel.viewers}}</div>
             </div>
-        </div>
+        </div> -->
+    <!-- </div> -->
+</div>
+
 </template>
 
 <script>
 
+import { mapState } from 'vuex';
+
 export default {
     name: 'multiPlayer',
-    props: ['numStreams', 'num', 'divideDir'],
-    data: function() {
-        return {
-            showCloseBtn: false,
-            lastMouseMove: null,
-        }
-    },
+
+    props: ['num'],
+
+    computed: mapState(['numMultiStreams']),
 
     watch: { 
-      	numStreams: function(newVal, oldVal) {
-              this.setPlayerPos(newVal)
+      	numMultiStreams: function(newVal, oldVal) {
+              console.log('testing123')
         },
     },
 
     mounted () {
-
-        // when first mounting the video player we need to import the twitchEmbed script from their site
-        // only once the script is loaded can we then try to load a new embed player
-        let embedScript = document.createElement('script');
-        embedScript.setAttribute("src", "https://embed.twitch.tv/embed/v1.js");
-        document.head.appendChild(embedScript);
-        embedScript.async = true;
-        embedScript.onload = () => {
-            if(this.channel) {
-                this.loadPlayer();
-            }
-        }
-
-        this.setPlayerPos(this.numStreams);
+        this.setPlayerPos();
 
         // watch if the channel for this player has been updated
         // if so load the player with that channel
@@ -71,7 +59,7 @@ export default {
                 theme: "dark",
                 autoplay: "default",
                 muted: false
-            }
+            };
 
             new window.Twitch.Embed("embed_player_" + this.num, embedOptions);
         },
@@ -80,10 +68,17 @@ export default {
             this.$store.commit("setMulti", {channel: name, num: this.num});
         },
 
-        setPlayerPos(numStreams) {
+        setPlayerPos() {
             const playerElem = document.querySelector("#multi_player_" + this.num);
+            console.log(this.$store.state.numMultiStreams)
+            if(this.$store.state.numMultiStreams == 0) {
+                playerElem.style.top = '0px';
+                playerElem.style.left = '0px';
+                playerElem.style.width = '100%';
+                playerElem.style.height = '100%';
+            }
 
-            if(numStreams == 2) {
+            if(this.$store.state.numMultiStreams == 1) {
                 if (this.num == 1) {
                     playerElem.style.top = '0px';
                     playerElem.style.left = '0px';
@@ -107,7 +102,7 @@ export default {
                 }
             }
 
-            if(numStreams == 3 || numStreams == 4) {
+            if(this.$store.state.numMultiStreams == 2 || this.$store.state.numMultiStreams == 3) {
                 if (this.num == 1) {
                     playerElem.style.top = '0px';
                     playerElem.style.left = '0px';
@@ -144,8 +139,8 @@ export default {
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+
 @import "../../global_styles.scss";
 
 .multi_player {
