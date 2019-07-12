@@ -25,12 +25,8 @@ export function getFollowing () {
             'Authorization': `OAuth ${store.state.user.accessToken}`
         }
     })
-    .then(response => {
-        store.commit("setFollowing", response.data.streams);
-    })
-    .catch(error => {
-        console.log(error);
-    });
+    .then(response => store.commit("setFollowing", response.data.streams))
+    .catch(error => console.log(error));
 }
 
 export function getGames () {
