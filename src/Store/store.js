@@ -16,7 +16,9 @@ export default new Vuex.Store({
     clientID: null,
     mousePos: null,
     breakpoint: null,
-    multi: [null, null, null, null], // channels for the multi component
+    multi: [null, null, null, null], // channels for the multi component,
+    games: [],
+    streamsByGame: [], // the top streams for a specific game
   },
 
   mutations: {
@@ -50,6 +52,14 @@ export default new Vuex.Store({
 
     setAccessToken(state, payload) {
         state.user.accessToken = payload;
+    },
+
+    setGames(state, payload) {
+        state.games = payload;
+    },
+
+    setStreamsByGame(state, payload) {
+        state.streamsByGame = payload;
     },
 
   },

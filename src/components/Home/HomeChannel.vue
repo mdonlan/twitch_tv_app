@@ -11,10 +11,6 @@
         <div class="status streamItem">{{stream.channel.status}}</div>
         <div class="viewers streamItem">{{stream.viewers.toLocaleString()}}</div>
     </div>
-    <div class="border borderTop"></div>
-    <div class="border borderRight"></div>
-    <div class="border borderBottom"></div>
-    <div class="border borderLeft"></div>
 </div>
 
 </template>
@@ -40,8 +36,16 @@ export default {
     margin: 15px;
     display: flex;
     flex-direction: column;
-    transition: 0.5s;
     position: relative;
+    transition: 0.3s;
+}
+
+.stream:hover > .textContainer {
+    background: $lighterBackgroundColor;
+}
+
+.stream:hover {
+    box-shadow: 0px 0px 20px 2px rgba(0,0,0,0.75);
 }
 
 .imgContainer {
@@ -57,6 +61,7 @@ export default {
     z-index: 1;
     background: $mainBackgroundColor;
     flex: 1;
+    transition: 0.3s; 
 }
 
 .streamItem {
@@ -91,10 +96,6 @@ export default {
     opacity: 0;
     transition: 0.5s;
     z-index: 2;
-}
-
-.clickZone:hover {
-    opacity: 0.3;
 }
 
 // media queries

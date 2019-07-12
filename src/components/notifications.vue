@@ -101,9 +101,9 @@ export default {
 
             if (this.queue.length > 0) {
                 // check what component we are on
-                const url = window.location.href;
-                if(url.includes('stream')) container.style.left = "calc(40% - 150px)";
-                else container.style.left = "calc(50% - 150px)";
+                // const url = window.location.href;
+                // if(url.includes('stream')) container.style.left = "calc(40% - 150px)";
+                // else container.style.left = "calc(50% - 150px)";
 
                 if(!this.queue[0].data.startTime) {
                     // if first in queue has no start time it means it has not been started
@@ -152,7 +152,7 @@ export default {
     position: absolute;
     z-index: 10;
     top: -500px;
-    left: calc(40% - 150px);
+    left: calc(50% - 150px);
     transition: top 1s;
     display: flex;
     flex-direction: column;

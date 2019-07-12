@@ -32,3 +32,22 @@ export function getFollowing () {
         console.log(error);
     });
 }
+
+export function getGames () {
+    axios({
+        url:'https://api.twitch.tv/kraken/games/top/?limit=100',
+        headers: {'Client-ID': window.location.href.includes("localhost") ? devID : prodID,}
+    })
+    .then(res => store.commit("setGames", res.data.top))
+    .catch(e => console.log(e));
+}
+
+export function getStreamsByGame (gameName) {
+    // get the top streams for a specific game
+    axios({
+        url:'https://api.twitch.tv/kraken/streams/?limit=100&game=' + gameName,
+        headers: {'Client-ID': window.location.href.includes("localhost") ? devID : prodID,}
+    })
+    .then(res => store.commit("setStreamsByGame", res.data.streams))
+    .catch(e => console.log(e));
+}

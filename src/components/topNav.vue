@@ -1,11 +1,11 @@
 <template>
 
-<div class="topNavWrapper">
-    <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Popular' }" @click.native="clickedButton" v-bind:to="{path: '/'}">Popular</router-link>
-    <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Games' }" @click.native="clickedButton" v-bind:to="{path: 'games'}">Games</router-link>
-    <router-link class="topNavBtn" v-bind:class="{ activeButton: activeButton == 'Followed' }" @click.native="clickedButton" v-bind:to="{path: 'followed'}">Followed</router-link>
-    <router-link class="topNavBtn aboutButton" v-bind:to="{path: 'about'}">About</router-link>
-    <a v-if="needToLogin" class="twitchConnectBtn" :href="twitchURL"> Connect Twitch Account </a>
+<div class="top_nav">
+    <router-link class="button" :class="{activeButton: activeButton == 'Popular'}" @click.native="clickedButton" :to="{path: '/'}">Popular</router-link>
+    <router-link class="button" :class="{activeButton: activeButton == 'Games'}" @click.native="clickedButton" :to="{path: 'games'}">Games</router-link>
+    <router-link class="button" :class="{activeButton: activeButton == 'Followed'}" @click.native="clickedButton" :to="{path: 'followed'}">Followed</router-link>
+    <router-link class="button aboutButton" :to="{path: 'about'}">About</router-link>
+    <a v-if="!$store.state.user.accessToken" class="twitchConnectBtn" :href="twitchURL">Connect Twitch Account</a>
     <search></search>
 </div>
 
@@ -13,21 +13,20 @@
 
 <script>
 
-import axios from 'axios'
 import { devID, prodID } from '../clientID.js'
 
 export default {
+
     name: 'topNav',
+
     data: function () {
         return {
-            needToLogin: true,
             activeButton: null,
             twitchURL: null
         }
     },
 
     created () {
-        this.checkLoggedIn();
         this.redirectFromTwitch();
 
         // set the url based on whether we are testing on dev build or not
@@ -51,30 +50,12 @@ export default {
             this.activeButton = e.target.innerHTML;
         },
 
-        checkLoggedIn() {
-            const url = window.location.href;
-            
-            if(localStorage.getItem("id_token")) {
-                this.needToLogin = false;
-            } else if(url.includes("access_token")) {
-                this.needToLogin = false;
-                this.saveUserToken(url);
-            }
-        },
-
-        saveUserToken (url) {
-            const urlAccessToken = urlString.match("access_token=(.*)&id_token");
-            const urlIdToken = urlString.match("id_token=(.*)&scope");
-            localStorage.setItem("access_token", urlAccessToken[1]);
-            localStorage.setItem("id_token", urlIdToken[1]);
-        },
-
         redirectFromTwitch() {
+            // after getting access token and id saved
+            // redirect to home page so vue knows what to display
+            // this simply removes the extra data on the address when twitch does their redirect
             const url = window.location.href;
             if (url.includes("access_token")) {
-                // after getting access token and id saved
-                // redirect to home page so vue knows what to display
-                // this simply removes the extra data on the address when twitch does their redirect
                 if (url.includes("localhost")) window.location.href = 'http://localhost:8080/#/';
                 else window.location.href = 'https://mdonlan.github.io/twitch_tv_app';
             }
@@ -89,9 +70,8 @@ export default {
 @import "../global_styles.scss";
 @import "../responsive_mixin.scss";
 
-.topNavWrapper {
+.top_nav {
     position: fixed;
-    margin-top: 0px;
     background: $mainBackgroundColor;
     height: 75px;
     margin-left: 100px;
@@ -100,9 +80,10 @@ export default {
     align-items: center;
     justify-content: center;
     z-index: 3;
+    top: 0px;
 }
 
-.topNavBtn {
+.button {
     height: 35px;
     width: 100px;
     margin-right: 10px;
@@ -113,9 +94,10 @@ export default {
     text-decoration: none;
     font-variant: small-caps;
     position: relative;
+    text-align: center;
 }
 
-.topNavBtn::before {
+.button::before {
     content: '';
     width: 0px;
     background: #dddddd;
@@ -126,13 +108,13 @@ export default {
     left: 50%;
 }
 
-.topNavBtn:hover::before {
+.button:hover::before {
     content: '';
     width: 50%;
     left: 0%;
 }
 
-.topNavBtn::after {
+.button::after {
     content: '';
     left: 50%;
     width: 0%;
@@ -143,7 +125,7 @@ export default {
     transition: 0.3s;
 }
 
-.topNavBtn:hover::after {
+.button:hover::after {
     width: 50%;
 }
 
@@ -197,23 +179,21 @@ a {
     text-decoration: none;
 }
 
-//
 // media queries
-//
 
 @include phone {
 
-    .topNavWrapper {
+    .top_nav {
         margin-left: 0px;
         width: 100%;
         height: 125px;
     }
 
-    .topNavBtnContainer {
+    .buttonContainer {
         flex-wrap: wrap;
     }
 
-    .topNavBtn {
+    .button {
         width: 40%;
     }
 

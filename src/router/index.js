@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home/Home'
-import gamesView from '@/components/gamesView'
+import Games from '@/components/Games/Games'
+import Game from '@/components/Games/Game'
 import followedView from '@/components/followedView'
-import gameView from '@/components/gameView'
-import about from '@/components/about'
+import About from '@/components/About'
 import loading from '@/components/loading'
 import multi from '@/components/Multi/multi'
 
@@ -26,8 +26,8 @@ const router = new Router({
     },
     {
       path: '/games/',
-      name: 'gamesView',
-      component: gamesView
+      name: 'Games',
+      component: Games
     },
     {
       path: '/followed/',
@@ -36,13 +36,13 @@ const router = new Router({
     },
     {
       path: '/game/',
-      name: 'gameView',
-      component: gameView
+      name: 'Game',
+      component: Game
     },
     {
       path: '/about/',
-      name: 'about',
-      component: about
+      name: 'About',
+      component: About
     },
     {
       path: '/loading/',
