@@ -3,7 +3,7 @@
 <div class="stream">
     <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: stream.channel.name}}"></router-link>
     <div class="imgContainer">
-        <img class="image" v-bind:src="stream.preview.large">
+        <img class="image" v-bind:src="stream.preview.medium">
     </div>
     <div class="textContainer">
         <div class="name streamItem">{{stream.channel.name}}</div>
@@ -30,26 +30,24 @@ export default {
 @import "../../responsive_mixin.scss";
 
 .stream {
-    height: 32%;
-    width: 18%;
-    color: #dddddd;
+    height: 280px;
+    width: 320px;
     margin: 15px;
     display: flex;
     flex-direction: column;
     position: relative;
     transition: 0.3s;
-}
-
-.stream:hover > .textContainer {
-    background: $lighterBackgroundColor;
+    background: $mainBackgroundColor;
 }
 
 .stream:hover {
+    background: $lighterBackgroundColor;
     box-shadow: 0px 0px 20px 2px rgba(0,0,0,0.75);
 }
 
 .imgContainer {
-    z-index: 1;
+    height: 180px;
+    width: 320px;
 }
 
 .textContainer {
@@ -58,8 +56,6 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1;
-    background: $mainBackgroundColor;
     flex: 1;
     transition: 0.3s; 
 }
@@ -72,15 +68,17 @@ export default {
     overflow: hidden;
     padding-left: 3px;
     padding-right: 3px;
+    text-align: center;
 }
 
 .name {
     font-size: 15px;
+    color: #ffffff;
 }
 
 .game, .viewers, .status {
-    color: rgba(221, 221, 221, 0.774);
-    font-size: 14px;
+    font-size: 13px;
+    color: #ddddddaf;
 }
 
 .image {

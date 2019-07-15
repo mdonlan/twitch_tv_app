@@ -1,7 +1,7 @@
 <template>
 
 <div id="app">
-    <topNav />
+    <TopNav />
     <LeftNav />
     <notifications />
     <videoPlayer />
@@ -42,9 +42,10 @@ export default {
 
 </script>
 
-<style> /* THIS STYLE IS GLOBAL -- NOT LOCAL SCOPE */
+<style lang="scss"> /* THIS STYLE IS GLOBAL -- NOT LOCAL SCOPE */
 
 @import url('https://fonts.googleapis.com/css?family=Roboto');
+@import "./global_styles.scss";
 
 html, body {
     height: 100%;
@@ -52,7 +53,8 @@ html, body {
     margin: 0px;
     padding: 0px;
     overflow: hidden;
-    background-color: #111111;
+    background-color: #0e0e0e;
+    color: $fontColor;
 }
 
 #app {

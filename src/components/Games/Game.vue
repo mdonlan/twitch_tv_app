@@ -1,6 +1,6 @@
 <template>
 
-    <div class="game">
+    <div class="game_wrapper">
         <div class="stream" :key="stream._id" v-for="stream in this.$store.state.streamsByGame">
             <router-link class="clickZone" :to="{path: 'stream', query: { name: stream.channel.name}}"/>
             <div class="imageContainer">
@@ -51,7 +51,7 @@ export default {
 
 @import "../../global_styles.scss";
 
-.game {
+.game_wrapper {
     position: absolute;
     display: flex;
     flex-direction: row;
@@ -76,6 +76,12 @@ export default {
     display: flex;
     flex-direction: column;
     position: relative;
+    transition: 0.3s;
+}
+
+.stream:hover {
+    background: $lighterBackgroundColor;
+    box-shadow: 0px 0px 20px 2px rgba(0,0,0,0.75);
 }
 
 .textContainer {
@@ -96,13 +102,9 @@ export default {
     height: 100%;
     width: 100%;
     opacity: 0;
-    background: #222222;
     transition: 0.5s;
 }
 
-.clickZone:hover {
-    opacity: 0.7;
-}
 
 .streamItem {
     width: calc(100% - 6px);
@@ -112,11 +114,17 @@ export default {
     overflow: hidden;
     padding-left: 3px;
     padding-right: 3px;
+    text-align: center;
+}
+
+.name {
+    font-size: 15px;
+    color: #ffffff;
 }
 
 .game, .viewers, .status {
-    color: rgba(221, 221, 221, 0.774);
-    font-size: 14px;
+    color: #ddddddaf;
+    font-size: 13px;
 }
 
 </style>

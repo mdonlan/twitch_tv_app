@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import topNav from '@/components/topNav'
+import TopNav from '@/components/TopNav/TopNav'
 import LeftNav from '@/components/LeftNav/LeftNav'
 import videoPlayer from '@/components/videoPlayer'
 import notifications from '@/components/notifications'
@@ -15,13 +15,15 @@ import multiChat from "./components/Multi/multiChat.vue"
 import multiSearch from "./components/Multi/multiSearch.vue"
 import chatsContainer from "./components/Multi/chatsContainer.vue"
 
-Vue.config.productionTip = false
+// Vue.config.productionTip = false
 
 // global vue components
-Vue.component('topNav', topNav);
+Vue.component('TopNav', TopNav);
 Vue.component('LeftNav', LeftNav);
 Vue.component('videoPlayer', videoPlayer);
 Vue.component('notifications', notifications);
+
+// TODO: import these locally
 Vue.component('search', search);
 Vue.component('loading', loading);
 Vue.component('scrollbar', scrollbar);

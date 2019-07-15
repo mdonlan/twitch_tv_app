@@ -1,23 +1,34 @@
 <template>
 
 <div class="top_nav">
-    <router-link class="button" :class="{activeButton: activeButton == 'Popular'}" @click.native="clickedButton" :to="{path: '/'}">Popular</router-link>
-    <router-link class="button" :class="{activeButton: activeButton == 'Games'}" @click.native="clickedButton" :to="{path: 'games'}">Games</router-link>
-    <router-link class="button" :class="{activeButton: activeButton == 'Followed'}" @click.native="clickedButton" :to="{path: 'followed'}">Followed</router-link>
-    <router-link class="button aboutButton" :to="{path: 'about'}">About</router-link>
-    <a v-if="!$store.state.user.accessToken" class="twitchConnectBtn" :href="twitchURL">Connect Twitch Account</a>
-    <search></search>
+    <div class="left"></div>
+    <div class="center">
+        <router-link class="button" :class="{activeButton: activeButton == 'Popular'}" @click.native="clickedButton" :to="{path: '/'}">Popular</router-link>
+        <router-link class="button" :class="{activeButton: activeButton == 'Games'}" @click.native="clickedButton" :to="{path: 'games'}">Games</router-link>
+        <router-link class="button" :class="{activeButton: activeButton == 'Followed'}" @click.native="clickedButton" :to="{path: 'followed'}">Followed</router-link>
+        <search></search>
+        <a v-if="!$store.state.user.accessToken" class="twitchConnectBtn" :href="twitchURL">Connect Twitch Account</a>
+    </div>
+    <div class="right">
+        <router-link class="button" :to="{path: 'about'}">About</router-link>
+        <Settings />
+    </div>
 </div>
 
 </template>
 
 <script>
 
-import { devID, prodID } from '../clientID.js'
+import { devID, prodID } from '../../clientID.js'
+import Settings from '../Settings'
 
 export default {
 
-    name: 'topNav',
+    name: 'TopNav',
+
+    components: {
+        Settings
+    },
 
     data: function () {
         return {
@@ -67,20 +78,35 @@ export default {
 
 <style lang="scss" scoped>
 
-@import "../global_styles.scss";
-@import "../responsive_mixin.scss";
+@import "../../global_styles.scss";
+@import "../../responsive_mixin.scss";
 
 .top_nav {
     position: fixed;
-    background: $mainBackgroundColor;
+    background: $darkerBackgroundColor;
     height: 75px;
     margin-left: 100px;
     width: calc(100% - 100px);
     display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 3;
     top: 0px;
+}
+
+.left, .center, .right {
+    display: flex;
+    align-items: center;
+}
+
+.left{
+    width: 25%;
+} 
+.right {
+    width: 25%;
+    justify-content: center;
+}
+
+.center {
+    width: 50%;
 }
 
 .button {

@@ -6,9 +6,9 @@
             <div class="imageContainer">
                 <img class="gameImage" v-bind:src="game.game.box.large" />
             </div>
-            <div class="gamesItemTextContainer">
-                <div class="gameName">{{game.game.name}}</div>
-                <div class="gameNumViewers">{{game.viewers.toLocaleString()}}</div>
+            <div class="textContainer">
+                <div class="name">{{game.game.name}}</div>
+                <div class="viewers">{{game.viewers.toLocaleString()}}</div>
             </div>
         </div>
     </div>
@@ -53,11 +53,23 @@ export default {
 .game {
     height: 250px;
     width: 175px;
-    background: $mainBackgroundColor;
     color: #dddddd;
     margin: 12px;
     display: flex;
     flex-direction: column;
+    text-align: center;
+    background: $mainBackgroundColor;
+    transition: 0.3s;
+}
+
+.game:hover {
+    background: $lighterBackgroundColor;
+    box-shadow: 0px 0px 20px 2px rgba(0,0,0,0.75);
+}
+
+.imageContainer {
+    height: 200px;
+    width: 100%;
 }
 
 .gameImage {
@@ -65,7 +77,7 @@ export default {
     width: 175px;  
 }
 
-.gamesItemTextContainer {
+.textContainer {
     height: 20%;
     width: 100%;
     display: flex;
@@ -83,18 +95,20 @@ export default {
     transition: 0.5s;
 }
 
-.clickZone:hover {
-    opacity: 0.7;
-}
-
-.gameName {
+.name {
     width: calc(100% - 6px);
     height: 20px;
+    line-height: 20px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     padding-left: 3px;
     padding-right: 3px;
+    font-size: 15px;
+}
+
+.viewers {
+    font-size: 13px;
 }
 
 </style>

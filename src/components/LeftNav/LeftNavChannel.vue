@@ -65,7 +65,7 @@ export default {
 .stream:hover {
     background: $lighterBackgroundColor;
     font-size: 12.5px;
-    color: white;
+    color: #ffffff;
     z-index: 10;
 }
 
@@ -106,6 +106,7 @@ a {
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 12px;
 }
 
 .logo {
@@ -114,7 +115,7 @@ a {
 }
 
 .name {
-    font-size: 12.5px;
+    font-size: 13px;
 }
 
 .game, .viewers, .status {

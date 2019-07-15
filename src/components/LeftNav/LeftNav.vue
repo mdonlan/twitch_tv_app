@@ -1,11 +1,11 @@
 <template>
 
 <div class="leftNavComponent">
-    <div class="showLeftNavButton" v-if="!showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('show')"><i class="fas fa-circle"></i></div>
-    <div class="hideLeftNavButton" v-if="showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('hide')"><i class="fas fa-times-circle"></i></div>
+    <!-- <div class="showLeftNavButton" v-if="!showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('show')"><i class="fas fa-circle"></i></div>
+    <div class="hideLeftNavButton" v-if="showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('hide')"><i class="fas fa-times-circle"></i></div> -->
 
     <div class="leftNavWrapper" id="leftNavWrapper">
-        <div class="leftNavTitle">LIVE FOLLOWING</div>
+        <div class="title">LIVE FOLLOWING</div>
         <scrollbar attachedElem="leftNavContentContainer" :offsetTop="75" />
         <div class="leftNavContentContainer">
             <LeftNavChannel :ref="follow._id" v-bind:key="follow._id" v-for="follow in this.$store.state.following" :stream="follow"/>
@@ -225,13 +225,12 @@ a {
     outline: none;
 }
 
-.leftNavTitle {
+.title {
     height: 75px;
     width: 250px;
     line-height: 75px;
-    border-bottom: 0.5px solid $mainBorderColor;
-    border-top: 0.5px solid $mainBorderColor;
     background: $darkerBackgroundColor;
+    text-align: center;
 }
 
 .hoverPreviewImg {
@@ -311,7 +310,7 @@ a {
         width: 0;
     }
 
-    .leftNavTitle {
+    .title {
         width: 100%;
     }
 }
