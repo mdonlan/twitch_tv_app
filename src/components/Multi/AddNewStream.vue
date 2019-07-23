@@ -1,6 +1,6 @@
 <template>
 
-<div class="add_new_stream">
+<div class="add_new_stream" v-if="this.$store.state.showAddNewMultiBtn">
     <div>add stream</div>
     <multiSearch />
 </div>
@@ -9,25 +9,8 @@
 
 <script>
 
-import { mapState } from 'vuex';
-
 export default {
     name: 'AddNewStream',
-
-    computed: mapState(['numMultiStreams']),
-
-    data: function () {
-        return {}
-    },
-    
-    watch: { 
-      	numMultiStreams: function (newVal, oldVal) {
-              if (newVal > 0) {
-                  const elem = document.querySelector(".add_new_stream");
-                  elem.style.zIndex = 0;
-              }
-        },
-    },
 }
 
 </script>

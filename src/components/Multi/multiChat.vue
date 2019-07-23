@@ -1,15 +1,17 @@
 <template>
-    <div class="multi_chat" :class="{active: activeChatNum == num}" v-if="$store.state.multi[num - 1]">
-        <iframe 
-            ref="chatElem"
-            frameborder="0"
-            scrolling="no"
-            id="chat_embed"
-            :src="'https://www.twitch.tv/embed/' + $store.state.multi[num - 1] + '/chat?darkpopout'"
-            height="100%"
-            width="100%"
-        />
-    </div>
+
+<div class="multi_chat" :class="{active: activeChatNum == num}" v-if="$store.state.multi[num - 1]">
+    <iframe 
+        ref="chatElem"
+        frameborder="0"
+        scrolling="no"
+        id="chat_embed"
+        :src="'https://www.twitch.tv/embed/' + $store.state.multi[num - 1] + '/chat?darkpopout'"
+        height="100%"
+        width="100%"
+    />
+</div>
+
 </template>
 
 <script>

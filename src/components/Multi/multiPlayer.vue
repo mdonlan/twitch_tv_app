@@ -1,19 +1,7 @@
 <template>
 
-<div :id="['multi_player_' + num]" class="multi_player">
+<div :id="['multi_player_' + num]" class="multi_player" :class="{ multi_player_active: $store.state.multi[num - 1]}" >
     <div :id="['embed_player_' + num]" class="embed_player" v-if="$store.state.multi[num - 1]"></div>
-    <!-- <multiSearch :num="num"/> -->
-        <!-- <div class="following" v-if="this.$store.state.following && !$store.state.multi[num - 1]">
-            <div class="title">Live Following</div>
-            <div class="following_channels">
-                <div class="channel_container"  @click="clickedChannel(channel.channel.name)" v-for="channel in this.$store.state.following" :key="channel.channel.name">
-                <div class="channel_item">{{channel.channel.name}}</div>
-                <div class="channel_item" >{{channel.channel.status}}</div>
-                <div class="channel_item" >{{channel.game}}</div>
-                <div class="channel_item" >{{channel.viewers}}</div>
-            </div>
-        </div> -->
-    <!-- </div> -->
 </div>
 
 </template>
@@ -36,7 +24,7 @@ export default {
     },
 
     mounted () {
-        this.setPlayerPos();
+        this.setPlayerPos(this.$store.state.numMultiStreams);
 
         // watch if the channel for this player has been updated
         // if so load the player with that channel
@@ -44,6 +32,12 @@ export default {
             return state.multi[this.num - 1];
         }, (channel) => {
             this.loadPlayer(channel)
+        });
+
+        this.$store.watch((state) => {
+            return state.numMultiStreams;
+        }, (num) => {
+            this.setPlayerPos(num);
         });
 
     },
@@ -68,17 +62,17 @@ export default {
             this.$store.commit("setMulti", {channel: name, num: this.num});
         },
 
-        setPlayerPos() {
+        setPlayerPos(numMulti) {
+            console.log(numMulti)
             const playerElem = document.querySelector("#multi_player_" + this.num);
-            console.log(this.$store.state.numMultiStreams)
-            if(this.$store.state.numMultiStreams == 0) {
+            if(numMulti == 1) {
                 playerElem.style.top = '0px';
                 playerElem.style.left = '0px';
                 playerElem.style.width = '100%';
                 playerElem.style.height = '100%';
             }
 
-            if(this.$store.state.numMultiStreams == 1) {
+            if(numMulti == 2) {
                 if (this.num == 1) {
                     playerElem.style.top = '0px';
                     playerElem.style.left = '0px';
@@ -102,7 +96,7 @@ export default {
                 }
             }
 
-            if(this.$store.state.numMultiStreams == 2 || this.$store.state.numMultiStreams == 3) {
+            if(numMulti == 3 || numMulti == 4) {
                 if (this.num == 1) {
                     playerElem.style.top = '0px';
                     playerElem.style.left = '0px';
@@ -146,6 +140,11 @@ export default {
 .multi_player {
     position: absolute;
     box-shadow: 0px 0px 1px 0px #111111;
+    display: none;
+}
+
+.multi_player_active {
+    display: block;
 }
 
 .embed_player {

@@ -14,7 +14,6 @@ export default new Vuex.Store({
             accessToken: null
         },
         clientID: null,
-        mousePos: null,
         breakpoint: null,
         multi: [null, null, null, null], // channels for the multi component,
         games: [],
@@ -23,7 +22,8 @@ export default new Vuex.Store({
         settings: {
             showNotifications: true,
             notificationSounds: true
-        }
+        },
+        showAddNewMultiBtn: true
     },
 
     mutations: {
@@ -43,16 +43,12 @@ export default new Vuex.Store({
             state.following = payload;
         },
 
-        setMousePos(state, payload) {
-            state.mousePos = payload;
-        },
-
         setBreakpoint(state, payload) {
             state.breakpoint = payload;
         },
 
         setMulti(state, payload) {
-            state.multi.splice(payload.num - 1, 1, payload.channel);
+            state.multi.splice(payload.num, 1, payload.channel);
         },
 
         setAccessToken(state, payload) {
@@ -73,6 +69,10 @@ export default new Vuex.Store({
 
         updateSettings(state, payload) {
             state.settings[payload.type] = payload.value;
+        },
+
+        setShowAddNewMultiBtn(state, payload) {
+            state.showAddNewMultiBtn = payload;
         },
     }
 });

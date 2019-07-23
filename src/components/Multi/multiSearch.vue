@@ -1,16 +1,18 @@
 <template>
-    <div v-if="!$store.state.multi[num - 1]" class="multi_search_wrapper">
-        <div class="input_wrapper">
-            <input class="input" v-model="query" @input="searchChangeHandler($event)" placeholder="Search for channels...">
-            <div class="clear_input" @click="clearInput">X</div>
-        </div>
-        <div class="results">
-            <div class="result" :key="result._id" v-for="result in results" v-on:click="setChannel(result)">
-                <div>{{ result.channel.name }}</div>
-                <div>{{ result.game }}</div>
-            </div>
+
+<div v-if="!$store.state.multi[this.num - 1]" class="multi_search_wrapper">
+    <div class="input_wrapper">
+        <input class="input" v-model="query" @input="searchChangeHandler($event)" placeholder="Search for channels...">
+        <div class="clear_input" @click="clearInput">X</div>
+    </div>
+    <div class="results">
+        <div class="result" :key="result._id" v-for="result in results" v-on:click="setChannel(result)">
+            <div>{{ result.channel.name }}</div>
+            <div>{{ result.game }}</div>
         </div>
     </div>
+</div>
+
 </template>
 
 <script>
@@ -19,15 +21,12 @@ import { devID, prodID } from '../../clientID.js';
 
 export default {
     name: 'multiSearch',
-    props: ['num'],
+    props: ["num"],
     data: function () {
         return {
             query: "",
             results: []
         }
-    },
-
-    mounted() {
     },
 
     methods: {
@@ -38,8 +37,9 @@ export default {
         },
  
         setChannel(result) {
-            this.$store.commit("setMulti", {channel: result.channel.name, num: this.num});
+            this.$store.commit("setMulti", {channel: result.channel.name, num: this.$store.state.numMultiStreams});
             this.$store.commit("setNumMultiStreams", this.$store.state.numMultiStreams + 1);
+            this.$store.commit("setShowAddNewMultiBtn", false);
         },
 
         searchChangeHandler(e) {

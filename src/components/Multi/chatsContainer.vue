@@ -1,37 +1,34 @@
-
 <template>
-    <div class="chat" :class="{ showChat: $store.state.multi[0] || $store.state.multi[1] || $store.state.multi[2] || $store.state.multi[3] }">
-        <div class="sectionTitle">Num Streams</div>     
-        <div class="manage_multi">
-            <div class="num_streams" @click="setNumStreams(2)">2</div>     
-            <div class="num_streams" @click="setNumStreams(4)">4</div>     
+
+<div class="chat" :class="{ showChat: $store.state.multi[0] || $store.state.multi[1] || $store.state.multi[2] || $store.state.multi[3] }">
+    <div class="sectionTitle">Rooms</div>
+    <div class="addNewMulti" @click="addNewMultiClickHandler()">+</div>
+    <div class="change_chat_room">
+        <div class="room" v-if="this.$store.state.multi[0]" >
+            <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 1}" @click="updateActiveChat(1)">{{this.$store.state.multi[0]}}</div>
+            <div class="closeRoomBtn" @click="closePlayer(0)">X</div>
         </div>
-        <div class="sectionTitle">Rooms</div>
-        <div class="change_chat_room">
-            <div class="room" v-if="this.$store.state.multi[0]" >
-                <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 1}" @click="updateActiveChat(1)">{{this.$store.state.multi[0]}}</div>
-                <div class="closeRoomBtn" @click="closePlayer(1)">X</div>
-            </div>
-            <div class="room" v-if="this.$store.state.multi[1]" >
-                <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 2}" @click="updateActiveChat(2)">{{this.$store.state.multi[1]}}</div>
-                <div class="closeRoomBtn" @click="closePlayer(2)">X</div>
-            </div>
-            <div class="room" v-if="this.$store.state.multi[2]" >
-                <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 3}" @click="updateActiveChat(3)">{{this.$store.state.multi[2]}}</div>
-                <div class="closeRoomBtn" @click="closePlayer(3)">X</div>
-            </div>
-            <div class="room" v-if="this.$store.state.multi[3]" >
-                <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 4}" @click="updateActiveChat(4)">{{this.$store.state.multi[3]}}</div>
-                <div class="closeRoomBtn" @click="closePlayer(4)">X</div>
-            </div>
+        <div class="room" v-if="this.$store.state.multi[1]" >
+            <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 2}" @click="updateActiveChat(2)">{{this.$store.state.multi[1]}}</div>
+            <div class="closeRoomBtn" @click="closePlayer(1)">X</div>
         </div>
-        <div class="chats">
-            <multiChat :num="1" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
-            <multiChat :num="2" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
-            <multiChat :num="3" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
-            <multiChat :num="4" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
+        <div class="room" v-if="this.$store.state.multi[2]" >
+            <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 3}" @click="updateActiveChat(3)">{{this.$store.state.multi[2]}}</div>
+            <div class="closeRoomBtn" @click="closePlayer(2)">X</div>
+        </div>
+        <div class="room" v-if="this.$store.state.multi[3]" >
+            <div class="chatRoomTitle" :class="{activeTitle: activeChatNum == 4}" @click="updateActiveChat(4)">{{this.$store.state.multi[3]}}</div>
+            <div class="closeRoomBtn" @click="closePlayer(3)">X</div>
         </div>
     </div>
+    <div class="chats">
+        <multiChat :num="1" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
+        <multiChat :num="2" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
+        <multiChat :num="3" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
+        <multiChat :num="4" :numStreams=numStreams :activeChatNum=activeChatNum></multiChat>
+    </div>
+</div>
+
 </template>
 
 <script>
@@ -50,7 +47,6 @@ export default {
 
         updateActiveChat(num) {
             this.activeChatNum = num;
-            
         },
 
         setNumStreams(num) {
@@ -60,8 +56,14 @@ export default {
         closePlayer(num) {
             this.$store.commit("setMulti", {channel: null, num: num});
             let embed = document.querySelector("#embed_player_" + num);
+            if (this.$store.state.numMultiStreams - 1 == 0) this.$store.commit("setShowAddNewMultiBtn", true);
+            this.$store.commit("setNumMultiStreams", this.$store.state.numMultiStreams - 1);
             embed.innerHTML = "";
         },
+
+        addNewMultiClickHandler () {
+            this.$store.commit("setShowAddNewMultiBtn", true);            
+        }
     }
 }
 
@@ -108,29 +110,6 @@ export default {
 
 .showChat {
     width: 20%;
-}
-
-.manage_multi {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 5px;
-    margin-bottom: 5px;
-}
-
-.num_streams {
-    text-align: center;
-    cursor: pointer;
-    transition: 0.3s;
-    padding: 8px;
-    margin-left: 3px;
-    margin-right: 3px;
-    background: $mainBackgroundColor;
-    font-size: 14px;
-}
-
-.num_streams:hover {
-    background: $lighterBackgroundColor;
 }
 
 .change_chat_room {

@@ -40,13 +40,14 @@ export default {
             isHovering: false,
             showingMobile: false,
             leftNavElem: null,
-            contentContainerElem: null
+            contentContainerElem: null,
+            mousePos: {x: null, y: null}
         }
     },
 
     mounted () {
         document.addEventListener("mousemove", this.mouseMoveHandler);
-        document.addEventListener("mouseover", this.mouseOverHandler);
+        // document.addEventListener("mouseover", this.mouseOverHandler);
         
         this.leftNavElem = document.querySelector(".leftNavWrapper");
 
@@ -65,7 +66,6 @@ export default {
     methods: {
         scrollHandler () {
             // also check what leftNav stream we are hovering over
-            let mousePos = this.$store.state.mousePos;
             let leftNav = document.querySelector(".leftNavContentContainer");
             let leftNavItems = Array.from(leftNav.children);
 
@@ -73,8 +73,8 @@ export default {
             // we have to do this here, because 
             leftNavItems.forEach((item) => {
                 let rect = item.getBoundingClientRect();
-                if (rect.left < mousePos.x && rect.right > mousePos.x &&
-                    rect.top < mousePos.y && rect.bottom > mousePos.y)
+                if (rect.left < this.mousePos.x && rect.right > this.mousePos.x &&
+                    rect.top < this.mousePos.y && rect.bottom > this.mousePos.y)
                     this.checkHoveringOverStream(item.children[0]);
             });
         },
@@ -129,8 +129,8 @@ export default {
 
             this.checkHoveringOverStream(toElem);
 
-            let mousePos = {x: event.clientX, y: event.clientY};
-            this.$store.commit("setMousePos", mousePos);
+            this.mousePos = {x: event.clientX, y: event.clientY};
+            // this.$store.commit("setMousePos", mousePos);
         },
 
         setLeftNavPos(hide) {
