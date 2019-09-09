@@ -4,7 +4,7 @@
     <!-- <div class="showLeftNavButton" v-if="!showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('show')"><i class="fas fa-circle"></i></div>
     <div class="hideLeftNavButton" v-if="showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('hide')"><i class="fas fa-times-circle"></i></div> -->
 
-    <div class="leftNavWrapper" id="leftNavWrapper">
+    <div class="leftNavWrapper" id="leftNavWrapper" :class="{leftNavWrapperHide: !this.$store.state.showLeftNav}">
         <div class="title">LIVE FOLLOWING</div>
         <scrollbar attachedElem="leftNavContentContainer" :offsetTop="75" />
         <div class="leftNavContentContainer">
@@ -57,10 +57,11 @@ export default {
         this.updateLive();
 
         // watch for changes in onVideoPage state var
-        this.$store.watch((state) => {return this.$store.state.onVideoPage}, (onVideoPage, oldValue) => {
-            if(onVideoPage == false) this.setLeftNavPos(false);
-            else this.setLeftNavPos(true);
-        });
+        // this.$store.watch((state) => {return this.$store.state.onVideoPage}, (onVideoPage, oldValue) => {
+        //     console.log('setting left nav');
+        //     if(onVideoPage == false) this.setLeftNavPos(false);
+        //     else this.setLeftNavPos(true);
+        // });
     },
 
     methods: {

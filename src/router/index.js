@@ -60,6 +60,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     // runs whenever route changes
 
+    // when leaving multi, clear old multi channels
     if (from.name == 'multi') {
         for (let i = 0; i < 4; i++) {
             store.commit("setMulti", {channel: null, num: i + 1});
@@ -73,11 +74,12 @@ router.beforeEach((to, from, next) => {
     } 
     else if(to.path == '/multi'){
         document.title = "Multi";
-        store.commit("setOnVideoPage", true);
-        // store.commit("setOnChannel", null);
+        // store.commit("setOnVideoPage", true);
+        store.commit("setShowLeftNav", false);
     }
     else {
-        store.commit("setOnVideoPage", false);
+        // store.commit("setOnVideoPage", false);
+        store.commit("setShowLeftNav", true);
         document.title = 'Twitch Vue App';    
     }
 

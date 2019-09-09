@@ -24,7 +24,8 @@ export default new Vuex.Store({
             notificationSounds: true
         },
         showAddNewMultiBtn: true,
-        popularStreams: []
+        popularStreams: [],
+        showLeftNav: true
     },
 
     mutations: {
@@ -76,8 +77,12 @@ export default new Vuex.Store({
             state.showAddNewMultiBtn = payload;
         },
 
-        setPopular (state, payload) {
+        setPopular(state, payload) {
             state.popularStreams = payload;
+        },
+
+        setShowLeftNav(state, payload) {
+            state.showLeftNav = payload;
         }
     }
 });
