@@ -3,7 +3,10 @@
 <div class="stream">
     <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: stream.channel.name}}"></router-link>
     <div class="imgContainer">
-        <img class="image" v-bind:src="stream.preview.medium">
+        <div v-lazy-container="{ selector: 'img'}">
+            <img :data-src="stream.preview.medium" data-loading="/src/assets/twitch_logo.png">
+        </div>
+        <!-- <img class="image" v-lazy="stream.preview.medium" loading="../../../assets/twitch_logo.png"> -->
     </div>
     <div class="textContainer">
         <div class="name streamItem">{{stream.channel.name}}</div>

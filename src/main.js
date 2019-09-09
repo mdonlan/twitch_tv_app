@@ -14,6 +14,9 @@ import multiPlayer from "./components/Multi/multiPlayer.vue"
 import multiChat from "./components/Multi/multiChat.vue"
 import multiSearch from "./components/Multi/multiSearch.vue"
 import chatsContainer from "./components/Multi/chatsContainer.vue"
+import VueLazyload from 'vue-lazyload'
+
+Vue.use(VueLazyload);
 
 // Vue.config.productionTip = false
 
