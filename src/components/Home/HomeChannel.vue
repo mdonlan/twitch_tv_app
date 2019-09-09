@@ -45,9 +45,15 @@ export default {
     box-shadow: 0px 0px 20px 2px rgba(0,0,0,0.75);
 }
 
+.stream:hover > .imgContainer {
+    opacity: 1;
+}
+
 .imgContainer {
     height: 180px;
     width: 320px;
+    opacity: 0.9;
+    transition: 0.3s;
 }
 
 .textContainer {

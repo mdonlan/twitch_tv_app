@@ -23,7 +23,8 @@ export default new Vuex.Store({
             showNotifications: true,
             notificationSounds: true
         },
-        showAddNewMultiBtn: true
+        showAddNewMultiBtn: true,
+        popularStreams: []
     },
 
     mutations: {
@@ -74,5 +75,9 @@ export default new Vuex.Store({
         setShowAddNewMultiBtn(state, payload) {
             state.showAddNewMultiBtn = payload;
         },
+
+        setPopular (state, payload) {
+            state.popularStreams = payload;
+        }
     }
 });

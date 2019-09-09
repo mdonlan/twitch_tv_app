@@ -12,6 +12,19 @@ export function initTwitchAPI () {
     setInterval(() => {
         getFollowing();
     }, 60000);
+
+    // axios({
+    // url:'https://api.twitch.tv/helix/streams?user_id=vader',
+    //     // add accept header b/c sometimes the api tries to access a 
+    //     // different api version and causes errors
+    //     headers: {
+    //         // 'Accept': 'application/vnd.twitchtv.v5+json',
+    //         'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
+    //         // 'Authorization': `OAuth ${store.state.user.accessToken}`
+    //     }
+    // })
+    // .then(response => console.log(response))
+    // .catch(error => console.log(error));
 }
 
 export function getFollowing () {
@@ -32,7 +45,7 @@ export function getFollowing () {
 export function getGames () {
     axios({
         url:'https://api.twitch.tv/kraken/games/top/?limit=100',
-        headers: {'Client-ID': window.location.href.includes("localhost") ? devID : prodID,}
+        headers: {'Client-ID': window.location.href.includes("localhost") ? devID : prodID}
     })
     .then(res => store.commit("setGames", res.data.top))
     .catch(e => console.log(e));
@@ -42,8 +55,18 @@ export function getStreamsByGame (gameName) {
     // get the top streams for a specific game
     axios({
         url:'https://api.twitch.tv/kraken/streams/?limit=100&game=' + gameName,
-        headers: {'Client-ID': window.location.href.includes("localhost") ? devID : prodID,}
+        headers: {'Client-ID': window.location.href.includes("localhost") ? devID : prodID}
     })
     .then(res => store.commit("setStreamsByGame", res.data.streams))
     .catch(e => console.log(e));
+}
+
+export function getPopularStreams () {
+    // get the most poular live streams
+    axios({
+        url:'https://api.twitch.tv/kraken/streams/?limit=100&offset=0',
+        headers: {'Client-ID': window.location.href.includes("localhost") ? devID : prodID}
+    })
+    .then(res => store.commit("setPopular", res.data.streams))
+    .catch(err => console.log(err));
 }

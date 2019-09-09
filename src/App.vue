@@ -18,16 +18,12 @@ export default {
     name: 'app',
 
     mounted() {
-        window.addEventListener("resize", this.resizedWindow);
+        window.addEventListener("resize", this.getBreakpoint);
         initTwitchAPI();
         this.getBreakpoint();
     },
 
     methods:  {
-        resizedWindow() {
-            this.getBreakpoint();
-        },
-
         getBreakpoint() {
             let width = window.innerWidth;
             let breakpoint;

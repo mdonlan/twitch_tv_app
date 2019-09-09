@@ -10,7 +10,7 @@
         <a v-if="!$store.state.user.accessToken" class="twitchConnectBtn" :href="twitchURL">Connect Twitch Account</a>
     </div>
     <div class="right">
-        <router-link class="button" :to="{path: 'about'}">About</router-link>
+        <router-link class="button" :class="{activeButton: activeButton == 'About'}" @click.native="clickedButton" :to="{path: 'about'}">About</router-link>
         <Settings />
     </div>
 </div>
@@ -50,10 +50,13 @@ export default {
     },
 
     methods: {
+        
         setActiveButton () {
+            // set active button based on url on page load
             const url = window.location.href;
             if (url.includes("games")) this.activeButton = 'Games';
             else if (url.includes("followed")) this.activeButton = 'Followed';
+            else if (url.includes("about")) this.activeButton = 'About';
             else this.activeButton = 'Popular'
         },
 
@@ -67,10 +70,18 @@ export default {
             // this simply removes the extra data on the address when twitch does their redirect
             const url = window.location.href;
             if (url.includes("access_token")) {
+                this.saveUserToken(url);
                 if (url.includes("localhost")) window.location.href = 'http://localhost:8080/#/';
                 else window.location.href = 'https://mdonlan.github.io/twitch_tv_app';
             }
-        }
+        },
+
+        saveUserToken (url) {
+            const access_token = url.match("access_token=(.*)&id_token");
+            const id_token = url.match("id_token=(.*)&scope");
+            localStorage.setItem("access_token", access_token[1]);
+            localStorage.setItem("id_token", id_token[1]);
+        },
     }
 }
 

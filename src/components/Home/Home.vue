@@ -2,53 +2,26 @@
 
 <div class="homeComponent">
     <div class="twitchWrapper">
-        <HomeChannel v-bind:key="stream._id" :stream="stream" v-for="stream in streams"/>
+        <HomeChannel v-bind:key="stream._id" :stream="stream" v-for="stream in this.$store.state.popularStreams"/>
     </div>
-    <scrollbar :attachedElem="scrollbarAttachedElem" :offsetTop="offsetTop"/>
+    <scrollbar attachedElem="twitchWrapper" :offsetTop="75" />
 </div>
 
 </template>
 
 <script>
 
-import axios from 'axios'
-import $ from 'jquery'
-import { devID, prodID } from '../../clientID.js'
 import HomeChannel from './HomeChannel'
+import { getPopularStreams } from '../../TwitchAPI'
 
 export default {
     name: 'Home',
     components: {
         HomeChannel
     },
-    data: function () {
-        return {
-            streams: [],
-            scrollbarAttachedElem: "twitchWrapper",
-            offsetTop: 75 // height of the top nav bar container
-        }
-    },
 
     created () {
-        this.getPopularStreams();
-    },
-
-    methods: {
-        getPopularStreams() {
-            // send a request for the most poular live streams
-            axios({
-                method:'get',
-                url:'https://api.twitch.tv/kraken/streams/?limit=100&offset=0',
-                headers: {'Client-ID': devID}
-            })
-            .then(response => {
-                let streamData = response.data.streams;
-                this.streams = streamData;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        }
+        getPopularStreams();
     }
 }
 

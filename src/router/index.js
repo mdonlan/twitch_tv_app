@@ -77,7 +77,8 @@ router.beforeEach((to, from, next) => {
         // store.commit("setOnChannel", null);
     }
     else {
-        store.commit("setOnVideoPage", false);    
+        store.commit("setOnVideoPage", false);
+        document.title = 'Twitch Vue App';    
     }
 
     next();
