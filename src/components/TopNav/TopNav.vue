@@ -38,7 +38,7 @@ export default {
     },
 
     created () {
-        this.redirectFromTwitch();
+        this.checkRedirectFromTwitch();
 
         // set the url based on whether we are testing on dev build or not
         if (window.location.href.includes("localhost")) this.twitchURL = 'https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=' + devID +'&redirect_uri=http://localhost:8080&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671';
@@ -64,7 +64,7 @@ export default {
             this.activeButton = e.target.innerHTML;
         },
 
-        redirectFromTwitch() {
+        checkRedirectFromTwitch() {
             // after getting access token and id saved
             // redirect to home page so vue knows what to display
             // this simply removes the extra data on the address when twitch does their redirect
