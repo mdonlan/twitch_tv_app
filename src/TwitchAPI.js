@@ -63,10 +63,33 @@ export function getStreamsByGame (gameName) {
 
 export function getPopularStreams () {
     // get the most poular live streams
-    axios({
-        url:'https://api.twitch.tv/kraken/streams/?limit=100&offset=0',
-        headers: {'Client-ID': window.location.href.includes("localhost") ? devID : prodID}
-    })
-    .then(res => store.commit("setPopular", res.data.streams))
-    .catch(err => console.log(err));
+    if (api.popular.loading == false) {
+        api.popular.loading = true;
+        axios({
+            url: api.popular.url + api.popular.offset,
+            headers: {'Client-ID': window.location.href.includes("localhost") ? devID : prodID}
+        })
+        .then(res => {
+            if (store.state.popularStreams.length > 0) {
+                let popularStreams = JSON.parse(JSON.stringify(store.state.popularStreams));
+                popularStreams = popularStreams.concat(res.data.streams);
+                store.commit("setPopular", popularStreams);
+            } else {
+                store.commit("setPopular", res.data.streams);
+            }
+            
+            api.popular.loading = false;
+            api.popular.offset += 20;
+        })
+        .catch(err => console.log(err));
+    }
+}
+
+// api state
+const api = {
+    popular: {
+        url: "https://api.twitch.tv/kraken/streams/?limit=20&offset=",
+        offset: 0,
+        loading: false
+    }
 }

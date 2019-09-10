@@ -22,6 +22,30 @@ export default {
 
     created () {
         getPopularStreams();
+    },
+
+    mounted () {
+        const elem = document.querySelector(".twitchWrapper");
+        elem.addEventListener("scroll", () => {this.checkLastStreaminView()});
+    },
+
+    methods: {
+        checkLastStreaminView() {
+            const wrapperElem = document.querySelector(".twitchWrapper");
+            const lastStreamElem = wrapperElem.childNodes[wrapperElem.childNodes.length - 1];
+
+            const bounds = lastStreamElem.getBoundingClientRect();
+            if (
+                bounds.top >= 0 &&
+                bounds.left >= 0 &&
+                bounds.right <= (window.innerWidth || document.documentElement.clientWidth) &&
+                bounds.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+            ) {
+                getPopularStreams();
+            } else {
+                console.log('Not in the viewport... whomp whomp');
+            }
+        }
     }
 }
 
