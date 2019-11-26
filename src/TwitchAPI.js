@@ -72,14 +72,14 @@ export function getPopularStreams () {
         .then(res => {
             if (store.state.popularStreams.length > 0) {
                 let popularStreams = JSON.parse(JSON.stringify(store.state.popularStreams));
-                popularStreams = popularStreams.concat(res.data.streams);
+                popularStreams = popularStreams.concat(res.data.data);
                 store.commit("setPopular", popularStreams);
             } else {
-                store.commit("setPopular", res.data.streams);
+                store.commit("setPopular", res.data.data);
             }
             
             api.popular.loading = false;
-            api.popular.offset += 20;
+            api.popular.offset += 50;
         })
         .catch(err => console.log(err));
     }
@@ -88,7 +88,7 @@ export function getPopularStreams () {
 // api state
 const api = {
     popular: {
-        url: "https://api.twitch.tv/kraken/streams/?limit=20&offset=",
+        url: "https://api.twitch.tv/helix/streams?first=50&offset=",
         offset: 0,
         loading: false
     }

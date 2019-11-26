@@ -1,10 +1,13 @@
 <template>
 
 <div class="add_new_stream" v-if="this.$store.state.showAddNewMultiBtn">
-    <div class="title">add stream</div>
+    <div class="head">
+        <div class="title">Multi Add New Stream</div>
+        <div class="close_button" @click="this.close" v-if="this.$store.state.numMultiStreams > 0">CLOSE</div>
+    </div>
     <div class="view_options">
-        <div class="set_following_button" :class="{active_button: this.showFollowing}" @click="toggleView('following')">following</div>
-        <div class="set_search_button" :class="{active_button: this.showSearch}" @click="toggleView('search')">search</div>
+        <div class="button" :class="{active_button: this.showFollowing}" @click="toggleView('following')">FOLLOWING</div>
+        <div class="button" :class="{active_button: this.showSearch}" @click="toggleView('search')">SEARCH</div>
     </div>
     <div>
         <multiSearch v-if="this.showSearch"/>
@@ -54,6 +57,10 @@ export default {
             this.$store.commit("setNumMultiStreams", this.$store.state.numMultiStreams + 1);
             this.$store.commit("setShowAddNewMultiBtn", false);
         },
+
+        close() {
+            this.$store.commit("setShowAddNewMultiBtn", false)
+        }
     }
 }
 
@@ -75,21 +82,36 @@ export default {
     overflow-y: scroll;
 }
 
+.head {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
 .title {
     text-align: center;
+    font-size: 18px;
+}
+
+.close_button {
+    position: absolute;
+    left: calc(100% - 60px);
+    top: 8px;
+    cursor: pointer;
 }
 
 .view_options {
     display: flex;
     justify-content: center;
+    margin-top: 15px;
+    margin-bottom: 20px;
 }
 
-.set_search_button {
+.button {
     transition: 0.3s;
-}
-
-.set_following_button {
-    transition: 0.3s;
+    padding: 8px;
+    border: 1px solid #dddddd;
+    cursor: pointer;
 }
 
 .active_button {
@@ -106,6 +128,7 @@ export default {
     width: 50%;
     display: flex;
     margin-top: 5px;
+    cursor: pointer;
 }
 
 .following_stream:hover {

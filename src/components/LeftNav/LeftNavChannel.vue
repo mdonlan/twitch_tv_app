@@ -64,7 +64,6 @@ export default {
 
 .stream:hover {
     background: $lighterBackgroundColor;
-    font-size: 12.5px;
     color: #ffffff;
     z-index: 10;
 }

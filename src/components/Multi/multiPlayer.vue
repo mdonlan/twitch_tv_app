@@ -31,7 +31,7 @@ export default {
         this.$store.watch((state) => {
             return state.multi[this.num - 1];
         }, (channel) => {
-            this.loadPlayer(channel)
+            if (channel) this.loadPlayer(channel); 
         });
 
         this.$store.watch((state) => {

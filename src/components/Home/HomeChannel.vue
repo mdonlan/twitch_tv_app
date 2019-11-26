@@ -1,18 +1,18 @@
 <template>
 
 <div class="stream">
-    <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: stream.channel.name}}"></router-link>
+    <router-link class="clickZone" v-bind:to="{path: 'stream', query: { name: stream.user_name}}"></router-link>
     <div class="imgContainer">
-        <div v-lazy-container="{ selector: 'img'}">
-            <img :data-src="stream.preview.medium" data-loading="/src/assets/twitch_logo.png">
-        </div>
-        <!-- <img class="image" v-lazy="stream.preview.medium" loading="../../../assets/twitch_logo.png"> -->
+        <!-- <div v-lazy-container="{ selector: 'img'}"> -->
+            <!-- <img :data-src="stream.preview.medium" data-loading="/src/assets/twitch_logo.png"> -->
+        <!-- </div> -->
+        <img class="image" v-lazy="thumbnail_url()" loading="../../../assets/twitch_logo.png">
     </div>
     <div class="textContainer">
-        <div class="name streamItem">{{stream.channel.name}}</div>
-        <div class="game streamItem">{{stream.channel.game}}</div>
-        <div class="status streamItem">{{stream.channel.status}}</div>
-        <div class="viewers streamItem">{{stream.viewers.toLocaleString()}}</div>
+        <div class="name streamItem">{{stream.user_name}}</div>
+        <div class="game streamItem">{{stream.game_id}}</div>
+        <div class="status streamItem">{{stream.title}}</div>
+        <div class="viewers streamItem">{{stream.viewer_count.toLocaleString()}}</div>
     </div>
 </div>
 
@@ -23,6 +23,17 @@
 export default {
     name: 'HomeChannel',
     props: ["stream"],
+    methods:
+    {
+        thumbnail_url() {
+            // convert thumbnail url to include width and height
+            let url = this.stream.thumbnail_url;
+            url = url.replace("{width}", "320");
+            url = url.replace("{height}", "180");
+            return url;
+        }
+        
+    }
 }
 
 </script>

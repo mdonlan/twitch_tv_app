@@ -1,16 +1,12 @@
 <template>
-
     <div :class="['scrollbar', attachedElem + 'Scrollbar']"></div>
-
 </template>
 
 <script>
 
 export default {
     name: 'scrollbar',
-
     props: ['attachedElem', 'offsetTop'],
-
     data: function() {
         return {
             containerElem: null,

@@ -55,10 +55,10 @@ export default {
 
         closePlayer(num) {
             this.$store.commit("setMulti", {channel: null, num: num});
-            let embed = document.querySelector("#embed_player_" + num);
+            // let embed = document.querySelector("#embed_player_" + num);
             if (this.$store.state.numMultiStreams - 1 == 0) this.$store.commit("setShowAddNewMultiBtn", true);
             this.$store.commit("setNumMultiStreams", this.$store.state.numMultiStreams - 1);
-            embed.innerHTML = "";
+            // embed.innerHTML = "";
         },
 
         addNewMultiClickHandler () {
@@ -160,6 +160,18 @@ export default {
     width: 50%;
     font-size: 14px;
     margin-bottom: 3px;
+}
+
+.addNewMulti {
+    color: #dddddd;
+    background: $mainBackgroundColor;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.addNewMulti:hover {
+    background: $lighterBackgroundColor;
 }
 
 </style>

@@ -33,7 +33,6 @@ export default {
         checkLastStreaminView() {
             const wrapperElem = document.querySelector(".twitchWrapper");
             const lastStreamElem = wrapperElem.childNodes[wrapperElem.childNodes.length - 1];
-
             const bounds = lastStreamElem.getBoundingClientRect();
             if (
                 bounds.top >= 0 &&
@@ -42,8 +41,6 @@ export default {
                 bounds.bottom <= (window.innerHeight || document.documentElement.clientHeight)
             ) {
                 getPopularStreams();
-            } else {
-                console.log('Not in the viewport... whomp whomp');
             }
         }
     }
