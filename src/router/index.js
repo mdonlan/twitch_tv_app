@@ -78,7 +78,7 @@ router.beforeEach((to, from, next) => {
         store.commit("setShowLeftNav", false);
     }
     else {
-        // store.commit("setOnVideoPage", false);
+        store.commit("setOnVideoPage", false);
         store.commit("setShowLeftNav", true);
         document.title = 'Twitch Vue App';    
     }
