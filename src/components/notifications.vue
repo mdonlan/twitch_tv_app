@@ -35,11 +35,11 @@ export default {
         // wait for data to be returned from requests, then check for new data
         setTimeout(() => {
             setInterval(() => {
-                this.checkForNewLive();
+                // this.checkForNewLive();
             }, 1000);
 
             setInterval(() => {
-                this.queueUpdate()
+                // this.queueUpdate()
             }, 500)
         }, 3000);
     },

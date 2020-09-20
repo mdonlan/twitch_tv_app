@@ -5,10 +5,13 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        app_token: null,
+        user_token: null,
         onVideoPage: false,
         onChannel: null,
         username: null,
         following: null,
+        user_data: null,
         user: {
             name: null,
             accessToken: null
@@ -25,10 +28,23 @@ export default new Vuex.Store({
         },
         showAddNewMultiBtn: true,
         popularStreams: [],
-        showLeftNav: true
+        showLeftNav: true,
+        twitch_auth_url: null
     },
 
     mutations: {
+        set_app_token(state, payload) {
+            state.app_token = payload;
+        },
+
+        set_user_token(state, payload) {
+            state.user_token = payload;
+        },
+
+        set_user_data(state, payload) {
+            state.user_data = payload;
+        },
+
         setOnVideoPage(state, payload) {
             state.onVideoPage = payload;
         },
@@ -83,6 +99,14 @@ export default new Vuex.Store({
 
         setShowLeftNav(state, payload) {
             state.showLeftNav = payload;
+        },
+        
+        setTwitchAuthUrl(state, payload) {
+            state.twitch_auth_url = payload;
+        },
+
+        setClientID(state, payload) {
+            state.clientID = payload;
         }
     }
 });

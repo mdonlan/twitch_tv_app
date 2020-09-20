@@ -1,5 +1,4 @@
 <template>
-
 <div class="top_nav">
     <div class="left"></div>
     <div class="center">
@@ -7,20 +6,18 @@
         <router-link class="button" :class="{activeButton: activeButton == 'Games'}" @click.native="clickedButton" :to="{path: 'games'}">Games</router-link>
         <router-link class="button" :class="{activeButton: activeButton == 'Followed'}" @click.native="clickedButton" :to="{path: 'followed'}">Followed</router-link>
         <search></search>
-        <a v-if="!$store.state.user.accessToken" class="twitchConnectBtn" :href="twitchURL">Connect Twitch Account</a>
+
     </div>
     <div class="right">
         <router-link class="button" :class="{activeButton: activeButton == 'About'}" @click.native="clickedButton" :to="{path: 'about'}">About</router-link>
         <Settings />
     </div>
 </div>
-
 </template>
 
 <script>
-
-import { devID, prodID } from '../../clientID.js'
 import Settings from '../Settings'
+import { get_user_data } from '../../TwitchAPI'
 
 export default {
 
@@ -33,25 +30,20 @@ export default {
     data: function () {
         return {
             activeButton: null,
-            twitchURL: null
         }
     },
 
-    created () {
+    created() {
         this.checkRedirectFromTwitch();
-
-        // set the url based on whether we are testing on dev build or not
-        if (window.location.href.includes("localhost")) this.twitchURL = 'https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=' + devID +'&redirect_uri=http://localhost:8080&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671';
-        else this.twitchURL = 'https://api.twitch.tv/kraken/oauth2/authorize?response_type=token+id_token&client_id=' + prodID + '&redirect_uri=https://mdonlan.github.io/twitch_tv_app&scope=viewing_activity_read+openid&state=c3ab8aa609ea11e793ae92361f002671';
     },
 
-    mounted () {
+    mounted() {
         this.setActiveButton();
     },
 
     methods: {
-        
-        setActiveButton () {
+
+        setActiveButton() {
             // set active button based on url on page load
             const url = window.location.href;
             if (url.includes("games")) this.activeButton = 'Games';
@@ -60,7 +52,7 @@ export default {
             else this.activeButton = 'Popular'
         },
 
-        clickedButton (e) {
+        clickedButton(e) {
             this.activeButton = e.target.innerHTML;
         },
 
@@ -76,19 +68,20 @@ export default {
             }
         },
 
-        saveUserToken (url) {
-            const access_token = url.match("access_token=(.*)&id_token");
-            const id_token = url.match("id_token=(.*)&scope");
-            localStorage.setItem("access_token", access_token[1]);
-            localStorage.setItem("id_token", id_token[1]);
+        saveUserToken(url) {
+            const user_token = url.match("access_token=(.*)&scope");
+            // console.log(access_token)
+            this.$store.commit('set_user_token', user_token[1]);
+            // get_user_data();
+            // const id_token = url.match("id_token=(.*)&scope");
+            localStorage.setItem("user_token", user_token[1]);
+            // localStorage.setItem("id_token", id_token[1]);
         },
     }
 }
-
 </script>
 
 <style lang="scss" scoped>
-
 @import "../../global_styles.scss";
 @import "../../responsive_mixin.scss";
 
@@ -103,14 +96,17 @@ export default {
     top: 0px;
 }
 
-.left, .center, .right {
+.left,
+.center,
+.right {
     display: flex;
     align-items: center;
 }
 
-.left{
+.left {
     width: 25%;
-} 
+}
+
 .right {
     width: 25%;
     justify-content: center;
@@ -172,32 +168,6 @@ export default {
     border: none !important;
 }
 
-.twitchConnectBtn {
-    height: 35px;
-    width: 175px;
-    border: solid 0.5px #2c65ce;
-    margin-right: 10px;
-    margin-left: 10px;
-    line-height: 35px;
-    color: #dddddd;
-    background: #5a087e;
-    font-size: 14px;
-    transition: 0.3s linear;
-    box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.75);
-    user-select: none;
-    text-decoration: none;
-    border-radius: 3px;
-}
-
-.twitchConnectBtn:hover {
-    background: #900fc7;
-}
-
-a {
-    text-decoration: none;
-    color: #dddddd;
-}
-
 .twitchLogo {
     position: absolute;
     top: 25px;
@@ -240,5 +210,4 @@ a {
         right: 0px;
     }
 }
-
 </style>

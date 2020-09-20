@@ -1,31 +1,35 @@
 <template>
-
 <div class="leftNavComponent">
     <!-- <div class="showLeftNavButton" v-if="!showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('show')"><i class="fas fa-circle"></i></div>
     <div class="hideLeftNavButton" v-if="showingMobile && this.$store.state.breakpoint == 'phone'" @click="toggleLeftNavMobile('hide')"><i class="fas fa-times-circle"></i></div> -->
 
     <div class="leftNavWrapper" id="leftNavWrapper" :class="{leftNavWrapperHide: !this.$store.state.showLeftNav}">
         <div class="title">LIVE FOLLOWING</div>
+
+        <div class="account_not_connected" v-if="!this.$store.state.user_data">
+            <div class="connect_account_message">Connect to your Twitch account and view all your followed channels in the sidebar!</div>
+            <a v-if="!$store.state.user.accessToken" class="twitchConnectBtn" :href="this.$store.state.twitch_auth_url">Connect Twitch Account</a>
+        </div>
+
         <scrollbar attachedElem="leftNavContentContainer" :offsetTop="75" />
         <div class="leftNavContentContainer">
-            <LeftNavChannel :ref="follow._id" v-bind:key="follow._id" v-for="follow in this.$store.state.following" :stream="follow"/>
+            <LeftNavChannel :ref="follow._id" v-bind:key="follow._id" v-for="follow in this.$store.state.following" :stream="follow" />
         </div>
+
         <LeftNavButtons />
     </div>
 
     <div class="hoverPreviewImg" v-if="isHovering">
-        <img class="hoverPreview"/>
+        <img class="hoverPreview" />
     </div>
 
-    <div class="hoverPreviewTriangle" v-if="isHovering">  
-        <div class="triangle"></div>      
+    <div class="hoverPreviewTriangle" v-if="isHovering">
+        <div class="triangle"></div>
     </div>
 </div>
-
 </template>
 
 <script>
-
 import LeftNavChannel from './LeftNavChannel';
 import LeftNavButtons from './LeftNavButtons';
 
@@ -41,14 +45,17 @@ export default {
             showingMobile: false,
             leftNavElem: null,
             contentContainerElem: null,
-            mousePos: {x: null, y: null}
+            mousePos: {
+                x: null,
+                y: null
+            }
         }
     },
 
-    mounted () {
+    mounted() {
         document.addEventListener("mousemove", this.mouseMoveHandler);
         // document.addEventListener("mouseover", this.mouseOverHandler);
-        
+
         this.leftNavElem = document.querySelector(".leftNavWrapper");
 
         this.contentContainerElem = document.querySelector(".leftNavContentContainer");
@@ -65,7 +72,7 @@ export default {
     },
 
     methods: {
-        scrollHandler () {
+        scrollHandler() {
             // also check what leftNav stream we are hovering over
             let leftNav = document.querySelector(".leftNavContentContainer");
             let leftNavItems = Array.from(leftNav.children);
@@ -81,17 +88,22 @@ export default {
         },
 
         setLeftNavPos(hide) {
-            if(hide) this.leftNavElem.classList.add("leftNavWrapperHide");
+            if (hide) this.leftNavElem.classList.add("leftNavWrapperHide");
             else this.leftNavElem.classList.remove("leftNavWrapperHide");
-        },    
+        },
 
         clickedVideoLink(stream) {
             // clicked a link to a stream on the leftNav
-            let to = {path: 'stream', query: {name: stream.channel.name}};
+            let to = {
+                path: 'stream',
+                query: {
+                    name: stream.channel.name
+                }
+            };
             this.$router.push(to);
-            
+
             // if we are on mobile auto hide the leftNav
-            if(this.$store.state.breakpoint == 'phone') {
+            if (this.$store.state.breakpoint == 'phone') {
                 this.showingMobile = false;
                 this.leftNavElem.classList.remove('show_mobile')
             }
@@ -103,11 +115,11 @@ export default {
             setInterval(this.getFollowing, 60000); // runs every 60 seconds to check for changes
         },
 
-        mouseOverHandler (event) {
+        mouseOverHandler(event) {
             // this is for firefox since it doesn't get the iframe element as target we also need
             // to user mouseover since relatedTarget is only on that event and not on mousemove
             let relatedTarget = event.relatedTarget;
-            if(relatedTarget == null && this.$store.state.onVideoPage) this.setLeftNavPos(true);
+            if (relatedTarget == null && this.$store.state.onVideoPage) this.setLeftNavPos(true);
         },
 
         mouseMoveHandler(event) {
@@ -125,18 +137,21 @@ export default {
             // and then we need to check for body or iframe depending on whether we last clicked 
             // on the iframe or the rest of the app
 
-            if(tag == "IFRAME" && this.$store.state.onVideoPage) this.setLeftNavPos(true);
-            else if(className == "mouseEventWatchLayerLeft" && this.$store.state.onVideoPage) this.setLeftNavPos(false);
+            if (tag == "IFRAME" && this.$store.state.onVideoPage) this.setLeftNavPos(true);
+            else if (className == "mouseEventWatchLayerLeft" && this.$store.state.onVideoPage) this.setLeftNavPos(false);
 
             this.checkHoveringOverStream(toElem);
 
-            this.mousePos = {x: event.clientX, y: event.clientY};
+            this.mousePos = {
+                x: event.clientX,
+                y: event.clientY
+            };
             // this.$store.commit("setMousePos", mousePos);
         },
 
         setLeftNavPos(hide) {
             // show or hide the left nav
-            if(hide) this.leftNavElem.classList.add("leftNavWrapperHide");
+            if (hide) this.leftNavElem.classList.add("leftNavWrapperHide");
             else this.leftNavElem.classList.remove("leftNavWrapperHide");
         },
 
@@ -146,14 +161,18 @@ export default {
 
             // check if the elem we are over has data-channel
             // left nav streams are the only ones that have this data
-            if(toElem.getAttribute("data-channel")) {
+            if (toElem.getAttribute("data-channel")) {
                 this.isHovering = true;
                 let hoverElemChannel = toElem.getAttribute("data-channel");
                 let hoverSrc = null;
 
                 // find which stream we are hovering over
                 this.$store.state.following.forEach((stream) => {
-                    if(stream.channel.name == hoverElemChannel) hoverSrc = stream.preview.large;
+                    if (stream.user_name == hoverElemChannel){
+                        hoverSrc = stream.thumbnail_url;
+                        hoverSrc = hoverSrc.replace("{width}", 640);
+                        hoverSrc = hoverSrc.replace("{height}", 360);
+                    }
                 });
 
                 // set the hover preview elem pos and src
@@ -161,25 +180,25 @@ export default {
                 let hoverElemContainer = document.querySelector(".hoverPreviewImg");
                 let hoverElemImg = document.querySelector(".hoverPreview");
 
-                if(hoverElemContainer) {
+                if (hoverElemContainer) {
                     let top = hoverElemContainer.style.top = elemPos.top - 20 + "px";
                     hoverElemImg.src = hoverSrc;
                 }
 
                 let hoverTriangle = document.querySelector(".hoverPreviewTriangle");
-                if(hoverTriangle) hoverTriangle.style.top = elemPos.top + "px";
+                if (hoverTriangle) hoverTriangle.style.top = elemPos.top + "px";
             } else {
                 this.isHovering = false;
             }
         },
 
         toggleLeftNavMobile(toggle) {
-            if(toggle == 'show') {
+            if (toggle == 'show') {
                 this.showingMobile = true;
                 this.leftNavElem.classList.add("show_mobile");
             }
 
-            if(toggle == 'hide') {
+            if (toggle == 'hide') {
                 this.showingMobile = false;
                 this.leftNavElem.classList.remove("show_mobile");
             }
@@ -189,7 +208,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 @import "../../global_styles.scss";
 @import "../../responsive_mixin.scss";
 
@@ -270,6 +288,43 @@ a {
     z-index: 100;
 }
 
+.account_not_connected {
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.connect_account_message {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.twitchConnectBtn {
+    height: 35px;
+    width: 175px;
+    color: #dddddd;
+    background: #5a087e;
+    font-size: 14px;
+    transition: 0.3s linear;
+    user-select: none;
+    text-decoration: none;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.twitchConnectBtn:hover {
+    background: #900fc7;
+}
+
+a {
+    text-decoration: none;
+    color: #dddddd;
+}
+
 /* for mobile to toggle whether to show leftnav */
 .showLeftNavButton {
     position: fixed;
@@ -284,6 +339,7 @@ a {
         color: red;
     }
 }
+
 .hideLeftNavButton {
     position: fixed;
     top: 50%;
@@ -315,5 +371,4 @@ a {
         width: 100%;
     }
 }
-
 </style>

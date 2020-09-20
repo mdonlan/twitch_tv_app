@@ -1,15 +1,15 @@
 <template>
 
     <div class="stream">
-        <div class="clickZone" @click="clickedVideoLink(stream)" :data-channel="stream.channel.name" />
+        <div class="clickZone" @click="clickedVideoLink(stream)" :data-channel="stream.user_name" />
         <div class="logoContainer">
-            <img class="logo leftNavItem" v-bind:src="stream.channel.logo">
+            <!-- <img class="logo leftNavItem" v-bind:src="stream.channel.logo"> -->
         </div>
         <div class="textContainer">
-            <div class="name leftNavItem">{{stream.channel.name}}</div>
-            <div class="game leftNavItem">{{stream.channel.game}}</div>
-            <div class="status leftNavItem">{{stream.channel.status}}</div>
-            <div class="viewers leftNavItem">{{stream.viewers.toLocaleString()}}</div>
+            <div class="name leftNavItem">{{stream.user_name}}</div>
+            <div class="game leftNavItem">{{stream.game_id}}</div>
+            <div class="status leftNavItem">{{stream.title}}</div>
+            <div class="viewers leftNavItem">{{stream.viewer_count.toLocaleString()}}</div>
         </div>
     </div>
 
