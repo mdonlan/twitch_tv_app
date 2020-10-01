@@ -12,12 +12,7 @@ const api = {
     }
 };
 
-const following = {
-    total: null,
-    num_pages: null,
-    pages: [],
-    data: []
-};
+
 
 // this function gets the auth token from our server, which is connecting to twitches servers
 // we need this auth token to do any twitch api calls
@@ -153,115 +148,107 @@ function get_following_stream_data(pages) {
     })
 }
 
-async function get_profile_images(following_ids) {
-    console.log('durings')
-    let id_string = "";
-    for (let i = 0; i < following_ids.length; i++) {
-        if (i == 0) id_string += `${following_ids[i]}`
-        else  id_string += `&id=${following_ids[i]}`
+async function get_profile_images() {
+    for (let i = 0; i < following.pages.length; i++) {
+        const following_ids = following.pages[i].map(a => a.to_id);
+        let id_string = "";
+        for (let j = 0; j < following_ids.length; j++) {
+            if (j == 0) id_string += `${following_ids[j]}`
+            else  id_string += `&id=${following_ids[j]}`
+        }
+
+        try {
+            const res = await axios({ url: `https://api.twitch.tv/helix/users?id=${id_string}`, method: 'get', headers: { 'Client-ID': window.location.href.includes("localhost") ? devID : prodID, 'Authorization': `Bearer ${store.state.user_token}`}});
+            res.data.data.forEach(user => {
+                following.data.forEach(following_user => {
+                    if (following_user.user_id == user.id) {
+                        console.log('test');
+                        following_user.profile_image = user.profile_image_url;
+                    }
+                })
+            })
+            // for (let i = 0; i < res.data.data.length; i++) {
+            //     for (let j = 0; j < following.data.length; j++) {
+            //         if (following.data[j].user_id == res.data.data[i].id) {
+            //             console.log(res.data.data[i].profile_image_url)
+            //             following.data[j].profile_image = res.data.data[i].profile_image_url;
+            //         }
+            //     }
+            // }
+        } catch(e) { console.log(e); }
     }
-    // get streamer profile pictures 
-    return axios({
-        url: `https://api.twitch.tv/helix/users?id=${id_string}`,
-        method: 'get',
-        headers: {
-            'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
-            'Authorization': `Bearer ${store.state.user_token}`
-        }
-    })
-    .then(res => {
-        // following.data = following.data.concat(res.data.data);
-        console.log(res.data)
-        for (let i = 0; i < res.data.data.length; i++) {
-            for (let j = 0; j < following.data.length; j++) {
-                if (following.data[j].user_id == res.data.data[i].id) {
-                    console.log(res.data.data[i].profile_image_url)
-                    following.data[j].profile_image = res.data.data[i].profile_image_url;
-                }
-            }
-        }
-    })
-    .catch(err => {
-        console.log(err);
-    })
 }
 
+// loops through all pages and gets all following streams
 async function get_all_following_streams() {
+
+    // set the url depending if we are on first page or not
     let url = `https://api.twitch.tv/helix/users/follows?from_id=${store.state.user_data.id}&first=100`; 
-    // if (page_cursor != undefined) url = `https://api.twitch.tv/helix/users/follows?from_id=${store.state.user_data.id}&first=100&after=${page_cursor}`
-    axios({
-        url: url,
-        method: 'get',
-        headers: {
-            'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
-            'Authorization': `Bearer ${store.state.user_token}`
-        }
-    })
-    .then(res => {
+    if (following.next_page_cursor != null) url = `https://api.twitch.tv/helix/users/follows?from_id=${store.state.user_data.id}&first=100&after=${following.next_page_cursor}`
+
+    try {
+        const res = await axios({ url: url, method: 'get', headers: { 'Client-ID': window.location.href.includes("localhost") ? devID : prodID, 'Authorization': `Bearer ${store.state.user_token}` }});
+        console.log('data');
         console.log(res)
-        // following.total = res.data.total;
-        // following.num_pages = Math.ceil(following.total / 100);
-        // following.pages.push(res.data.data)
+        following.total = res.data.total;
+        following.num_pages = Math.ceil(following.total / 100);
+        following.pages.push(res.data.data)
         if (following.pages.length < following.num_pages) {
-            // getFollowing(res.data.pagination.cursor)
+            following.next_page_cursor = res.data.pagination.cursor;
+            await get_all_following_streams();
         }
-        else {
-            // get_following_stream_data(following.pages);
-        }
-        // store.commit("setFollowing", res.data.data);
-    })
-    .catch(err => {
-        console.log(err);
-    })
+    } catch(e) {
+        console.log(e);
+    }
 }
 
+// checks all the user's following channels and see's which are live
+async function check_for_live_following() {
+    for (let i = 0; i < following.pages.length; i++) {
+        const following_ids = following.pages[i].map(a => a.to_id);
+        let id_string = "";
+        for (let j = 0; j < following_ids.length; j++) {
+            if (j == 0) id_string += `?user_id=${following_ids[j]}`
+            else  id_string += `&user_id=${following_ids[j]}`
+        }
 
-export async function getFollowing (page_cursor) {
+        try {
+            const res = await axios({ url: `https://api.twitch.tv/helix/streams?${id_string}`, method: 'get', headers: { 'Client-ID': window.location.href.includes("localhost") ? devID : prodID, 'Authorization': `Bearer ${store.state.user_token}` }});
+            following.data = following.data.concat(res.data.data);
+            following.data.sort((a, b) => b.viewer_count - a.viewer_count);
+        } catch(e) { console.log(e); }
+    }
+}
+
+const following = {
+    total: null,
+    num_pages: null,
+    pages: [],
+    data: [],
+    next_page_cursor: null
+};
+
+export async function getFollowing () {
     // in order to get all live following streams we need to make several calls to the twitch api
     // idk why they made this so difficult, the old api only needed a single call
     
     // ok, first we need to get the list of all the streams the user is following
-    const all_following_streams = await get_all_following_streams();
+    await get_all_following_streams();
+    await check_for_live_following();
+    console.log('start')
+    await get_profile_images();
+    console.log('end')
+    console.log(following)
 
-    // let url = `https://api.twitch.tv/helix/users/follows?from_id=${store.state.user_data.id}&first=100`; 
-    // if (page_cursor != undefined) url = `https://api.twitch.tv/helix/users/follows?from_id=${store.state.user_data.id}&first=100&after=${page_cursor}`
-    // axios({
-    //     url: url,
-    //     method: 'get',
-    //     headers: {
-    //         'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
-    //         'Authorization': `Bearer ${store.state.user_token}`
-    //     }
-    // })
-    // .then(res => {
-    //     following.total = res.data.total;
-    //     following.num_pages = Math.ceil(following.total / 100);
-    //     following.pages.push(res.data.data)
-    //     if (following.pages.length < following.num_pages) {
-    //         // getFollowing(res.data.pagination.cursor)
-    //     }
-    //     else {
-    //         // get_following_stream_data(following.pages);
-    //     }
-    //     // store.commit("setFollowing", res.data.data);
-    // })
-    // .catch(err => {
-    //     console.log(err);
-    // })
-    // // axios({
-    // //     url:'https://api.twitch.tv/kraken/streams/followed?limit=100',
-    // //     // add accept header b/c sometimes the api tries to access a 
-    // //     // different api version and causes errors
-    // //     headers: {
-    // //         'Accept': 'application/vnd.twitchtv.v5+json',
-    // //         'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
-    // //         'Authorization': `OAuth ${store.state.user.accessToken}`
-    // //     }
-    // // })
-    // // .then(response => store.commit("setFollowing", response.data.streams))
-    // // .catch(error => console.log(error));
+    store.commit("setFollowing", following.data);
+
 }
 
+
+
+// BELOW
+// old, need to update
+//
 export function getGames () {
     axios({
         url:'https://api.twitch.tv/kraken/games/top/?limit=100',
@@ -279,39 +266,4 @@ export function getStreamsByGame (gameName) {
     })
     .then(res => store.commit("setStreamsByGame", res.data.streams))
     .catch(e => console.log(e));
-}
-
-export async function getPopularStreams () {
-    // console.log(store.state.token)
-    if (store.state.app_token) {
-        // console.log('token is there')
-    } else {
-        // console.log('toke is NOT there')
-        // await get_app_token()
-    }
-
-    // get the most poular live streams
-    if (api.popular.loading == false) {
-        api.popular.loading = true;
-        axios({
-            url: api.popular.url + api.popular.offset,
-            headers: {
-                'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
-                'Authorization': `Bearer ${store.state.app_token.access_token}`
-            }
-        })
-        .then(res => {
-            if (store.state.popularStreams.length > 0) {
-                let popularStreams = JSON.parse(JSON.stringify(store.state.popularStreams));
-                popularStreams = popularStreams.concat(res.data.data);
-                store.commit("setPopular", popularStreams);
-            } else {
-                store.commit("setPopular", res.data.data);
-            }
-            
-            api.popular.loading = false;
-            api.popular.offset += 50;
-        })
-        .catch(err => console.log(err));
-    }
 }
