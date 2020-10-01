@@ -21,7 +21,7 @@ export default {
     },
 
     created () {
-        // getPopularStreams();
+        getPopularStreams();
     },
 
     mounted () {
@@ -40,7 +40,7 @@ export default {
                 bounds.right <= (window.innerWidth || document.documentElement.clientWidth) &&
                 bounds.bottom <= (window.innerHeight || document.documentElement.clientHeight)
             ) {
-                // getPopularStreams();
+                getPopularStreams();
             }
         }
     }

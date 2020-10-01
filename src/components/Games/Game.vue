@@ -2,15 +2,15 @@
 
     <div class="game_wrapper">
         <div class="stream" :key="stream._id" v-for="stream in this.$store.state.streamsByGame">
-            <router-link class="clickZone" :to="{path: 'stream', query: { name: stream.channel.name}}"/>
+            <router-link class="clickZone" :to="{path: 'stream', query: { name: stream.user_name}}"/>
             <div class="imageContainer">
-                <img class="streamImage" :src="stream.preview.large">
+                <img class="streamImage" :src="stream.thumbnail_url">
             </div>
             <div class="textContainer">
-                <div class="name streamItem">{{stream.channel.name}}</div>
-                <div class="game streamItem">{{stream.channel.game}}</div>
-                <div class="status streamItem">{{stream.channel.status}}</div>
-                <div class="viewers streamItem">{{stream.viewers.toLocaleString()}}</div>
+                <div class="name streamItem">{{stream.user_name}}</div>
+                <!-- <div class="game streamItem">{{stream.channel.game}}</div> -->
+                <div class="status streamItem">{{stream.title}}</div>
+                <div class="viewers streamItem">{{stream.viewer_count.toLocaleString()}}</div>
             </div>
         </div>
     </div>
@@ -68,8 +68,8 @@ export default {
 }
 
 .stream {
-    height: 32%;
-    width: 18%;
+    height: 250px;
+    width: 175px;
     background: $mainBackgroundColor;
     color: #dddddd;
     margin: 12px;
@@ -85,7 +85,7 @@ export default {
 }
 
 .textContainer {
-    height: 50%;
+    height: 20%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -93,7 +93,7 @@ export default {
 }
 
 .streamImage {
-    height: 100%;
+    height: 200px;
     width: 100%;
 }
 

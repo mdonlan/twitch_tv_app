@@ -7,7 +7,7 @@
         </div>
         <div class="textContainer">
             <div class="name leftNavItem">{{stream.user_name}}</div>
-            <div class="game leftNavItem">{{stream.game_id}}</div>
+            <div class="game leftNavItem">{{stream.game_name}}</div>
             <div class="status leftNavItem">{{stream.title}}</div>
             <div class="viewers leftNavItem">{{stream.viewer_count.toLocaleString()}}</div>
         </div>

@@ -1,14 +1,14 @@
 <template>
 
     <div class="games">
-        <div class="game" :key="game._id" v-for="game in this.$store.state.games">
-            <router-link class="clickZone" :to="{path: 'game', query: { name: game.game.name}}" />
+        <div class="game" :key="game.id" v-for="game in this.$store.state.games">
+            <router-link class="clickZone" :to="{path: 'game', query: { name: game.name}}" />
             <div class="imageContainer">
-                <img class="gameImage" v-bind:src="game.game.box.large" />
+                <img class="gameImage" v-bind:src="game.box_art_url" />
             </div>
             <div class="textContainer">
-                <div class="name">{{game.game.name}}</div>
-                <div class="viewers">{{game.viewers.toLocaleString()}}</div>
+                <div class="name">{{game.name}}</div>
+                <!-- <div class="viewers">{{game.viewers.toLocaleString()}}</div> -->
             </div>
         </div>
     </div>
@@ -17,7 +17,6 @@
 
 <script>
 
-import axios from 'axios'
 import { getGames } from '../../TwitchAPI'
 
 export default {
