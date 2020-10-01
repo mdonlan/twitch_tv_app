@@ -3,7 +3,7 @@
     <div class="stream">
         <div class="clickZone" @click="clickedVideoLink(stream)" :data-channel="stream.user_name" />
         <div class="logoContainer">
-            <!-- <img class="logo leftNavItem" v-bind:src="stream.channel.logo"> -->
+            <img class="logo leftNavItem" v-bind:src="stream.profile_image">
         </div>
         <div class="textContainer">
             <div class="name leftNavItem">{{stream.user_name}}</div>
@@ -110,7 +110,9 @@ a {
 
 .logo {
     height: 100%;
-    border-radius: 5px;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
 }
 
 .name {
