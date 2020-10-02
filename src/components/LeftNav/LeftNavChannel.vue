@@ -33,7 +33,7 @@ export default {
     methods: {
         clickedVideoLink(stream) {
             // clicked a link to a stream on the leftNav
-            let to = {path: 'stream', query: {name: stream.channel.name}};
+            let to = {path: 'stream', query: {name: stream.user_name}};
             this.$router.push(to);
             
             // if we are on mobile auto hide the leftNav
