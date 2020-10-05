@@ -66,7 +66,7 @@ router.beforeEach((to, from, next) => {
             store.commit("setMulti", {channel: null, num: i + 1});
         }
     }
-    
+
     if(to.path == '/stream') {
         document.title = to.query.name;
         store.commit("setOnVideoPage", true);

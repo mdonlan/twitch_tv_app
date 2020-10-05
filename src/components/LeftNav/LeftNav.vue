@@ -87,10 +87,10 @@ export default {
             });
         },
 
-        setLeftNavPos(hide) {
-            if (hide) this.leftNavElem.classList.add("leftNavWrapperHide");
-            else this.leftNavElem.classList.remove("leftNavWrapperHide");
-        },
+        // setLeftNavPos(hide) {
+        //     if (hide) this.leftNavElem.classList.add("leftNavWrapperHide");
+        //     else this.leftNavElem.classList.remove("leftNavWrapperHide");
+        // },
 
         clickedVideoLink(stream) {
             // clicked a link to a stream on the leftNav
@@ -119,7 +119,7 @@ export default {
             // this is for firefox since it doesn't get the iframe element as target we also need
             // to user mouseover since relatedTarget is only on that event and not on mousemove
             let relatedTarget = event.relatedTarget;
-            if (relatedTarget == null && this.$store.state.onVideoPage) this.setLeftNavPos(true);
+            if (relatedTarget == null && this.$store.state.onVideoPage) this.$store.commit("setShowLeftNav", false);
         },
 
         mouseMoveHandler(event) {
@@ -137,9 +137,10 @@ export default {
             // and then we need to check for body or iframe depending on whether we last clicked 
             // on the iframe or the rest of the app
 
-            if (tag == "IFRAME" && this.$store.state.onVideoPage) this.setLeftNavPos(true);
-            else if (className == "mouseEventWatchLayerLeft" && this.$store.state.onVideoPage) this.setLeftNavPos(false);
-
+            // if (tag == "IFRAME" && this.$store.state.onVideoPage) this.setLeftNavPos(true);
+            // else if (className == "mouseEventWatchLayerLeft" && this.$store.state.onVideoPage) this.setLeftNavPos(false);
+            if (tag == "IFRAME" && this.$store.state.onVideoPage) this.$store.commit("setShowLeftNav", false);
+            else if (className == "mouseEventWatchLayerLeft" && this.$store.state.onVideoPage) this.$store.commit("setShowLeftNav", true);
             this.checkHoveringOverStream(toElem);
 
             this.mousePos = {
@@ -150,9 +151,10 @@ export default {
         },
 
         setLeftNavPos(hide) {
+            // console.log('setting left nav hide: ' + hide)
             // show or hide the left nav
-            if (hide) this.leftNavElem.classList.add("leftNavWrapperHide");
-            else this.leftNavElem.classList.remove("leftNavWrapperHide");
+            // if (hide) this.leftNavElem.classList.add("leftNavWrapperHide");
+            // else this.leftNavElem.classList.remove("leftNavWrapperHide");
         },
 
         checkHoveringOverStream(toElem) {
