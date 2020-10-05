@@ -43,7 +43,7 @@ export async function initTwitchAPI () {
     // we can get rid of this in prod
     let twitch_auth_url;
     if (window.location.href.includes("localhost")) twitch_auth_url = `https://id.twitch.tv/oauth2/authorize?client_id=${client_id}&redirect_uri=http://localhost:8080&response_type=token&scope=viewing_activity_read`;
-    else twitch_auth_url =  `https://id.twitch.tv/oauth2/authorize?client_id=${prodID}&redirect_uri=https://mdonlan.github.io/twitch_tv_app&response_type=token&scope=viewing_activity_read`;
+    else twitch_auth_url =  `https://id.twitch.tv/oauth2/authorize?client_id=${client_id}&redirect_uri=https://mdonlan.github.io/twitch_tv_app&response_type=token&scope=viewing_activity_read`;
     store.commit('setTwitchAuthUrl', twitch_auth_url)
 }
 
