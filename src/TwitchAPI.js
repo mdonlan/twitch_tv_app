@@ -5,7 +5,7 @@ import store from './Store/store'
 // this function gets the auth token from our server, which is connecting to twitches servers
 // we need this auth token to do any twitch api calls
 async function get_app_token() {
-    return axios({ url: 'http://157.230.58.188:3000/token', method: 'get', })
+    return axios({ url: 'https://157.230.58.188/token', method: 'get', })
     .then(res => { store.commit("set_app_token", res.data); })
     .catch(err => { console.log(err); })
 }
