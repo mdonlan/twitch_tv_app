@@ -15,7 +15,7 @@
 
 <script>
 import axios from 'axios';
-import { devID, prodID } from '../clientID.js';
+import { client_id } from '../clientID.js';
 
 export default {
   name: 'panel',
@@ -48,7 +48,7 @@ export default {
         method:'get',
         url:'https://api.twitch.tv/api/channels/' + this.$store.state.onChannel + '/panels',
         headers: {
-          'Client-ID': devID,
+          'Client-ID': client_id,
           'Authorization': accessToken
         }
       })

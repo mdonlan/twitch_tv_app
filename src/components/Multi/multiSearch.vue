@@ -17,7 +17,7 @@
 
 <script>
 import axios from 'axios';
-import { devID, prodID } from '../../clientID.js';
+import { client_id } from '../../clientID.js';
 
 export default {
     name: 'multiSearch',
@@ -52,7 +52,7 @@ export default {
                 url:'https://api.twitch.tv/kraken/search/streams?query=' + searchQuery + '&limit=100',
                 headers: {
                     'Accept': 'application/vnd.twitchtv.v5+json',
-                    'Client-ID': devID,
+                    'Client-ID': client_id,
                 }
             })
             .then((response) => {

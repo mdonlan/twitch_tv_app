@@ -10,18 +10,18 @@
 
 <script>
 import { initTwitchAPI } from './TwitchAPI'
-import { devID, prodID } from './clientID.js'
+import { client_id } from './clientID.js'
 
 export default {
     name: 'app',
 
     mounted() {
         window.addEventListener("resize", this.getBreakpoint);
-        if (window.location.href.includes("localhost")) this.$store.commit("setClientID", devID);
+        if (window.location.href.includes("localhost")) this.$store.commit("setClientID", client_id);
         else this.$store.commit("setClientID", prodID);
 
-        if (window.location.href.includes("localhost")) this.$store.commit("setTwitchAuthUrl", `https://id.twitch.tv/oauth2/authorize?client_id=${devID}&redirect_uri=http://localhost:8080&response_type=token&scope=viewing_activity_read`);
-        else this.$store.commit("setTwitchAuthUrl", `https://id.twitch.tv/oauth2/authorize?client_id=${devID}&redirect_uri=http://localhost:8080&response_type=token&scope=viewing_activity_read`);
+        if (window.location.href.includes("localhost")) this.$store.commit("setTwitchAuthUrl", `https://id.twitch.tv/oauth2/authorize?client_id=${client_id}&redirect_uri=http://localhost:8080&response_type=token&scope=viewing_activity_read`);
+        else this.$store.commit("setTwitchAuthUrl", `https://id.twitch.tv/oauth2/authorize?client_id=${client_id}&redirect_uri=http://localhost:8080&response_type=token&scope=viewing_activity_read`);
 
         initTwitchAPI();
         this.getBreakpoint();

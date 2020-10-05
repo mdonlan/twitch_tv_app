@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { devID, prodID } from './clientID.js'
+import { client_id } from './clientID.js'
 import store from './Store/store'
 
 // this function gets the auth token from our server, which is connecting to twitches servers
@@ -15,7 +15,7 @@ async function get_user_data() {
         url: 'https://api.twitch.tv/helix/users',
         method: 'get',
         headers: {
-            'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
+            'Client-ID': client_id,
             'Authorization': `Bearer ${store.state.user_token}`
         }
     })
@@ -42,7 +42,7 @@ export async function initTwitchAPI () {
     // connect account button, it changes depending if we are in dev mode or not
     // we can get rid of this in prod
     let twitch_auth_url;
-    if (window.location.href.includes("localhost")) twitch_auth_url = `https://id.twitch.tv/oauth2/authorize?client_id=${devID}&redirect_uri=http://localhost:8080&response_type=token&scope=viewing_activity_read`;
+    if (window.location.href.includes("localhost")) twitch_auth_url = `https://id.twitch.tv/oauth2/authorize?client_id=${client_id}&redirect_uri=http://localhost:8080&response_type=token&scope=viewing_activity_read`;
     else twitch_auth_url =  `https://id.twitch.tv/oauth2/authorize?client_id=${prodID}&redirect_uri=https://mdonlan.github.io/twitch_tv_app&response_type=token&scope=viewing_activity_read`;
     store.commit('setTwitchAuthUrl', twitch_auth_url)
 }
@@ -57,7 +57,7 @@ async function get_profile_images() {
         }
 
         try {
-            const res = await axios({ url: `https://api.twitch.tv/helix/users?id=${id_string}`, method: 'get', headers: { 'Client-ID': window.location.href.includes("localhost") ? devID : prodID, 'Authorization': `Bearer ${store.state.user_token}`}});
+            const res = await axios({ url: `https://api.twitch.tv/helix/users?id=${id_string}`, method: 'get', headers: { 'Client-ID': client_id, 'Authorization': `Bearer ${store.state.user_token}`}});
             res.data.data.forEach(user => {
                 following.data.forEach(following_user => {
                     if (following_user.user_id == user.id) {
@@ -77,7 +77,7 @@ async function get_all_following_streams() {
     if (following.next_page_cursor != null) url = `https://api.twitch.tv/helix/users/follows?from_id=${store.state.user_data.id}&first=100&after=${following.next_page_cursor}`
 
     try {
-        const res = await axios({ url: url, method: 'get', headers: { 'Client-ID': window.location.href.includes("localhost") ? devID : prodID, 'Authorization': `Bearer ${store.state.user_token}` }});
+        const res = await axios({ url: url, method: 'get', headers: { 'Client-ID': client_id, 'Authorization': `Bearer ${store.state.user_token}` }});
         following.total = res.data.total;
         following.num_pages = Math.ceil(following.total / 100);
         following.pages.push(res.data.data)
@@ -101,7 +101,7 @@ async function check_for_live_following() {
         }
 
         try {
-            const res = await axios({ url: `https://api.twitch.tv/helix/streams?${id_string}`, method: 'get', headers: { 'Client-ID': window.location.href.includes("localhost") ? devID : prodID, 'Authorization': `Bearer ${store.state.user_token}` }});
+            const res = await axios({ url: `https://api.twitch.tv/helix/streams?${id_string}`, method: 'get', headers: { 'Client-ID': client_id, 'Authorization': `Bearer ${store.state.user_token}` }});
             following.data = following.data.concat(res.data.data);
             following.data.sort((a, b) => b.viewer_count - a.viewer_count);
         } catch(e) { console.log(e); }
@@ -123,7 +123,7 @@ async function get_game_ids() {
         }
 
         try {
-            const res = await axios({ url: `https://api.twitch.tv/helix/games?id=${id_string}`, method: 'get', headers: { 'Client-ID': window.location.href.includes("localhost") ? devID : prodID, 'Authorization': `Bearer ${store.state.user_token}`}});
+            const res = await axios({ url: `https://api.twitch.tv/helix/games?id=${id_string}`, method: 'get', headers: { 'Client-ID': client_id, 'Authorization': `Bearer ${store.state.user_token}`}});
             following.data.forEach(following_user => {
                 res.data.data.forEach(game => {
                     if (following_user.game_id == game.id) {
@@ -166,7 +166,7 @@ export function getGames () {
     axios({
         url:'https://api.twitch.tv/helix/games/top?first=100',
         headers: {
-            'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
+            'Client-ID': client_id,
             'Authorization': `Bearer ${store.state.app_token.access_token}`
         }
     })
@@ -181,7 +181,7 @@ export function getGames () {
 }
 
 async function get_game_id(name) {
-    const res = await axios({ url: `https://api.twitch.tv/helix/games?name=${name}`, headers: { 'Client-ID': window.location.href.includes("localhost") ? devID : prodID, 'Authorization': `Bearer ${store.state.app_token.access_token}` }});
+    const res = await axios({ url: `https://api.twitch.tv/helix/games?name=${name}`, headers: { 'Client-ID': client_id, 'Authorization': `Bearer ${store.state.app_token.access_token}` }});
     return res.data.data[0].id;
 }
 
@@ -194,7 +194,7 @@ export async function getStreamsByGame (gameName) {
     axios({
         url:'https://api.twitch.tv/helix/streams/?first=100&game_id=' + game_id,
         headers: {
-            'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
+            'Client-ID': client_id,
             'Authorization': `Bearer ${store.state.app_token.access_token}`
         }
     })
@@ -217,7 +217,7 @@ export async function getPopularStreams () {
         axios({
             url: api.popular.url + api.popular.offset,
             headers: {
-                'Client-ID': window.location.href.includes("localhost") ? devID : prodID,
+                'Client-ID': client_id,
                 'Authorization': `Bearer ${store.state.app_token.access_token}`
             }
         })
