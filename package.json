@@ -10,7 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "core-util-is": "^1.0.2",
     "moment": "^2.24.0",
     "node-sass": "^4.13.0",
